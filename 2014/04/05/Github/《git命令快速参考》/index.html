@@ -1,0 +1,493 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>《Git命令快速参考》 | Leo&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="Leo_璇哥">
+    
+    <meta name="description" content="本附录为Git常见命令快速参考。每节介绍一种操作类型。这里会列出很多命令，而相应的解释却不多。对于还不熟悉Git的读者，可回头翻阅第1章“Git的版本控制之道”（第3页）
+A.1安装和初始化在使用Git之前，须要先进行配置。在使用一个新的版本库之前，须要先初始化。本节介绍与Git设置和初始化相关的命">
+    
+    
+    
+    
+    <link rel="alternative" href="http://weibo.com/lsx1993" title="Leo&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/author.jpg" alt="Leo&#39;s Blog" title="Leo&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Leo&#39;s Blog">Leo&#39;s Blog</a></h1>
+				<h2 class="blog-motto">华南理工大学2010级计算机全英创新班，2013级研究生。Java程序员，研究PaaS平台。积极向上，追求卓越。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">博客主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/page/lab">实验室</a></li>
+					
+						<li><a href="/page">关于</a></li>
+					
+					<li>
+					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/04/05/Github/《git命令快速参考》/" title="《Git命令快速参考》" itemprop="url">《Git命令快速参考》</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://lisuxuan1993.github.com" title="Leo_璇哥">Leo_璇哥</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2014-04-05T03:31:03.000Z" itemprop="datePublished">Apr 5 2014</time>
+    更新日期:<time datetime="2014-05-05T03:34:37.000Z" itemprop="dateModified">May 5 2014</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#A-1_u5B89_u88C5_u548C_u521D_u59CB_u5316"><span class="toc-number">1.</span> <span class="toc-text">A.1安装和初始化</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#u521D_u59CB_u5316_u65B0_u7248_u672C_u5E93"><span class="toc-number">1.1.</span> <span class="toc-text">初始化新版本库</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#A-2__u65E5_u5E38_u64CD_u4F5C"><span class="toc-number">2.</span> <span class="toc-text">A.2 日常操作</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#A-3__u5206_u652F"><span class="toc-number">3.</span> <span class="toc-text">A.3 分支</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#A-4__u5386_u53F2"><span class="toc-number">4.</span> <span class="toc-text">A.4 历史</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#A-5__u8FDC_u7A0B_u7248_u672C_u5E93_3A"><span class="toc-number">5.</span> <span class="toc-text">A.5 远程版本库:</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#A-6__u8FDE_u63A5Git_u548CSVN"><span class="toc-number">6.</span> <span class="toc-text">A.6 连接Git和SVN</span></a></li></ol>
+		</div>
+		
+		<p>本附录为Git常见命令快速参考。每节介绍一种操作类型。<br>这里会列出很多命令，而相应的解释却不多。对于还不熟悉Git的读者，可回头翻阅第1章“Git的版本控制之道”（第3页）</p>
+<h1 id="A-1_u5B89_u88C5_u548C_u521D_u59CB_u5316"><a href="#A-1_u5B89_u88C5_u548C_u521D_u59CB_u5316" class="headerlink" title="A.1安装和初始化"></a>A.1安装和初始化</h1><p>在使用Git之前，须要先进行配置。在使用一个新的版本库之前，须要先初始化。本节介绍与Git设置和初始化相关的命令。</p>
+<p>配置全局用户名和电子邮件地址<br>prompt&gt; git config –global user.name “Your Name”<br>prompt&gt; git config –global user.email “you@example.com”<br>为特定的版本库配置用户名和电子邮件地址</p>
+<p>注意：你可以为每个版本库单独设置用户名和邮件地址。这使得用户可在不同项目中使用不同的用户名和/或不同的邮件地址。</p>
+<p>prompt&gt; cd /path/to/repo<br>prompt&gt; git config user.name “Your Name” </p>
+<p>prompt&gt; git config user.email you@example.com</p>
+<p>在命令行中使用不同颜色显示不同内容<br>prompt&gt; git config –global color.ui “auto”</p>
+<h2 id="u521D_u59CB_u5316_u65B0_u7248_u672C_u5E93"><a href="#u521D_u59CB_u5316_u65B0_u7248_u672C_u5E93" class="headerlink" title="初始化新版本库"></a>初始化新版本库</h2><p>prompt&gt; mkdir /path/to/repo<br>prompt&gt; cd /path/to/repo<br>prompt&gt; git init<br>Initialized empty Git repository in /path/to/repo/.git/<br>prompt&gt;<br>… create file(s) for first commit …<br>prompt&gt; git add .<br>prompt&gt; git commit -m ‘initial import’ O9 n<em> U</em> c; }, {<br>Created initial commit bdebe5c: initial import</p>
+<p>1 files changed, 1 insertions(+), 0 deletions(-)  </p>
+<p>create mode 100644 <some file="">s, A</some></p>
+<p>克隆版本库<br>prompt&gt; git clone <repository url=""> M<br>Initialize repo/.git<br>Initialized empty Git repository in /work/<remote repository="">/.git/</remote></repository></p>
+<p>将目录中的内容纳入Git版本控制<br>prompt&gt; cd /path/to/existing/directory<br>prompt&gt; git init<br>Initialized empty Git repository in /path/to/existing/directory/.git/<br>prompt&gt; git add .<br>prompt&gt; git commit -m “initial import of some project”</p>
+<p>在本地版本库中设置远程版本库的别名<br>… from within the repository directory …<br>prompt&gt; git remote add <remote repository=""> <repository url=""></repository></remote></p>
+<h1 id="A-2__u65E5_u5E38_u64CD_u4F5C"><a href="#A-2__u65E5_u5E38_u64CD_u4F5C" class="headerlink" title="A.2 日常操作"></a>A.2 日常操作</h1><p>Normal Usage</p>
+<p>本节列出Git日常操作命令，对应于第4章“添加与提交：Git基础”（第41页）。</p>
+<p>添加新文件或暂存已有文件上的改动，然后提交<br>prompt&gt; git add <some file=""><br>prompt&gt; git commit -m “<some message="">“</some></some></p>
+<p>暂存已有文件上的部分修改.<br>注意：[…]表示可选参数</p>
+<p>prompt&gt; git add -p [<some file=""> [<some file=""> [and so on]]]<br>选择要提交的文本块……</some></some></p>
+<p>使用交互方式添加文件<br>prompt&gt; git add -i</p>
+<p>暂存已纳入Git版本控制之下的文件的修改<br>prompt&gt; git add -u [<some path=""> [<some path="">]]</some></some></p>
+<p>提交已纳入Git版本控制之下的文件的所有修改<br>prompt&gt; git commit -m “<some message="">“ </some></p>
+<p>清除工作目录树中的修改<br>prompt&gt; git checkout HEAD <some file=""> [<some file="">]</some></some></p>
+<p>取消已暂存但尚未提交的修改的暂存标识<br>prompt&gt; git reset HEAD <some file=""> [<some file="">]</some></some></p>
+<p>修复上一次提交中的问题</p>
+<p>改动相关文件，并暂存……<br>prompt&gt; git commit -m “<some message="">“ –amend </some></p>
+<p>修复上一次提交中的问题，并复用上次的提交注释<br>prompt&gt; git commit -C HEAD –amend</p>
+<h1 id="A-3__u5206_u652F"><a href="#A-3__u5206_u652F" class="headerlink" title="A.3 分支"></a>A.3 分支</h1><p>Branches</p>
+<p>分支是Git的强项之一。本节介绍关于分支的各个命令。详细内容见第5章“理解和使用分支”（第55页）。</p>
+<p>列出本地分支<br>prompt&gt; git branch</p>
+<p>列出远程分支<br>prompt&gt; git branch -r</p>
+<p>列出所有分支<br>prompt&gt; git branch -a. </p>
+<p>基于当前分支（的末梢）创建新分支<br>prompt&gt; git branch <new branch=""></new></p>
+<p>检出另一条分支<br>prompt&gt; git checkout <some branch="">; </some></p>
+<p>基于当前分支创建新分支，同时检出该分支<br>prompt&gt; git checkout -b <new branch=""></new></p>
+<p>基于另一个起点，创建新分支;<br>你可以从版本库中的任何一个版本开始创建新分支。这个起始点可以用一条已有的分支名称、一个提交名称，或者一个标签名称来表达。<br>prompt&gt; git branch <new branch=""> <start point="">.</start></new></p>
+<p>创建同名新分支，覆盖已有分支<br>prompt&gt; git branch -f <some existing="" branch=""> [<start point="">]</start></some></p>
+<p>移动或重命名分支<br>只有当<new branch="">不存在时<br>prompt&gt; git checkout -m <existing branch="" name=""> <new branch="" name=""></new></existing></new></p>
+<p>如果<new branch="">已存在，就覆盖它<br>prompt&gt; git checkout -M <existing branch="" name=""> <new branch="" name=""></new></existing></new></p>
+<p>把另一条分支合并到当前分支,<br>prompt&gt; git merge <some branch=""></some></p>
+<p>合并，但不提交<br>prompt&gt; git merge –no-commit <some branch=""></some></p>
+<p>拣选合并，并且提交<br>prompt&gt; git cherry-pick <commit name=""></commit></p>
+<p>拣选合并，但不提交<br>prompt&gt; git cherry-pick -n <commit name=""></commit></p>
+<p>把一条分支上的内容压合到另一条分支（上的一个提交）<br>prompt&gt; git merge –squash <some branch="">8 </some></p>
+<p>删除分支<br>仅当欲删除的分支已合并到当前分支时,<br>prompt&gt; git branch -d <branch to="" delete=""></branch></p>
+<p>不论欲删除的分支是否已合并到当前分支<br>prompt&gt; git branch -D <branch to="" delete=""></branch></p>
+<h1 id="A-4__u5386_u53F2"><a href="#A-4__u5386_u53F2" class="headerlink" title="A.4 历史"></a>A.4 历史</h1><p>History</p>
+<p>这些命令用来显示版本库的历史信息，包括代码曾在哪里、谁在何时做了什么、修改的内容及其统计信息。详见第6章“查询Git历史记录”（第71页）。</p>
+<p>显示全部历史记录<br>prompt&gt; git log</p>
+<p>显示版本历史，以及版本间的内容差异<br>prompt&gt; git log -p</p>
+<p>只显示最近一个提交<br>prompt&gt; git log -1</p>
+<p>显示最近的20个提交，以及版本间的内容差异<br>prompt&gt; git log -20 -p</p>
+<p>显示最近6小时的提交<br>prompt&gt; git log –since=”6 hours”</p>
+<p>显示两天之前的提交<br>prompt&gt; git log –before=”2 days”;</p>
+<p>显示比HEAD（当前检出分支的末梢）早3个提交的那个提交<br>prompt&gt; git log -1 HEAD~3<br>或者<br>prompt&gt; git log -1 HEAD^^^<br>或者……<br>prompt&gt; git log -1 HEAD~1^^</p>
+<p>显示两个版本之间的提交<br>下面命令中的<start point="">和<end point="">可以是一个提交名称、分支名称、标签名称，或者它们的混合<br>prompt&gt; git log <start point="">…<end point=""></end></start></end></start></p>
+<p>显示历史，每个提交显示一行，包括提交注释的第一行<br>prompt&gt; git log –pretty=oneline</p>
+<p>显示改动行数统计<br>prompt&gt; git log –stat</p>
+<p>显示改动文件的名称和状态<br>prompt&gt; git log –name-status4</p>
+<p>显示当前工作目录树和暂存区间的差别<br>prompt&gt; git diff</p>
+<p>显示暂存区和版本库间的差别;<br>prompt&gt; git diff –cached</p>
+<p>显示工作目录树和版本库间的差别<br>prompt&gt; git diff HEAD</p>
+<p>显示工作目录树与版本库中某次提交版本之间的差别</p>
+<p><start point="">可以是一个提交名称、分支名称或标签名称。<br>prompt&gt; git diff <start point=""></start></start></p>
+<p>显示版本库中两个版本之间的差别<br>prompt&gt; git diff <start point=""> <end point=""></end></start></p>
+<p>显示差别的相关统计<br>prompt&gt; git diff –stat <start point=""> [<end point="">]</end></start></p>
+<p>显示文件中各个部分的修改者及相关提交信息<br>prompt&gt; git blame <some file=""></some></p>
+<p>显示文件中各个部分的修改者及相关提交信息，包括在该文件中复制、粘贴和移动内容等方面的情况。<br>prompt&gt; git blame -M <some file="">,</some></p>
+<p>显示文件中各部分的修改者及相关提交信息，包括在文件间移动内容方面的情况<br>prompt&gt; git blame -C -C <some file=""></some></p>
+<p>显示历史时，显示复制和粘贴信息<br>prompt&gt; git log -C -C -p -1 <some point=""></some></p>
+<h1 id="A-5__u8FDC_u7A0B_u7248_u672C_u5E93_3A"><a href="#A-5__u8FDC_u7A0B_u7248_u672C_u5E93_3A" class="headerlink" title="A.5 远程版本库:"></a>A.5 远程版本库:</h1><p>Remote Repositories</p>
+<p>开发人员之间通过远程版本库来共享工作成果，相互协作。本节介绍关于这些操作的命令，详见第7章“与远程版本库协作”（第91页）。</p>
+<p>克隆远程版本库<br>prompt&gt; git clone <some repository=""></some></p>
+<p>克隆远程版本库，但只下载其中最近200个提交的历史记录<br>prompt&gt; git clone –depth 200 <some repository=""></some></p>
+<p>在本地版本库中设置远程版本库的别名<br>prompt&gt; git remote add <remote repository=""> <repository url=""></repository></remote></p>
+<p>显示远程分支<br>prompt&gt; git branch -r</p>
+<p>基于远程分支创建本地分支<br>prompt&gt; git branch <new branch=""> <remote branch=""></remote></new></p>
+<p>基于远程标签创建本地分支<br>prompt&gt; git branch <new branch=""> <remote tag=""></remote></new></p>
+<p>从别名为“origin”的远程版本库中取来修改变化，但不合并到本地分支<br>prompt&gt; git fetch; </p>
+<p>从任意的远程版本库中取来修改变化，但不合并到本地分支<br>prompt&gt; git fetch <remote repository=""></remote></p>
+<p>从任意的远程版本库中取来修改变化，并合并到当前检出的本地分支)<br>prompt&gt; git pull <remote repository=""></remote></p>
+<p>从别名为“origin”的远程版本库中取来修改变化，并合并到当前检出的本地分支<br>prompt&gt; git pull</p>
+<p>把修改变化从本地分支推入远程版本库<br>prompt&gt; git push <remote repository=""> <local branch="">:<remote branch=""></remote></local></remote></p>
+<p>把修改变化从本地分支推入远程版本库中同名分支<br>prompt&gt; git push <remote repository=""> <local branch=""></local></remote></p>
+<p>把修改变化从本地新建分支推入远程版本库<br>prompt&gt; git push <remote repository=""> <local branch=""></local></remote></p>
+<p>把修改变化推入别名为“origin”的远程版本库<br>当远程版本库中已有同名分支时，这个命令会推入本地分支到远程版本库对应的分支中。如果远程版本库中尚无同名分支，则须使用git push <repository name=""> <local branch="">。<br>prompt&gt; git push</local></repository></p>
+<p>在远程版本库中删除分支<br>prompt&gt; git push <remote repository=""> :<remote branch=""></remote></remote></p>
+<p>在本地版本库中删除所有远程版本库中已不存在的分支<br>prompt&gt; git remote prune <remote repository=""></remote></p>
+<p>在本地版本库中删除某个远程版本库的简称，以及该远程版本库相关的分支<br>prompt&gt; git remote rm <remote repository=""></remote></p>
+<h1 id="A-6__u8FDE_u63A5Git_u548CSVN"><a href="#A-6__u8FDE_u63A5Git_u548CSVN" class="headerlink" title="A.6 连接Git和SVN"></a>A.6 连接Git和SVN</h1><p>Git to SVN Bridge</p>
+<p>Git可以读取Subversion版本库中的数据，并把本地修改发送回Subversion版本库。这是Git区别于其他版本控制工具的必杀技之一。相关详细介绍请参见第10章“迁移到Git”（第131页）。<br>克隆SVN版本库的全部内容<br>prompt&gt; git svn clone <svn repository=""></svn></p>
+<p>克隆具有标准结构的SVN版本库<br>下面命令适用于克隆标准结构的SVN数据库，也就是说，主干命名为trunk，其他分支都存放于branches目录下，标签都存放于tags目录下。<br>prompt&gt; git svn clone -s <svn repository=""></svn></p>
+<p>克隆非标准结构的SVN版本库<br>prompt&gt; git svn clone -T <trunk path=""> </trunk></p>
+<p>-b <branch path=""> </branch></p>
+<p>-t <tag path=""></tag></p>
+<p><svn repository="">6<br>克隆具有标准结构的SVN版本库中的某个版本（比如第2321版）)<br>prompt&gt; git svn clone -s -r 2321</svn></p>
+<p>克隆具有标准结构的SVN版本库，并对SVN中的分支添加前缀<br>prompt&gt; git svn clone -s –prefix svn/ <svn repository=""></svn></p>
+<p>从上游SVN版本库中获得更新的内容，并依此在本地Git版本库中变基本地分支<br>prompt&gt; git svn rebase</p>
+<p>把修改变化推回上游SVN版本库<br>prompt&gt; git svn dcommit</p>
+<p>列出所有将推入上游SVN版本库的提交<br>prompt&gt; git svn dcommit -n</p>
+<p>显示SVN历史记录<br>prompt&gt; git svn log; </p>
+<p>显示文件中各个部分的SVN的修改者及相关提交信息<br>prompt&gt; git svn blame <some file=""></some></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Github/">Github</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  
+<div class="jiathis_style">
+    <span class="jiathis_txt">分享到：</span>
+    <a class="jiathis_button_tsina">新浪微博</a>
+    <a class="jiathis_button_weixin">微信</a>
+    <a class="jiathis_button_twitter">Twitter</a>
+    <a class="jiathis_button_evernote">EverNote</a>
+    <a href="http://www.jiathis.com/share?uid=1501277" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+</div>
+<script type="text/javascript" >
+    var jiathis_config={
+    data_track_clickback:true,
+    sm:"copy,renren,cqq",
+    pic:"",
+    summary:"",
+    
+  </script> 
+<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=
+" charset="utf-8"></script>      
+
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2014/04/21/Java/工厂模式/" title="工厂方法模式">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  工厂方法模式</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2014/03/17/Spark/如何学习spark并精通/"  title="如何学习Spark并精通">
+ <strong>NEXT:</strong><br/> 
+ <span>如何学习Spark并精通
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#A-1_u5B89_u88C5_u548C_u521D_u59CB_u5316"><span class="toc-number">1.</span> <span class="toc-text">A.1安装和初始化</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#u521D_u59CB_u5316_u65B0_u7248_u672C_u5E93"><span class="toc-number">1.1.</span> <span class="toc-text">初始化新版本库</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#A-2__u65E5_u5E38_u64CD_u4F5C"><span class="toc-number">2.</span> <span class="toc-text">A.2 日常操作</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#A-3__u5206_u652F"><span class="toc-number">3.</span> <span class="toc-text">A.3 分支</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#A-4__u5386_u53F2"><span class="toc-number">4.</span> <span class="toc-text">A.4 历史</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#A-5__u8FDC_u7A0B_u7248_u672C_u5E93_3A"><span class="toc-number">5.</span> <span class="toc-text">A.5 远程版本库:</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#A-6__u8FDE_u63A5Git_u548CSVN"><span class="toc-number">6.</span> <span class="toc-text">A.6 连接Git和SVN</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/C/" title="C++">C++<sup>4</sup></a></li>
+		
+			<li><a href="/categories/Github/" title="Github">Github<sup>3</sup></a></li>
+		
+			<li><a href="/categories/Java/" title="Java">Java<sup>11</sup></a></li>
+		
+			<li><a href="/categories/Linux/" title="Linux">Linux<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Lisp/" title="Lisp">Lisp<sup>0</sup></a></li>
+		
+			<li><a href="/categories/Python/" title="Python">Python<sup>0</sup></a></li>
+		
+			<li><a href="/categories/Spark/" title="Spark">Spark<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Web/" title="Web">Web<sup>1</sup></a></li>
+		
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>1</sup></a></li>
+		
+			<li><a href="/categories/数据结构/" title="数据结构">数据结构<sup>4</sup></a></li>
+		
+			<li><a href="/categories/算法/" title="算法">算法<sup>4</sup></a></li>
+		
+			<li><a href="/categories/职业生涯/" title="职业生涯">职业生涯<sup>7</sup></a></li>
+		
+			<li><a href="/categories/随笔生活/" title="随笔生活">随笔生活<sup>4</sup></a></li>
+		
+			<li><a href="/categories/面试/" title="面试">面试<sup>4</sup></a></li>
+		
+			<li><a href="/categories/项目总结/" title="项目总结">项目总结<sup>0</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+      <li><a href="http://yangjian.me" target="_blank" title="YangJian">Alimon's Blog</a></li>
+      <li><a href="http://zespia.tw/hexo" target="_blank" title="Hexo">Hexo</a></li>
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="http://weibo.com/lsx1993" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  
+  <div class="archiveslist">
+    <p class="asidetitle"><a href="/archives">归档</a></p>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">九月 2014</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">五月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">四月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/03/">三月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">二月 2014</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/10/">十月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/09/">九月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/02/">二月 2013</a><span class="archive-list-count">2</span></li></ul>
+  </div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello,This is my blog. <br/>
+			I will share my learing experience here.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/lsx1993" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/lisuxuan1993" target="_blank" title="github"></a>
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2016 
+		
+		<a href="http://lisuxuan1993.github.com" target="_blank" title="Leo_璇哥">Leo_璇哥</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"null"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'null', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+  </body>
+</html>

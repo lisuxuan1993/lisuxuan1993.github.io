@@ -1,0 +1,410 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>《Spring实战》第3版 | Leo&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="Leo_璇哥">
+    
+    <meta name="description" content="《Spring实战》2014-06-25    Spring框架成为Java开发人员的必备知识。    Spring3引入了强大的新特性：SpEL，Spring表达式语言，IoC容器的新注解，用户急需的对REST的支持。重要方面：    REST，远程服务，消息，安全，MVC，Web Flow。本书">
+    
+    
+    
+    
+    <link rel="alternative" href="http://weibo.com/lsx1993" title="Leo&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/author.jpg" alt="Leo&#39;s Blog" title="Leo&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Leo&#39;s Blog">Leo&#39;s Blog</a></h1>
+				<h2 class="blog-motto">华南理工大学2010级计算机全英创新班，2013级研究生。Java程序员，研究PaaS平台。积极向上，追求卓越。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">博客主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/page/lab">实验室</a></li>
+					
+						<li><a href="/page">关于</a></li>
+					
+					<li>
+					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2013/06/25/Java/spring实战第3版/" title="《Spring实战》第3版" itemprop="url">《Spring实战》第3版</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://lisuxuan1993.github.com" title="Leo_璇哥">Leo_璇哥</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2013-06-25T13:17:20.000Z" itemprop="datePublished">Jun 25 2013</time>
+    更新日期:<time datetime="2014-09-24T03:43:28.000Z" itemprop="dateModified">Sep 24 2014</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#u300ASpring_u5B9E_u6218_u300B"><span class="toc-number">1.</span> <span class="toc-text">《Spring实战》</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#u7B2C1_u7AE0_Spring_u4E4B_u65C5"><span class="toc-number">1.1.</span> <span class="toc-text">第1章    Spring之旅</span></a></li></ol></li></ol>
+		</div>
+		
+		<h1 id="u300ASpring_u5B9E_u6218_u300B"><a href="#u300ASpring_u5B9E_u6218_u300B" class="headerlink" title="《Spring实战》"></a>《Spring实战》</h1><p>2014-06-25<br>    Spring框架成为Java开发人员的必备知识。<br>    Spring3引入了强大的新特性：SpEL，Spring表达式语言，IoC容器的新注解，用户急需的对REST的支持。<br><strong>重要方面：</strong><br>    REST，远程服务，消息，安全，MVC，Web Flow。<br><strong>本书内容：</strong><br>    应用注解减少配置。<br>    使用RESTful资源<br>    Spring表达式语言（SpEL）<br>    安全，Web Flow及其它。<br><strong>内容提要：</strong><br>    核心的Spring知识，Spring应用程序的核心组件和常用元素，Spring集成3个方面。<br>    Spring之旅，装配Bean，最小化Spring XML配置，面向切面的Spring，征服数据库，事务管理使用Spring MVC构建Web应用程序，使用Spring Web Flow，保护Spring应用，使用远程服务，为Spring添加REST功能，Spring消息，使用JMX管理Spring Bean以及其他Spring技术等内容。<br>    使用Spring框架进行开发必须掌握的核心概念。<br>    深入介绍了Spring应用程序的常用组件。<br>    Spring如何与其他的应用、服务进行企业级集成。<br>    代码示例简洁且易于理解。<br>    让你关注于真正重要的事情——你的关键业务需求。<br><strong>译者序：</strong><br>    不断发展的技术，不断学习的态度。<br>    JavaEE开发标准。<br><strong>前言：</strong><br>    主要特性：依赖注入，AOP面向方面编程，持久化，声明式事务，Spring MVC以及Acegi Security。<br>    丰富的配置命名空间、注解驱动的编程模型以及设计良好的约定和默认值会将整页的XML配置减少为几个元素。</p>
+<p><strong>第一部分：</strong><br>    依赖注入DI和面向切面编程AOP。Spring的基本原理。</p>
+<p><strong>第二部分：</strong><br>    展现如何将这些理念用在应用程序通用元素的构建上。<br>第5章Spring对数据持久化的支持。Spring对JDBC的支持，怎样与持久化框架进行集成，如（Hibernate和Java Persistence API  JPA）<br>第6章对第5章的补充，借助Spring的事务支持来确保数据库的完整性。Spring是怎样借助AOP使得简单的应用对象具备声明式事务的能力。<br>第7章介绍Spring MVC框架。透明地绑定Web参数到业务对象中，并同时提供校验和错误处理功能。<br>第8章介绍Spring Web Flow，是Spring MVC的扩展。可以开发出会话式的Web应用。<br>第9章使用Spring Security为应用程序实现安全性。在Web请求层面（借助Servlet过滤器）和方法层面（借助Spring AOP）保护应用程序。</p>
+<p><strong>第三部分：</strong><br>第10章将应用程序对象导出为远程服务。如何无缝的访问远程服务。RMI，Hessian/Burlap,基于SOAP的Web Service和Spring本身的HttpInvoker。<br>第11章重新讨论Spring MVC，展示如何将应用程序的数据导出为RESTful资源。<br>第12章使用Spring和JMS发送和接收异步消息。<br>第13章使用JMX来管理应用程序的对象。<br>总结第14章如何使用Spring来调度任务，发送电子邮件以及访问JNDI配置的资源。</p>
+<hr>
+<p>#第一部分 Spring的核心</p>
+<h2 id="u7B2C1_u7AE0_Spring_u4E4B_u65C5"><a href="#u7B2C1_u7AE0_Spring_u4E4B_u65C5" class="headerlink" title="第1章    Spring之旅"></a>第1章    Spring之旅</h2><p><strong>本章内容：</strong><br>    探索Spring核心模块<br>    解耦应用对象<br>    使用AOP管理横切关注点<br>    Spring的Bean容器</p>
+<p>Java为Applet而来，但为组件化而留。<br>JavaBean规范针对Java定义了软件组件模型。JavaBean最初是为定义可重用的应用组件。<br>复杂的应用需要诸如事务支持、安全、分布式计算等服务。<br>除了名字，EJB Bean和JavaBean已经没有任何关系了。</p>
+<p>AOP和DI为JavaBean提供了之前EJB才有的强大功能。为POJO提供了类似EJB的声明式编程模型。当简单的JavaBean可以胜任的时候，你再也不会愿意笨重的EJB组件了。</p>
+<p>Spring框架已经成为基于POJO的轻量级开发框架的领导者。</p>
+<p><strong>简化Java开发</strong><br>    让简单的JavaBean实现之前只有EJB才能完成的事情。<br>    Spring不仅仅局限于服务器端开发，任何Java应用都能在简单性、可测试性和松耦合等方面从Spring获益。<br>    Spring的基本理念都源于最根本的使命：简化Java开发。</p>
+<p>为了降低Java开发的复杂性，Spring采取了以下<strong>4种关键策略</strong>：</p>
+<ul>
+<li>基于POJO的轻量级和最小侵入性编程；</li>
+<li>通过依赖注入和面向接口实现松耦合；</li>
+<li>基于切面和惯例进行声明式编程；</li>
+<li>通过切面和模板减少样板式代码；</li>
+</ul>
+<hr>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Java/">Java</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  
+<div class="jiathis_style">
+    <span class="jiathis_txt">分享到：</span>
+    <a class="jiathis_button_tsina">新浪微博</a>
+    <a class="jiathis_button_weixin">微信</a>
+    <a class="jiathis_button_twitter">Twitter</a>
+    <a class="jiathis_button_evernote">EverNote</a>
+    <a href="http://www.jiathis.com/share?uid=1501277" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+</div>
+<script type="text/javascript" >
+    var jiathis_config={
+    data_track_clickback:true,
+    sm:"copy,renren,cqq",
+    pic:"",
+    summary:"",
+    
+  </script> 
+<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=
+" charset="utf-8"></script>      
+
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2013/08/01/算法/poj2785——4-values-whose-sum-is-0/" title="POJ:2785——4 values whose Sum is 0">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  POJ:2785——4 values whose Sum is 0</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2013/06/24/Github/GitHub详细教程/"  title="GitHub详细教程">
+ <strong>NEXT:</strong><br/> 
+ <span>GitHub详细教程
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#u300ASpring_u5B9E_u6218_u300B"><span class="toc-number">1.</span> <span class="toc-text">《Spring实战》</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#u7B2C1_u7AE0_Spring_u4E4B_u65C5"><span class="toc-number">1.1.</span> <span class="toc-text">第1章    Spring之旅</span></a></li></ol></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/C/" title="C++">C++<sup>4</sup></a></li>
+		
+			<li><a href="/categories/Github/" title="Github">Github<sup>3</sup></a></li>
+		
+			<li><a href="/categories/Java/" title="Java">Java<sup>11</sup></a></li>
+		
+			<li><a href="/categories/Linux/" title="Linux">Linux<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Lisp/" title="Lisp">Lisp<sup>0</sup></a></li>
+		
+			<li><a href="/categories/Python/" title="Python">Python<sup>0</sup></a></li>
+		
+			<li><a href="/categories/Spark/" title="Spark">Spark<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Web/" title="Web">Web<sup>1</sup></a></li>
+		
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>1</sup></a></li>
+		
+			<li><a href="/categories/数据结构/" title="数据结构">数据结构<sup>4</sup></a></li>
+		
+			<li><a href="/categories/算法/" title="算法">算法<sup>4</sup></a></li>
+		
+			<li><a href="/categories/职业生涯/" title="职业生涯">职业生涯<sup>7</sup></a></li>
+		
+			<li><a href="/categories/随笔生活/" title="随笔生活">随笔生活<sup>4</sup></a></li>
+		
+			<li><a href="/categories/面试/" title="面试">面试<sup>4</sup></a></li>
+		
+			<li><a href="/categories/项目总结/" title="项目总结">项目总结<sup>0</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+      <li><a href="http://yangjian.me" target="_blank" title="YangJian">Alimon's Blog</a></li>
+      <li><a href="http://zespia.tw/hexo" target="_blank" title="Hexo">Hexo</a></li>
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="http://weibo.com/lsx1993" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  
+  <div class="archiveslist">
+    <p class="asidetitle"><a href="/archives">归档</a></p>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">九月 2014</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">五月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">四月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/03/">三月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">二月 2014</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/10/">十月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/09/">九月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/02/">二月 2013</a><span class="archive-list-count">2</span></li></ul>
+  </div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello,This is my blog. <br/>
+			I will share my learing experience here.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/lsx1993" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/lisuxuan1993" target="_blank" title="github"></a>
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2016 
+		
+		<a href="http://lisuxuan1993.github.com" target="_blank" title="Leo_璇哥">Leo_璇哥</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"null"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'null', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+  </body>
+</html>

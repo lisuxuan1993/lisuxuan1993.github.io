@@ -1,0 +1,410 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>网络编程面试总结之select、poll和epoll | Leo&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="Leo_璇哥">
+    
+    <meta name="description" content="Epoll 是何方神圣？Epoll 可是当前在 Linux 下开发大规模并发网络程序的热门人选， Epoll 在 Linux2.6 内核中正式引入，和 select 相似，其实都 I/O 多路复用技术而已 ，并没有什么神秘的。其实在 Linux 下设计并发网络程序，向来不缺少方法，比如典型的 Apa">
+    
+    
+    
+    
+    <link rel="alternative" href="http://weibo.com/lsx1993" title="Leo&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/author.jpg" alt="Leo&#39;s Blog" title="Leo&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Leo&#39;s Blog">Leo&#39;s Blog</a></h1>
+				<h2 class="blog-motto">华南理工大学2010级计算机全英创新班，2013级研究生。Java程序员，研究PaaS平台。积极向上，追求卓越。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">博客主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/page/lab">实验室</a></li>
+					
+						<li><a href="/page">关于</a></li>
+					
+					<li>
+					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/01/03/面试/网络编程面试总结之select、poll和epoll/" title="网络编程面试总结之select、poll和epoll" itemprop="url">网络编程面试总结之select、poll和epoll</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://lisuxuan1993.github.com" title="Leo_璇哥">Leo_璇哥</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2014-01-03T05:33:35.000Z" itemprop="datePublished">Jan 3 2014</time>
+    更新日期:<time datetime="2014-05-03T05:39:07.000Z" itemprop="dateModified">May 3 2014</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Epoll__u662F_u4F55_u65B9_u795E_u5723_uFF1F"><span class="toc-number">1.</span> <span class="toc-text">Epoll 是何方神圣？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#u5E38_u7528_u6A21_u578B_u7684_u7F3A_u70B9"><span class="toc-number">2.</span> <span class="toc-text">常用模型的缺点</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#PPC/TPC__u6A21_u578B"><span class="toc-number">2.1.</span> <span class="toc-text">PPC/TPC 模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#select__u6A21_u578B"><span class="toc-number">2.2.</span> <span class="toc-text">select 模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#poll__u6A21_u578B"><span class="toc-number">2.3.</span> <span class="toc-text">poll 模型</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Epoll__u7684_u63D0_u5347"><span class="toc-number">3.</span> <span class="toc-text">Epoll 的提升</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Epoll__u4E3A_u4EC0_u4E48_u9AD8_u6548"><span class="toc-number">4.</span> <span class="toc-text">Epoll 为什么高效</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Epoll__u5173_u952E_u6570_u636E_u7ED3_u6784"><span class="toc-number">5.</span> <span class="toc-text">Epoll 关键数据结构</span></a></li></ol>
+		</div>
+		
+		<h1 id="Epoll__u662F_u4F55_u65B9_u795E_u5723_uFF1F"><a href="#Epoll__u662F_u4F55_u65B9_u795E_u5723_uFF1F" class="headerlink" title="Epoll 是何方神圣？"></a>Epoll 是何方神圣？</h1><p>Epoll 可是当前在 Linux 下开发大规模并发网络程序的热门人选， Epoll 在 Linux2.6 内核中正式引入，和 select 相似，其实都 I/O 多路复用技术而已 ，并没有什么神秘的。<br>其实在 Linux 下设计并发网络程序，向来不缺少方法，比如典型的 Apache 模型（ Process Per Connection ，简称 PPC ）， TPC （ Thread Per Connection ）模型，以及 select 模型和 poll 模型，那为何还要再引入 Epoll 这个东东呢？那还是有得说说的 …</p>
+<h1 id="u5E38_u7528_u6A21_u578B_u7684_u7F3A_u70B9"><a href="#u5E38_u7528_u6A21_u578B_u7684_u7F3A_u70B9" class="headerlink" title="常用模型的缺点"></a>常用模型的缺点</h1><p>如果不摆出来其他模型的缺点，怎么能对比出 Epoll 的优点呢。</p>
+<h2 id="PPC/TPC__u6A21_u578B"><a href="#PPC/TPC__u6A21_u578B" class="headerlink" title="PPC/TPC 模型"></a>PPC/TPC 模型</h2><p>这两种模型思想类似，就是让每一个到来的连接一边自己做事去，别再来烦我 。只是 PPC 是为它开了一个进程，而 TPC 开了一个线程。可是别烦我是有代价的，它要时间和空间啊，连接多了之后，那么多的进程 / 线程切换，这开销就上来了；因此这类模型能接受的最大连接数都不会高，一般在几百个左右。</p>
+<h2 id="select__u6A21_u578B"><a href="#select__u6A21_u578B" class="headerlink" title="select 模型"></a>select 模型</h2><ol>
+<li>最大并发数限制，因为一个进程所打开的 FD （文件描述符）是有限制的，www.linuxidc.com 由 FD_SETSIZE 设置，默认值是 1024/2048 ，因此 Select 模型的最大并发数就被相应限制了。自己改改这个 FD_SETSIZE ？想法虽好，可是先看看下面吧 …</li>
+<li>效率问题， select 每次调用都会线性扫描全部的 FD 集合，这样效率就会呈现线性下降，把 FD_SETSIZE 改大的后果就是，大家都慢慢来，什么？都超时了？？！！</li>
+<li>内核 / 用户空间 内存拷贝问题，如何让内核把 FD 消息通知给用户空间呢？在这个问题上 select 采取了内存拷贝方法。</li>
+</ol>
+<h2 id="poll__u6A21_u578B"><a href="#poll__u6A21_u578B" class="headerlink" title="poll 模型"></a>poll 模型</h2><p>基本上效率和 select 是相同的， select 缺点的 2 和 3 它都没有改掉。</p>
+<h1 id="Epoll__u7684_u63D0_u5347"><a href="#Epoll__u7684_u63D0_u5347" class="headerlink" title="Epoll 的提升"></a>Epoll 的提升</h1><p>把其他模型逐个批判了一下，再来看看 Epoll 的改进之处吧，其实把 select 的缺点反过来那就是 Epoll 的优点了。</p>
+<ul>
+<li>Epoll 没有最大并发连接的限制，上限是最大可以打开文件的数目，这个数字一般远大于 2048, 一般来说这个数目和系统内存关系很大 ，具体数目可以 cat /proc/sys/fs/file-max 察看。</li>
+<li>效率提升， Epoll 最大的优点就在于它只管你“活跃”的连接 ，而跟连接总数无关，因此在实际的网络环境中， Epoll 的效率就会远远高于 select 和 poll 。</li>
+<li>内存拷贝， Epoll 在这点上使用了“共享内存 ”，这个内存拷贝也省略了。</li>
+</ul>
+<h1 id="Epoll__u4E3A_u4EC0_u4E48_u9AD8_u6548"><a href="#Epoll__u4E3A_u4EC0_u4E48_u9AD8_u6548" class="headerlink" title="Epoll 为什么高效"></a>Epoll 为什么高效</h1><p>Epoll 的高效和其数据结构的设计是密不可分的，这个下面就会提到。<br>首先回忆一下 select 模型，当有 I/O 事件到来时， select 通知应用程序有事件到了快去处理，而应用程序必须轮询所有的 FD 集合，测试每个 FD 是否有事件发生，并处理事件；代码像下面这样：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int res = select(maxfd+1, &#38;readfds, NULL, NULL, 120);&#10;if (res &#62; 0)&#10;&#123;&#10;    for (int i = 0; i &#60; MAX_CONNECTION; i++)&#10;    &#123;&#10;        if (FD_ISSET(allConnection, &#38;readfds))&#10;        &#123;&#10;            handleEvent(allConnection);&#10;        &#125;&#10;    &#125;&#10;&#125;&#10;// if(res == 0) handle timeout, res &#60; 0 handle error</span><br></pre></td></tr></table></figure></p>
+<p>Epoll 不仅会告诉应用程序有I/0 事件到来，还会告诉应用程序相关的信息，这些信息是应用程序填充的，因此根据这些信息应用程序就能直接定位到事件，而不必遍历整个FD 集合。<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int res = epoll_wait(epfd, events, 20, 120);&#10;for (int i = 0; i &#60; res;i++)&#10;&#123;&#10;    handleEvent(events[n]);&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="Epoll__u5173_u952E_u6570_u636E_u7ED3_u6784"><a href="#Epoll__u5173_u952E_u6570_u636E_u7ED3_u6784" class="headerlink" title="Epoll 关键数据结构"></a>Epoll 关键数据结构</h1><p>前面提到 Epoll 速度快和其数据结构密不可分，其关键数据结构就是：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">struct epoll_event &#123;&#10;    __uint32_t events;      // Epoll events&#10;    epoll_data_t data;      // User data variable&#10;&#125;;&#10;typedef union epoll_data &#123;&#10;    void *ptr;&#10;    int fd;&#10;    __uint32_t u32;&#10;    __uint64_t u64;&#10;&#125; epoll_data_t;</span><br></pre></td></tr></table></figure></p>
+<p>可见 epoll_data 是一个 union 结构体 , 借助于它应用程序可以保存很多类型的信息 :fd 、指针等等。有了它，应用程序就可以直接定位目标了。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/面试/">面试</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  
+<div class="jiathis_style">
+    <span class="jiathis_txt">分享到：</span>
+    <a class="jiathis_button_tsina">新浪微博</a>
+    <a class="jiathis_button_weixin">微信</a>
+    <a class="jiathis_button_twitter">Twitter</a>
+    <a class="jiathis_button_evernote">EverNote</a>
+    <a href="http://www.jiathis.com/share?uid=1501277" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+</div>
+<script type="text/javascript" >
+    var jiathis_config={
+    data_track_clickback:true,
+    sm:"copy,renren,cqq",
+    pic:"",
+    summary:"",
+    
+  </script> 
+<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=
+" charset="utf-8"></script>      
+
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2014/01/05/C++/c++的虚函数的实现机制/" title="C++的虚函数的实现机制">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  C++的虚函数的实现机制</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2013/12/28/随笔生活/ruhezaibaozhengshuimiandeqingkaungxia/"  title="如何在保证睡眠的情况下把各种事情做好">
+ <strong>NEXT:</strong><br/> 
+ <span>如何在保证睡眠的情况下把各种事情做好
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Epoll__u662F_u4F55_u65B9_u795E_u5723_uFF1F"><span class="toc-number">1.</span> <span class="toc-text">Epoll 是何方神圣？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#u5E38_u7528_u6A21_u578B_u7684_u7F3A_u70B9"><span class="toc-number">2.</span> <span class="toc-text">常用模型的缺点</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#PPC/TPC__u6A21_u578B"><span class="toc-number">2.1.</span> <span class="toc-text">PPC/TPC 模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#select__u6A21_u578B"><span class="toc-number">2.2.</span> <span class="toc-text">select 模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#poll__u6A21_u578B"><span class="toc-number">2.3.</span> <span class="toc-text">poll 模型</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Epoll__u7684_u63D0_u5347"><span class="toc-number">3.</span> <span class="toc-text">Epoll 的提升</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Epoll__u4E3A_u4EC0_u4E48_u9AD8_u6548"><span class="toc-number">4.</span> <span class="toc-text">Epoll 为什么高效</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Epoll__u5173_u952E_u6570_u636E_u7ED3_u6784"><span class="toc-number">5.</span> <span class="toc-text">Epoll 关键数据结构</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/C/" title="C++">C++<sup>4</sup></a></li>
+		
+			<li><a href="/categories/Github/" title="Github">Github<sup>3</sup></a></li>
+		
+			<li><a href="/categories/Java/" title="Java">Java<sup>11</sup></a></li>
+		
+			<li><a href="/categories/Linux/" title="Linux">Linux<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Lisp/" title="Lisp">Lisp<sup>0</sup></a></li>
+		
+			<li><a href="/categories/Python/" title="Python">Python<sup>0</sup></a></li>
+		
+			<li><a href="/categories/Spark/" title="Spark">Spark<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Web/" title="Web">Web<sup>1</sup></a></li>
+		
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>1</sup></a></li>
+		
+			<li><a href="/categories/数据结构/" title="数据结构">数据结构<sup>4</sup></a></li>
+		
+			<li><a href="/categories/算法/" title="算法">算法<sup>4</sup></a></li>
+		
+			<li><a href="/categories/职业生涯/" title="职业生涯">职业生涯<sup>7</sup></a></li>
+		
+			<li><a href="/categories/随笔生活/" title="随笔生活">随笔生活<sup>4</sup></a></li>
+		
+			<li><a href="/categories/面试/" title="面试">面试<sup>4</sup></a></li>
+		
+			<li><a href="/categories/项目总结/" title="项目总结">项目总结<sup>0</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+      <li><a href="http://yangjian.me" target="_blank" title="YangJian">Alimon's Blog</a></li>
+      <li><a href="http://zespia.tw/hexo" target="_blank" title="Hexo">Hexo</a></li>
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="http://weibo.com/lsx1993" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  
+  <div class="archiveslist">
+    <p class="asidetitle"><a href="/archives">归档</a></p>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">九月 2014</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">五月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">四月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/03/">三月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">二月 2014</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/10/">十月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/09/">九月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/02/">二月 2013</a><span class="archive-list-count">2</span></li></ul>
+  </div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello,This is my blog. <br/>
+			I will share my learing experience here.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/lsx1993" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/lisuxuan1993" target="_blank" title="github"></a>
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2016 
+		
+		<a href="http://lisuxuan1993.github.com" target="_blank" title="Leo_璇哥">Leo_璇哥</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"null"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'null', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+  </body>
+</html>

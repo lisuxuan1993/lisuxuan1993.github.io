@@ -1,0 +1,414 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>排序算法总结 | Leo&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="Leo_璇哥">
+    
+    <meta name="description" content="排序算法总结
+
+插入排序n2          快速排序nlog2n 不稳   希尔排序 n1.3 不稳选择排序n2不稳   堆排序nlog2n 不稳     基数排序O(d(n+1))冒泡排序n2          归并排序nlog2n
+冒泡排序
+
+1void BubbleSort(int a[]">
+    
+    
+    
+    
+    <link rel="alternative" href="http://weibo.com/lsx1993" title="Leo&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/author.jpg" alt="Leo&#39;s Blog" title="Leo&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Leo&#39;s Blog">Leo&#39;s Blog</a></h1>
+				<h2 class="blog-motto">华南理工大学2010级计算机全英创新班，2013级研究生。Java程序员，研究PaaS平台。积极向上，追求卓越。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">博客主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/page/lab">实验室</a></li>
+					
+						<li><a href="/page">关于</a></li>
+					
+					<li>
+					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/02/19/算法/排序算法总结/" title="排序算法总结" itemprop="url">排序算法总结</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://lisuxuan1993.github.com" title="Leo_璇哥">Leo_璇哥</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2014-02-18T20:07:43.000Z" itemprop="datePublished">Feb 19 2014</time>
+    更新日期:<time datetime="2015-03-15T12:41:43.000Z" itemprop="dateModified">Mar 15 2015</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+		</div>
+		
+		<p><strong>排序算法总结</strong></p>
+<hr>
+<p>插入排序n2          快速排序nlog2n 不稳   希尔排序 n1.3 不稳<br>选择排序n2不稳   堆排序nlog2n 不稳     基数排序O(d(n+1))<br>冒泡排序n2          归并排序nlog2n</p>
+<p><strong>冒泡排序</strong></p>
+<hr>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">void BubbleSort(int a[],int n)&#10;&#123;&#10; int i,j;&#10; for(i=0;i&#60;n;i++)&#10;  for(j=1;j&#60;n-i;j++)&#10;   if(a[j-1]&#62;a[j])&#10;    Swap(a[j-1],a[j]);&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>快速排序</strong></p>
+<hr>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#include&#60;cstdio&#62;&#10;#include&#60;ctime&#62;&#10;#include&#60;cstdlib&#62;&#10;void Swap(int&#38; a,int&#38; b)&#123;if(a!=b)&#123;a^=b;b^=a;a^=b&#10;int Partition(int *A,int p,int r)&#10;&#123;&#10; int x,i;&#10; x=A[r];&#10; i=p-1;&#10; for(int j=p;j&#60;=r-1;++j)&#10; &#123;&#10;  if(A[j]&#60;=x)&#10;   Swap(A[++i],A[j]);&#10;  //x&#20026;&#26368;&#21518;&#19968;&#20010;&#25968;&#65292;&#23567;&#20110;x&#65292;&#19981;&#21160;&#65288;&#20132;&#25442;&#65289;&#26412;&#36523;&#65288;&#26410;&#26377;&#22823;&#20110;x&#30340;&#65289;&#10;  //&#24050;&#26377;&#22823;&#20110;x&#30340;&#26102;&#65292;&#20877;&#36935;&#23567;&#20110;x&#65306;&#20132;&#25442;&#10; &#125;&#10; Swap(A[++i],A[r]);&#10; return i;&#10;&#125;&#10;void QuickSort(int *A,int p,int r)&#10;&#123;&#10; if(p&#60;r)&#10; &#123;&#10;  int q = Partition(A,p,r);&#10;  QuickSort(A,p,q-1);&#10;  QuickSort(A,q+1,r);&#10; &#125;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>堆排序</strong></p>
+<hr>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#include&#60;cstdio&#62;&#10;#include&#60;algorithm&#62;&#10;using namespace std;&#10;//&#12298;&#31639;&#27861;&#23548;&#35770;&#12299;&#22534;&#25490;&#24207;&#37319;&#29992;&#26368;&#22823;&#22534;&#65292;&#26368;&#23567;&#22534;&#36890;&#24120;&#29992;&#20110;&#26500;&#36896;&#26368;&#23567;&#20248;&#20808;&#38431;&#21015;&#10;inline int Parent(int i)&#123;return i&#62;&#62;1;&#125;&#10;inline int Left(int i)&#123;return i&#60;&#60;1;&#125;&#10;inline int Right(int i)&#123;return (i&#60;&#60;1) | 1; &#125;&#10;inline void Swap(int &#38;a,int &#38;b)&#123;if(a!=b) &#123;a^=b;b^=a;a^=b;&#125;&#125;&#10;//&#20445;&#25345;&#22534;&#30340;&#24615;&#36136;&#10;void MAXHeap(int *A,int heap_size,int i)&#10;&#123;&#10; int l,r,max;&#10; l = left(i);&#10; r = Right(i);&#10; if(l&#60;=heap_size &#38;&#38; A[l]&#62;A[j])&#10;  max = l;&#10; else max = i;&#10; if(r&#60;=heap_size &#38;&#38; A[r]&#62;A[max])&#10;  max = r;&#10; if(max!=i)&#10; &#123;&#10;  Swap(A[i],A[max]);//&#23601;&#22320;&#25490;&#24207;&#10;  MAXHeap(A,heap_size,max);&#10; &#125;&#10;&#125;&#10;&#24314;&#22534;&#10;void BuildMAXHeap(int* A,int heap_size)&#10;&#123;&#10; for(int i = heap_size&#62;&#62;1;i&#62;=1;--i)&#10;  MAXHeap(A,heap_size,i);&#10;&#125;&#10;&#25490;&#24207;&#10;void HeapSort(int* A,int heap_size)&#10;&#123;&#10; BuildMAXHeap(A,heap_size);&#10; int len = heap_size;&#10; for(int i=heap_size;i&#62;=2;--j)&#10; &#123;&#10;  Swap(A[1],A[i]);&#10;  --len;&#10;  MAXHeap(A,len,1);&#10; &#125;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>归并排序</strong></p>
+<hr>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//&#24402;&#24182;&#25490;&#24207; O(nlog2n) &#38468;&#21152;&#31354;&#38388;O(n)&#10;#include&#60;stdio.h&#62;&#10;#define true 1&#10;#define false 0&#10;void mergearray(int a[],int first,int mid,int last,int temp[])&#10;&#123;&#10; int i = first,j = mid+1;&#10; int m = mid,n = last;&#10; int k = 0;&#10; while(i&#60;=m &#38;&#38; j&#60;=n)&#10; &#123;&#10;  if(a[i]&#60;a[j])&#10;   temp[k++] = a[i++];&#10;  else temp[k++] = a[j++];&#10; &#125;&#10; while(i&#60;m)&#10;  temp[k++] = a[i++];&#10; while(j&#60;n)&#10;  temp[k++] = a[j++];&#10; for(i=0;i&#60;k;i++)&#10;  a[first] = temp[i];&#10;&#125;&#10;void mergesort(int a[],int first,int last,int temp[])&#10;&#123;&#10; if(first&#60;last)&#10; &#123;&#10;  int mid = (first+last)/2;&#10;  mergesort(a,first,mid,temp);&#10;  mergesort(a,mid+1,last,temp);&#10;  mergearray(a,first,mid,last,temp);&#10; &#125;&#10;&#125;&#10;int MergeSort(int a[],int n)&#10;&#123;&#10; int* p = (int*)malloc(n*sizeof(int));//&#20849;&#29992;&#20020;&#26102;&#25968;&#32452;&#10; if(p == NLL)//&#20869;&#23384;&#20998;&#37197;&#19981;&#25104;&#21151;&#65292;&#30003;&#35831;&#31354;&#38388;&#26159;&#21542;&#25104;&#21151;&#12290;&#10;  return false;&#10; mergesort(a,0,n-1,p&#10; free(p);&#10; return true;&#10;&#125;&#10;int main()&#10;&#123;&#10; int i;&#10; int a[] = &#123;23,4,9,34,12,3,89,7,80&#125;;&#10; MergeSort(a,q);&#10; for(i=0;i&#60;q;i++)&#10;  printf(&#34;%d&#34;,a[i]);&#10;  printf(&#34;\n&#34;);&#10; return 0;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>希尔排序</strong></p>
+<hr>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#24076;&#23572;&#25490;&#24207;&#65306;&#25554;&#20837;&#25490;&#24207;&#30340;&#25913;&#36827;&#12290;&#36882;&#20943;&#22686;&#37327;&#25490;&#24207;&#31639;&#27861;&#12290;&#10;&#27493;&#38271;&#20026;1&#26102;&#23601;&#26159;&#25554;&#20837;&#25490;&#24207;&#12290;&#10;#include&#60;stdio.h&#62;&#10;void ShellSort(int a[],int n)&#10;&#123;&#10; int i,j,k,temp,gap;&#10; int gaps[]=&#123;1,5,13,43,113,297,815,1989,4711,11969,27901,84801,213331&#125;;&#10; for(k=0;gap[k]&#60;n;k++)&#10; while(--k&#62;=0)&#10; &#123;&#10;  gap = gaps[k];&#10;  for(i=gap;i&#60;n;i++)&#10;  &#123;&#10;   j=i-gap;&#10;   temp=a[i];&#10;   while((j&#62;=0)&#38;&#38;(a[j]&#62;temp))&#10;   &#123;&#10;    a[j+gap] = a[j];&#10;    j=j-gap;&#10;   &#125;&#10;   a[j+gap] = temp;&#10;  &#125;&#10; &#125;&#10;&#125;&#10;&#25110;&#32773;&#65306;&#10;void shellSort(int* data,size_t size)&#10;&#123;&#10; for(int gap = size/2;gap&#62;0;gap/=2)&#10;  for(int i=gap;i&#60;size;++i)&#10;  &#123;&#10;   int key = data[i];&#10;   int j=0;&#10;   for(j=i-gap;j&#62;=0&#38;&#38;data[j]&#62;key;j-=gap)&#10;   &#123;&#10;    data[j+gap] = data[j];&#10;   &#125;&#10;   data[j+gap] = key;&#10;  &#125;&#10;&#125;</span><br></pre></td></tr></table></figure>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/算法/">算法</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  
+<div class="jiathis_style">
+    <span class="jiathis_txt">分享到：</span>
+    <a class="jiathis_button_tsina">新浪微博</a>
+    <a class="jiathis_button_weixin">微信</a>
+    <a class="jiathis_button_twitter">Twitter</a>
+    <a class="jiathis_button_evernote">EverNote</a>
+    <a href="http://www.jiathis.com/share?uid=1501277" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+</div>
+<script type="text/javascript" >
+    var jiathis_config={
+    data_track_clickback:true,
+    sm:"copy,renren,cqq",
+    pic:"",
+    summary:"",
+    
+  </script> 
+<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=
+" charset="utf-8"></script>      
+
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2014/02/28/职业生涯/技术学习清单/" title="《技术学习路线清单》">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  《技术学习路线清单》</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2014/02/08/职业生涯/《番茄工作法》/"  title="《番茄工作法》">
+ <strong>NEXT:</strong><br/> 
+ <span>《番茄工作法》
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/C/" title="C++">C++<sup>4</sup></a></li>
+		
+			<li><a href="/categories/Github/" title="Github">Github<sup>3</sup></a></li>
+		
+			<li><a href="/categories/Java/" title="Java">Java<sup>11</sup></a></li>
+		
+			<li><a href="/categories/Linux/" title="Linux">Linux<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Lisp/" title="Lisp">Lisp<sup>0</sup></a></li>
+		
+			<li><a href="/categories/Python/" title="Python">Python<sup>0</sup></a></li>
+		
+			<li><a href="/categories/Spark/" title="Spark">Spark<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Web/" title="Web">Web<sup>1</sup></a></li>
+		
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>1</sup></a></li>
+		
+			<li><a href="/categories/数据结构/" title="数据结构">数据结构<sup>4</sup></a></li>
+		
+			<li><a href="/categories/算法/" title="算法">算法<sup>4</sup></a></li>
+		
+			<li><a href="/categories/职业生涯/" title="职业生涯">职业生涯<sup>7</sup></a></li>
+		
+			<li><a href="/categories/随笔生活/" title="随笔生活">随笔生活<sup>4</sup></a></li>
+		
+			<li><a href="/categories/面试/" title="面试">面试<sup>4</sup></a></li>
+		
+			<li><a href="/categories/项目总结/" title="项目总结">项目总结<sup>0</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+      <li><a href="http://yangjian.me" target="_blank" title="YangJian">Alimon's Blog</a></li>
+      <li><a href="http://zespia.tw/hexo" target="_blank" title="Hexo">Hexo</a></li>
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="http://weibo.com/lsx1993" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  
+  <div class="archiveslist">
+    <p class="asidetitle"><a href="/archives">归档</a></p>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">九月 2014</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">五月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">四月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/03/">三月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">二月 2014</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/10/">十月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/09/">九月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/02/">二月 2013</a><span class="archive-list-count">2</span></li></ul>
+  </div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello,This is my blog. <br/>
+			I will share my learing experience here.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/lsx1993" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/lisuxuan1993" target="_blank" title="github"></a>
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2016 
+		
+		<a href="http://lisuxuan1993.github.com" target="_blank" title="Leo_璇哥">Leo_璇哥</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"null"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'null', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+  </body>
+</html>

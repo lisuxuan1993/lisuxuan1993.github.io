@@ -1,0 +1,411 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>POJ:2785——4 values whose Sum is 0 | Leo&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="Leo_璇哥">
+    
+    <meta name="description" content="4 Values whose Sum is 0
+Time Limit: 15000MS Memory Limit: 228000K 
+Total Submissions: 4991 Accepted: 1171 
+Case Time Limit: 5000MS
+DescriptionThe SUM ">
+    
+    
+    
+    
+    <link rel="alternative" href="http://weibo.com/lsx1993" title="Leo&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/author.jpg" alt="Leo&#39;s Blog" title="Leo&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Leo&#39;s Blog">Leo&#39;s Blog</a></h1>
+				<h2 class="blog-motto">华南理工大学2010级计算机全英创新班，2013级研究生。Java程序员，研究PaaS平台。积极向上，追求卓越。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">博客主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/page/lab">实验室</a></li>
+					
+						<li><a href="/page">关于</a></li>
+					
+					<li>
+					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2013/08/01/算法/poj2785——4-values-whose-sum-is-0/" title="POJ:2785——4 values whose Sum is 0" itemprop="url">POJ:2785——4 values whose Sum is 0</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://lisuxuan1993.github.com" title="Leo_璇哥">Leo_璇哥</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2013-08-01T15:16:01.000Z" itemprop="datePublished">Aug 1 2013</time>
+    更新日期:<time datetime="2014-09-24T03:45:43.000Z" itemprop="dateModified">Sep 24 2014</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+		</div>
+		
+		<p>4 Values whose Sum is 0</p>
+<p>Time Limit: 15000MS Memory Limit: 228000K </p>
+<p>Total Submissions: 4991 Accepted: 1171 </p>
+<p>Case Time Limit: 5000MS</p>
+<p>Description<br>The SUM problem can be formulated as follows: given four lists A, B, C, D of integer values, compute how many quadruplet (a, b, c, d ) ∈ A x B x C x D are such that a + b + c + d = 0 . In the following, we assume that all lists have the same size n . </p>
+<p>Input<br>The first line of the input file contains the size of the lists n (this value can be as large as 4000). We then have n lines containing four integer values (with absolute value as large as 228 ) that belong respectively to A, B, C and D . </p>
+<p>Output<br>For each input file, your program has to write the number quadruplets whose sum is zero. </p>
+<p>Sample Input<br>6<br>-45 22 42 -16<br>-41 -27 56 30<br>-36 53 -37 77<br>-36 30 -75 -46<br>26 -38 -10 62<br>-32 -54 -6 45<br>Sample Output<br>5</p>
+<p>Hint<br>Sample Explanation: Indeed, the sum of the five following quadruplets is zero: (-45, -27, 42, 30), (26, 30, -10, -46), (-32, 22, 56, -46),(-32, 30, -75, 77), (-32, -54, 56, 30). </p>
+<p>Source<br>Southwestern Europe 2005</p>
+<p>这道题如果直接背包的话最坏情况仍然是O(n^4)的,所以必须想办法把复杂度降下来.<br>分为左右两半分别枚举,则显然各枚举两列的话复杂度会降得最多.<br>考虑先把左半边的情况全存下来,然后查找右半边每个和的负数在左边的个数.<br>如果直接枚举查找,则复杂度仍然为O(n^4).<br>所以可以先把左边的结果排序,然后对右面的每对和做二分查找其负值.<br>这样的话,复杂度为O(n^2 log n),符合本题要求</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span><span class="string">&lt;stdio.h&gt;</span>  </span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span><span class="string">&lt;stdlib.h&gt;</span>  </span></span><br><span class="line">  </span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> MAXN <span class="number">4001</span>  </span></span><br><span class="line">  </span><br><span class="line"><span class="keyword">int</span> apb[MAXN*MAXN],cpd[MAXN*MAXN];  </span><br><span class="line"><span class="keyword">int</span> a[MAXN],b[MAXN],c[MAXN],d[MAXN];  </span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">cmp</span><span class="params">(<span class="keyword">const</span> <span class="keyword">void</span> *a,<span class="keyword">const</span> <span class="keyword">void</span> *b)</span>  </span><br><span class="line"></span>&#123;  </span><br><span class="line">    <span class="keyword">return</span> (*(<span class="keyword">int</span> *)a - *(<span class="keyword">int</span> *)b);  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">bin_search</span><span class="params">(<span class="keyword">int</span> * a, <span class="keyword">int</span> key,<span class="keyword">int</span> n)</span></span>;  </span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span>  </span><br><span class="line"></span>&#123;  </span><br><span class="line">    <span class="keyword">int</span> n,i,j,ans,t;  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">while</span>(~<span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;n))  </span><br><span class="line">    &#123;  </span><br><span class="line">        <span class="keyword">for</span>( i = <span class="number">0</span>;i&lt;n;++i)  </span><br><span class="line">            <span class="built_in">scanf</span>(<span class="string">"%d%d%d%d"</span>,&amp;a[i],&amp;b[i],&amp;c[i],&amp;d[i]);  </span><br><span class="line">        <span class="keyword">for</span>(i = <span class="number">0</span>;i &lt; n;++i )  </span><br><span class="line">            <span class="keyword">for</span>(j = <span class="number">0</span>;j &lt; n;++j )  </span><br><span class="line">            &#123;  </span><br><span class="line">                apb[i*n+j] = a[i] + b[j];  </span><br><span class="line">                cpd[i*n+j] = c[i] + d[j];  </span><br><span class="line">            &#125;  </span><br><span class="line">              </span><br><span class="line">            qsort(apb,n*n,<span class="keyword">sizeof</span>(<span class="keyword">int</span>),cmp);  </span><br><span class="line">  </span><br><span class="line">            t=n*n;  </span><br><span class="line">            <span class="keyword">for</span>(ans = i = <span class="number">0</span> ; i&lt;t;++i)  </span><br><span class="line">                ans += bin_search(apb,-cpd[i],t);  </span><br><span class="line">  </span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"%d\n"</span>,ans);  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    system(<span class="string">"pause"</span>);  </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">bin_search</span><span class="params">(<span class="keyword">int</span> *a,<span class="keyword">int</span> key,<span class="keyword">int</span> n)</span>  </span><br><span class="line"></span>&#123;  </span><br><span class="line">    <span class="keyword">int</span> cnt,up,low,mid,t;  </span><br><span class="line">    cnt = <span class="number">0</span>;  </span><br><span class="line">    up = n-<span class="number">1</span>;  </span><br><span class="line">    low = <span class="number">0</span>;  </span><br><span class="line">    <span class="keyword">while</span>(low&lt;=up)  </span><br><span class="line">    &#123;  </span><br><span class="line">        mid = (up + low)&gt;&gt;<span class="number">1</span>;  </span><br><span class="line">        <span class="keyword">if</span>(key == a[mid])  </span><br><span class="line">            <span class="keyword">break</span>;  </span><br><span class="line">        <span class="keyword">if</span>(key &lt; a[mid])  </span><br><span class="line">            up = mid - <span class="number">1</span>;  </span><br><span class="line">        <span class="keyword">else</span>  </span><br><span class="line">            low = mid + <span class="number">1</span>;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">if</span>(key == a[mid])  </span><br><span class="line">    &#123;  </span><br><span class="line">        ++cnt;  </span><br><span class="line">        t = mid;  </span><br><span class="line">        <span class="keyword">while</span>(t&gt;<span class="number">0</span> &amp;&amp; key == a[--t])  </span><br><span class="line">            ++cnt;  </span><br><span class="line">        <span class="keyword">while</span> (mid &lt; n-<span class="number">1</span> &amp;&amp; key == a[++mid])   </span><br><span class="line">            ++cnt;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">return</span> cnt;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/POJ/">POJ</a><a href="/tags/算法/">算法</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/算法/">算法</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  
+<div class="jiathis_style">
+    <span class="jiathis_txt">分享到：</span>
+    <a class="jiathis_button_tsina">新浪微博</a>
+    <a class="jiathis_button_weixin">微信</a>
+    <a class="jiathis_button_twitter">Twitter</a>
+    <a class="jiathis_button_evernote">EverNote</a>
+    <a href="http://www.jiathis.com/share?uid=1501277" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+</div>
+<script type="text/javascript" >
+    var jiathis_config={
+    data_track_clickback:true,
+    sm:"copy,renren,cqq",
+    pic:"",
+    summary:"",
+    
+  </script> 
+<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=
+" charset="utf-8"></script>      
+
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2013/08/02/随笔生活/因为我真正开始行动/" title="因为我真正开始行动">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  因为我真正开始行动</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2013/06/25/Java/spring实战第3版/"  title="《Spring实战》第3版">
+ <strong>NEXT:</strong><br/> 
+ <span>《Spring实战》第3版
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/C/" title="C++">C++<sup>4</sup></a></li>
+		
+			<li><a href="/categories/Github/" title="Github">Github<sup>3</sup></a></li>
+		
+			<li><a href="/categories/Java/" title="Java">Java<sup>11</sup></a></li>
+		
+			<li><a href="/categories/Linux/" title="Linux">Linux<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Lisp/" title="Lisp">Lisp<sup>0</sup></a></li>
+		
+			<li><a href="/categories/Python/" title="Python">Python<sup>0</sup></a></li>
+		
+			<li><a href="/categories/Spark/" title="Spark">Spark<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Web/" title="Web">Web<sup>1</sup></a></li>
+		
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>1</sup></a></li>
+		
+			<li><a href="/categories/数据结构/" title="数据结构">数据结构<sup>4</sup></a></li>
+		
+			<li><a href="/categories/算法/" title="算法">算法<sup>4</sup></a></li>
+		
+			<li><a href="/categories/职业生涯/" title="职业生涯">职业生涯<sup>7</sup></a></li>
+		
+			<li><a href="/categories/随笔生活/" title="随笔生活">随笔生活<sup>4</sup></a></li>
+		
+			<li><a href="/categories/面试/" title="面试">面试<sup>4</sup></a></li>
+		
+			<li><a href="/categories/项目总结/" title="项目总结">项目总结<sup>0</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+      <li><a href="http://yangjian.me" target="_blank" title="YangJian">Alimon's Blog</a></li>
+      <li><a href="http://zespia.tw/hexo" target="_blank" title="Hexo">Hexo</a></li>
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="http://weibo.com/lsx1993" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  
+  <div class="archiveslist">
+    <p class="asidetitle"><a href="/archives">归档</a></p>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">九月 2014</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">五月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">四月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/03/">三月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">二月 2014</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/10/">十月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/09/">九月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/02/">二月 2013</a><span class="archive-list-count">2</span></li></ul>
+  </div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello,This is my blog. <br/>
+			I will share my learing experience here.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/lsx1993" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/lisuxuan1993" target="_blank" title="github"></a>
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2016 
+		
+		<a href="http://lisuxuan1993.github.com" target="_blank" title="Leo_璇哥">Leo_璇哥</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"null"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'null', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+  </body>
+</html>

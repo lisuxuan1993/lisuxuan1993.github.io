@@ -1,0 +1,507 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>《深入理解Java虚拟机》 | Leo&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="Leo_璇哥">
+    
+    <meta name="description" content="《深入理解Java虚拟机》学习虚拟机中各种自动运作的技术特性的原理（自己思考程序这样写好不好的基础和前提：理解认清这些技术的运作本质）
+1.内存管理 2.Class文件结构与执行引擎 3.编译器优化 4. 多线程并发
+安全的内存管理和访问机制，避免了绝大部分的内存泄露和指针越界问题。实现了热点代码检">
+    
+    
+    
+    
+    <link rel="alternative" href="http://weibo.com/lsx1993" title="Leo&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/author.jpg" alt="Leo&#39;s Blog" title="Leo&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Leo&#39;s Blog">Leo&#39;s Blog</a></h1>
+				<h2 class="blog-motto">华南理工大学2010级计算机全英创新班，2013级研究生。Java程序员，研究PaaS平台。积极向上，追求卓越。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">博客主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/page/lab">实验室</a></li>
+					
+						<li><a href="/page">关于</a></li>
+					
+					<li>
+					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/10/25/Java/《深入理解Java虚拟机》/" title="《深入理解Java虚拟机》" itemprop="url">《深入理解Java虚拟机》</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://lisuxuan1993.github.com" title="Leo_璇哥">Leo_璇哥</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2014-10-25T09:18:39.000Z" itemprop="datePublished">Oct 25 2014</time>
+    更新日期:<time datetime="2014-10-25T01:22:27.000Z" itemprop="dateModified">Oct 25 2014</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#u300A_u6DF1_u5165_u7406_u89E3Java_u865A_u62DF_u673A_u300B"><span class="toc-number">1.</span> <span class="toc-text">《深入理解Java虚拟机》</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#u7B2C_u4E8C_u90E8_u5206__u81EA_u52A8_u5185_u5B58_u7BA1_u7406_u673A_u5236"><span class="toc-number">2.</span> <span class="toc-text">第二部分 自动内存管理机制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#u865A_u62DF_u673A_u5185_u5B58_u533A_u57DF_u5212_u5206_u539F_u7406"><span class="toc-number">2.1.</span> <span class="toc-text">虚拟机内存区域划分原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2__u8FD0_u884C_u65F6_u6570_u636E_u533A_u57DF"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 运行时数据区域</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-1__u7A0B_u5E8F_u8BA1_u6570_u5668_Program_Counter_Register__u8F83_u5C0F_u7684_u5185_u5B58_u7A7A_u95F4_u3002"><span class="toc-number">2.2.1.</span> <span class="toc-text">2.2.1 程序计数器 Program Counter Register 较小的内存空间。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-2_Java_u865A_u62DF_u673A_u6808__uFF08_u6808_u5E27_u662F_u65B9_u6CD5_u8FD0_u884C_u671F_u7684_u57FA_u7840_u6570_u636E_u7ED3_u6784_uFF09"><span class="toc-number">2.2.2.</span> <span class="toc-text">2.2.2 Java虚拟机栈  （栈帧是方法运行期的基础数据结构）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-3__u672C_u5730_u65B9_u6CD5_u6808"><span class="toc-number">2.2.3.</span> <span class="toc-text">2.2.3 本地方法栈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-4_Java_u5806"><span class="toc-number">2.2.4.</span> <span class="toc-text">2.2.4 Java堆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-5__u65B9_u6CD5_u533A"><span class="toc-number">2.2.5.</span> <span class="toc-text">2.2.5 方法区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-6__u8FD0_u884C_u65F6_u5E38_u91CF_u6C60"><span class="toc-number">2.2.6.</span> <span class="toc-text">2.2.6 运行时常量池</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-7__u76F4_u63A5_u5185_u5B58"><span class="toc-number">2.2.7.</span> <span class="toc-text">2.2.7 直接内存</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3__u5BF9_u8C61_u8BBF_u95EE"><span class="toc-number">2.3.</span> <span class="toc-text">2.3 对象访问</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#JVM_u4E2D_u5806_u5185_u5B58_u7684_u5206_u7C7B"><span class="toc-number">2.3.1.</span> <span class="toc-text">JVM中堆内存的分类</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u5185_u5B58_u6EA2_u51FA_u5F02_u5E38_u7684_u539F_u56E0"><span class="toc-number">2.4.</span> <span class="toc-text">内存溢出异常的原因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u81EA_u5DF1_u9879_u76EE_u4E2D_u9047_u5230_u7684_u5185_u5B58_u6EA2_u51FA_u65B9_u9762_u7684_u95EE_u9898"><span class="toc-number">2.5.</span> <span class="toc-text">自己项目中遇到的内存溢出方面的问题</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#u5783_u573E_u6536_u96C6_u7B97_u6CD5_uFF0C_u5783_u573E_u6536_u96C6_u5668_u7684_u7279_u70B9_u548C_u5DE5_u4F5C_u539F_u7406_uFF0C_u5185_u5B58_u52A8_u6001_u5206_u914D_u4E0E_u56DE_u6536_u7B56_u7565"><span class="toc-number">3.</span> <span class="toc-text">垃圾收集算法，垃圾收集器的特点和工作原理，内存动态分配与回收策略</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2__u5BF9_u8C61_u5DF2_u6B7B_u5417_uFF1F"><span class="toc-number">3.1.</span> <span class="toc-text">3.2 对象已死吗？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3__u5783_u573E_u6536_u96C6_u7B97_u6CD5"><span class="toc-number">3.2.</span> <span class="toc-text">3.3 垃圾收集算法</span></a></li></ol></li></ol>
+		</div>
+		
+		<h1 id="u300A_u6DF1_u5165_u7406_u89E3Java_u865A_u62DF_u673A_u300B"><a href="#u300A_u6DF1_u5165_u7406_u89E3Java_u865A_u62DF_u673A_u300B" class="headerlink" title="《深入理解Java虚拟机》"></a>《深入理解Java虚拟机》</h1><p>学习虚拟机中各种自动运作的技术特性的原理（自己思考程序这样写好不好的基础和前提：理解认清这些技术的运作本质）</p>
+<p>1.内存管理 2.Class文件结构与执行引擎 3.编译器优化 4. 多线程并发</p>
+<p>安全的内存管理和访问机制，避免了绝大部分的内存泄露和指针越界问题。<br>实现了热点代码检测和运行时编译及优化。</p>
+<p>JDK=Java语言+Java虚拟机+Java API类库。（支持Java程序开发的最小环境）<br>JRE=JavaSE API子集 + Java虚拟机。（JRE是支持Java程序运行的标准环境）</p>
+<p>Java技术的未来<br>模块化，混合语言，多核并行（并行编程领域），进一步丰富语法，进一步丰富语法，64位虚拟机。</p>
+<p>JDK1.5语法扩充<br>自动装箱，泛型，动态注解，枚举，可变长参数，遍历循环等语法特性。<br>Lambda表达式：函数式编程。（面向函数方式的编程可能会成为主流）</p>
+<p>每个JVM都有两种机制，<br>一个是装载具有合适名称的类(类或是接口)，叫做类装载子系统；<br>另外的一个负责执行包含在已装载的类或接口中的指令，叫做运行引擎。<br>每个JVM又包括方法区、堆、Java 栈、程序计数器和本地方法栈这五个部分。</p>
+<h1 id="u7B2C_u4E8C_u90E8_u5206__u81EA_u52A8_u5185_u5B58_u7BA1_u7406_u673A_u5236"><a href="#u7B2C_u4E8C_u90E8_u5206__u81EA_u52A8_u5185_u5B58_u7BA1_u7406_u673A_u5236" class="headerlink" title="第二部分 自动内存管理机制"></a>第二部分 自动内存管理机制</h1><h2 id="u865A_u62DF_u673A_u5185_u5B58_u533A_u57DF_u5212_u5206_u539F_u7406"><a href="#u865A_u62DF_u673A_u5185_u5B58_u533A_u57DF_u5212_u5206_u539F_u7406" class="headerlink" title="虚拟机内存区域划分原理"></a>虚拟机内存区域划分原理</h2><pre><code>虚拟机内存的各个区域，区域的作用，服务对象以及其中可能产生的问题。
+</code></pre><h2 id="2-2__u8FD0_u884C_u65F6_u6570_u636E_u533A_u57DF"><a href="#2-2__u8FD0_u884C_u65F6_u6570_u636E_u533A_u57DF" class="headerlink" title="2.2 运行时数据区域"></a>2.2 运行时数据区域</h2><h3 id="2-2-1__u7A0B_u5E8F_u8BA1_u6570_u5668_Program_Counter_Register__u8F83_u5C0F_u7684_u5185_u5B58_u7A7A_u95F4_u3002"><a href="#2-2-1__u7A0B_u5E8F_u8BA1_u6570_u5668_Program_Counter_Register__u8F83_u5C0F_u7684_u5185_u5B58_u7A7A_u95F4_u3002" class="headerlink" title="2.2.1 程序计数器 Program Counter Register 较小的内存空间。"></a>2.2.1 程序计数器 Program Counter Register 较小的内存空间。</h3><p>作用：当前进程所执行的字节码的行号指示器。<br>在虚拟机的概念模型里，字节码解释器工作时就是通过改变这个计数器的值来选取下一条需要执行的字节码指令。<br>分支、循环、跳转、异常处理、线程恢复等基础功能都需要依赖这个计数器来完成。</p>
+<p>Java虚拟机的多线程：是通过线程轮流切换并分配处理器执行时间的方式来实现的。</p>
+<p>每条线程都需要一个独立的程序计数器。各条线程之间的计数器互不影响，独立存储。所以称这块内存区域为【”线程私有“的内存】<br>如果正在执行的是Native方法，这个计数器的值则为空（Undefined）<br>此内存区域是唯一一个在Java虚拟机规范中没有规定任何OutOfMemoryError情况的区域。</p>
+<h3 id="2-2-2_Java_u865A_u62DF_u673A_u6808__uFF08_u6808_u5E27_u662F_u65B9_u6CD5_u8FD0_u884C_u671F_u7684_u57FA_u7840_u6570_u636E_u7ED3_u6784_uFF09"><a href="#2-2-2_Java_u865A_u62DF_u673A_u6808__uFF08_u6808_u5E27_u662F_u65B9_u6CD5_u8FD0_u884C_u671F_u7684_u57FA_u7840_u6570_u636E_u7ED3_u6784_uFF09" class="headerlink" title="2.2.2 Java虚拟机栈  （栈帧是方法运行期的基础数据结构）"></a>2.2.2 Java虚拟机栈  （栈帧是方法运行期的基础数据结构）</h3><p>【线程私有】生命周期与线程相同。<br>虚拟机栈描述的是Java方法执行的内存模型：每个方法被执行的时候都会同时创建一个栈帧Stack Frame。用于存储【局部变量表】，操作数栈，动态链接，方法出口等信息。<br>每一个方法被调用直至执行完成的过程，就对应着一个栈帧在虚拟机栈中从入栈到出栈的过程。</p>
+<p>局部变量表所需的内存空间在编译期间完成分配。当进入一个方法时，这个方法需要在帧中分配多大的局部变量空间是完全确定的，在方法运行期间不会改变局部变量表的大小。</p>
+<p>如果线程请求的栈深度大于虚拟机所允许的深度，将抛出StackOverFlowError异常。<br>如果虚拟机动态扩展时，无法申请到足够的内存时会抛出OutOfMemoryError异常。</p>
+<h3 id="2-2-3__u672C_u5730_u65B9_u6CD5_u6808"><a href="#2-2-3__u672C_u5730_u65B9_u6CD5_u6808" class="headerlink" title="2.2.3 本地方法栈"></a>2.2.3 本地方法栈</h3><p>与虚拟机栈所发挥的作用相似。区别不过是虚拟机栈为虚拟机【执行Java方法（字节码）】服务。而本地方法栈为虚拟机使用到的【Native方法】服务。具体的虚拟机可以自由实现它。<br>甚至有的虚拟机如Sun HotSpot虚拟机，直接就把本地方法栈和Java虚拟机栈合二为一。与虚拟机栈一样，本地方法栈也会抛出两个异常。</p>
+<h3 id="2-2-4_Java_u5806"><a href="#2-2-4_Java_u5806" class="headerlink" title="2.2.4 Java堆"></a>2.2.4 Java堆</h3><pre><code>对于大多数应用来说，Java堆是Java虚拟机所管理的内存中最大的一块。
+ Java堆是【被所有线程共享】。在虚拟机启动时创建。
+ 此区域唯一目的就是存放对象实例。几乎所有的对象实例都在这里分配内存。
+是垃圾收集器管理的主要区域，很多时候也被称为”GC堆“Garbage Collected Heap（垃圾收集堆）
+
+堆中没有内存完成实例分配，并且无法在扩展时，将会抛出OutOfMemoryError异常。
+</code></pre><h3 id="2-2-5__u65B9_u6CD5_u533A"><a href="#2-2-5__u65B9_u6CD5_u533A" class="headerlink" title="2.2.5 方法区"></a>2.2.5 方法区</h3><pre><code>每个线程共享。
+存储已被虚拟机加载的类信息，常量，静态变量，即时编译器编译后的代码等数据。
+</code></pre><p>虽然Java虚拟机规范把方法区描述成【堆的一个逻辑部分】，但是他却有一个别名叫做非堆（Non-Heap）目的应该是与Java堆区分开来。</p>
+<pre><code>垃圾收集行为在方法区是较少出现的。
+这个区域的内存回收目标主要是针对常量池的回收和对类型的卸载。
+
+当方法区无法满足【内存分配需求】时，将会抛出OutOfMemoryError异常。
+</code></pre><h3 id="2-2-6__u8FD0_u884C_u65F6_u5E38_u91CF_u6C60"><a href="#2-2-6__u8FD0_u884C_u65F6_u5E38_u91CF_u6C60" class="headerlink" title="2.2.6 运行时常量池"></a>2.2.6 运行时常量池</h3><pre><code>Runtime Constant Pool 是方法区的一部分。
+常量池：class文件中，用于存放【编译期生成的各种字面量和符号引用】。这部分内容将在类加载后存放在方法区的运行时常量池中。
+
+运行时常量池相对于class文件常量池的另外一个重要特征是具备动态性。运行期间也可以将新的常量放入池中。比如String类的intern()方法。
+</code></pre><h3 id="2-2-7__u76F4_u63A5_u5185_u5B58"><a href="#2-2-7__u76F4_u63A5_u5185_u5B58" class="headerlink" title="2.2.7 直接内存"></a>2.2.7 直接内存</h3><pre><code>NIO中的通道和缓冲区，使用Native函数库直接分配堆外内存。
+</code></pre><h2 id="2-3__u5BF9_u8C61_u8BBF_u95EE"><a href="#2-3__u5BF9_u8C61_u8BBF_u95EE" class="headerlink" title="2.3 对象访问"></a>2.3 对象访问</h2><p>最简单涉及：Java堆，Java栈，方法区。</p>
+<p>Object obj = new Object();<br>——Object obj反映到“Java栈”的局部变量表中，作为一个reference类型数据出现。<br>——new Object()这部分的语义反映到Java堆中。形成一块存储了Object类型所有实例数据值的结构化内存。<br>——另外在Java堆中还必须包含能查找到此对象类型数据（如对象类型、父类、实现的接口、方法等）的地址信息，这些类型数据存储在方法区中。</p>
+<h3 id="JVM_u4E2D_u5806_u5185_u5B58_u7684_u5206_u7C7B"><a href="#JVM_u4E2D_u5806_u5185_u5B58_u7684_u5206_u7C7B" class="headerlink" title="JVM中堆内存的分类"></a>JVM中堆内存的分类</h3><ol>
+<li>Young（年轻代）<br>年轻代分三个区。一个Eden区，两个Survivor区。大部分对象在Eden（伊甸园，乐园）区中生成。当Eden区满时，还存活的对象将被复制到Survivor区（两个中的一个），当这个Survivor区满时，此区的存活对象将被复制到另外一个Survivor区，当这个Survivor区也满了的时候，从第一个Survivor区复制过来的并且此时还存活的对象，将被复制“年老区(Tenured)”。需要注意，Survivor的两个区是对称的，没先后关系，所以同一个区中可能同时存在从Eden复制过来对象，和从前一个Survivor复制过来的对象，而复制到年老区的只有从第一个Survivor去过来的对象。而且，Survivor区总有一个是空的。</li>
+<li>Tenured（年老代）<br>年老代存放从年轻代存活的对象。一般来说年老代存放的都是生命期较长的对象。</li>
+<li>Perm（持久代）【方法区】<br>用于存放静态文件，如Java类、方法等。持久代对垃圾回收没有显著影响，但是有些应用可能动态生成或者调用一些class，例如Hibernate等，在这种时候需要设置一个比较大的持久代空间来存放这些运行过程中新增的类。持久代大小通过-XX:MaxPermSize=<n>进行设置。</n></li>
+</ol>
+<h2 id="u5185_u5B58_u6EA2_u51FA_u5F02_u5E38_u7684_u539F_u56E0"><a href="#u5185_u5B58_u6EA2_u51FA_u5F02_u5E38_u7684_u539F_u56E0" class="headerlink" title="内存溢出异常的原因"></a>内存溢出异常的原因</h2><p>2.4 实战：OutOfMemoryError异常</p>
+<p>2.4.1 Java堆内存溢出<br>    存储对象实例，我们只要不断创建对象，并且保证GC Roots到对象之间有可达路径来避免垃圾回收机制清除这些对象，就会在对象达到最大堆容量限制后产生内存溢出异常。</p>
+<pre><code>内存映像分析工具，检查是否是内存泄露，还是内存溢出。
+</code></pre><p>2.4.2 虚拟机栈和本地方法栈溢出<br>    本地变量表。StackOverflowError异常。（栈帧太大）</p>
+<p>2.4.3 方法区 + 运行时常量池溢出<br>    运行时常量池：字符串常量池 String.intern()<br>方法区溢出<br>    存放Class的相关信息，如类名、访问修饰符、常量池、字段描述、方法描述等。<br>     思路：运行时产生大量的类去填满方法区，直到溢出。</p>
+<pre><code>JVM上的动态语言。
+</code></pre><p>2.4.4 本机直接内存溢出<br>    NIO相关。明显的特征：Heap Dump文件中不会看见明显的异常，即OOM后Dump文件很小。</p>
+<h2 id="u81EA_u5DF1_u9879_u76EE_u4E2D_u9047_u5230_u7684_u5185_u5B58_u6EA2_u51FA_u65B9_u9762_u7684_u95EE_u9898"><a href="#u81EA_u5DF1_u9879_u76EE_u4E2D_u9047_u5230_u7684_u5185_u5B58_u6EA2_u51FA_u65B9_u9762_u7684_u95EE_u9898" class="headerlink" title="自己项目中遇到的内存溢出方面的问题"></a>自己项目中遇到的内存溢出方面的问题</h2><h1 id="u5783_u573E_u6536_u96C6_u7B97_u6CD5_uFF0C_u5783_u573E_u6536_u96C6_u5668_u7684_u7279_u70B9_u548C_u5DE5_u4F5C_u539F_u7406_uFF0C_u5185_u5B58_u52A8_u6001_u5206_u914D_u4E0E_u56DE_u6536_u7B56_u7565"><a href="#u5783_u573E_u6536_u96C6_u7B97_u6CD5_uFF0C_u5783_u573E_u6536_u96C6_u5668_u7684_u7279_u70B9_u548C_u5DE5_u4F5C_u539F_u7406_uFF0C_u5185_u5B58_u52A8_u6001_u5206_u914D_u4E0E_u56DE_u6536_u7B56_u7565" class="headerlink" title="垃圾收集算法，垃圾收集器的特点和工作原理，内存动态分配与回收策略"></a>垃圾收集算法，垃圾收集器的特点和工作原理，内存动态分配与回收策略</h1><p>哪些内存需要回收、什么时候回收、如何回收。</p>
+<pre><code>程序计数器+虚拟机栈+本地方法栈：随线程而生随线程而灭。方法或线程结束时，内存自然就跟随着回收了。
+而Java堆和方法区则不一样。这部分内存的分配和回收都是动态的。垃圾收集器所关注的是这部分内存。
+</code></pre><h2 id="3-2__u5BF9_u8C61_u5DF2_u6B7B_u5417_uFF1F"><a href="#3-2__u5BF9_u8C61_u5DF2_u6B7B_u5417_uFF1F" class="headerlink" title="3.2 对象已死吗？"></a>3.2 对象已死吗？</h2><p>3.2.1 引用计数算法<br>    COM（Component Object Model）技术、使用ActionScript 3 的FlashPlayer、Python语言以及游戏脚本领域中被广泛应用的Squirrel中使用了引用计数算法进行内存管理。</p>
+<pre><code>Java语言没有选用引用计数方法，因为很难解决对象之间的相互循环引用的问题。
+</code></pre><p>3.2.2 根搜索算法（可达性分析算法）<br>    Java、C#、Lisp<br>    这个算法的基本思路：通过一系列的名为“GC Roots”的对象作为起始点，从这些节点开始向下搜索，搜索所走过的路径称为引用链（Reference Chain）当一个对象到GC Roots没有任何引用链相连时，则证明此对象是不可用的。</p>
+<p>3.2.3 再谈引用</p>
+<p>3.2.5 回收方法区</p>
+<p>永久代的垃圾收集主要回收两部分内容：废弃常量和无用的类。</p>
+<h2 id="3-3__u5783_u573E_u6536_u96C6_u7B97_u6CD5"><a href="#3-3__u5783_u573E_u6536_u96C6_u7B97_u6CD5" class="headerlink" title="3.3 垃圾收集算法"></a>3.3 垃圾收集算法</h2><p>3.3.1 标记-清除算法<br>最基础的收集算法：首先标记，然后再清除。<br>主要缺点有两个：<br>一：效率问题；<br>二：空间问题，会产生大量不连续的内存碎片，空间碎片太多可能会导致，当程序在以后的运行过程中需要分配较大对象时无法找到足够的连续内存而不得不提前触发另一次垃圾收集动作。</p>
+<p>3.2.2 复制算法<br>为了解决效率问题，将可用内存按容量划分为大小相等的两块，每次只使用其中的一块。当这一块的内存用完了，就将还存活着的对象复制到另一块上面。<br>然后再把已使用过的内存空间一次清理掉。</p>
+<p>这种算法的代价是将内存缩小为原来的一半，未免太高了点。</p>
+<p>3.3.3 标记-整理算法</p>
+<p>3.3.4 分代收集算法<br>当前商业虚拟机的垃圾收集都采用”分代收集”Generational Colletction算法。<br>根据对象存活周期的不同将内存划分为几块。</p>
+<p>3.4 垃圾收集器：内存回收的具体实现</p>
+<p>HotSpot实现了七中作用于不同分代的收集器。</p>
+<p>直到现在为止还没有最好的收集器出现，更加没有万能的收集器。我们选择的只是对具体应用最合适的收集器。</p>
+<p>3.4.1 Serial收集器 P77</p>
+<p>3.5 内存分配与回收策略 P86<br>自动内存管理：<br>1.给对象分配内存；<br>2.回收分配给对象的内存。<br>对象内存分配：<br>几条普遍的内存分配原则：</p>
+<p>3.5.1 对象优先在Eden分配<br>大多数情况下，对象在新生代Eden区中分配。</p>
+<p>3.5.2 大对象直接进入老年代</p>
+<p>3.5.3 长期存活的对象将进入老年代</p>
+<p>3.5.4 动态对象年龄判定</p>
+<p>3.5.5 空间分配担保 P94</p>
+<p>第3章小结（垃圾收集器 + 内存分配）P96 </p>
+<p>基本回收算法</p>
+<ol>
+<li>引用计数（Reference Counting）<br>比较古老的回收算法。原理是此对象有一个引用，即增加一个计数，删除一个引用则减少一个计数。垃圾回收时，只用收集计数为0的对象。此算法最致命的是无法处理循环引用的问题。</li>
+<li>标记-清除（Mark-Sweep）<br>此算法执行分两阶段。第一阶段从引用根节点开始标记所有被引用的对象，第二阶段遍历整个堆，把未标记的对象清除。此算法需要暂停整个应用，同时，会产生内存碎片。</li>
+<li>复制（Copying）<br>此算法把内存空间划为两个相等的区域，每次只使用其中一个区域。垃圾回收时，遍历当前使用区域，把正在使用中的对象复制到另外一个区域中。次算法每次只处理正在使用中的对象，因此复制成本比较小，同时复制过去以后还能进行相应的内存整理，不过出现“碎片”问题。当然，此算法的缺点也是很明显的，就是需要两倍内存空间。</li>
+<li>标记-整理（Mark-Compact）<br>此算法结合了“标记-清除”和“复制”两个算法的优点。也是分两阶段，第一阶段从根节点开始标记所有被引用对象，第二阶段遍历整个堆，把清除未标记对象并且把存活对象“压缩”到堆的其中一块，按顺序排放。此算法避免了“标记-清除”的碎片问题，同时也避免了“复制”算法的空间问题。</li>
+<li>增量收集（Incremental Collecting）<br>实施垃圾回收算法，即：在应用进行的同时进行垃圾回收。不知道什么原因JDK5.0中的收集器没有使用这种算法的。</li>
+<li>分代（Generational Collecting）<br>基于对对象生命周期分析后得出的垃圾回收算法。把对象分为年青代、年老代、持久代，对不同生命周期的对象使用不同的算法（上述方式中的一个）进行回收。现在的垃圾回收器（从J2SE1.2开始）都是使用此算法的。</li>
+</ol>
+<p>三、GC类型<br>GC有两种类型：Scavenge GC和Full GC。</p>
+<ol>
+<li>Scavenge GC<br>一般情况下，当新对象生成，并且在Eden申请空间失败时，就好触发Scavenge GC，堆Eden区域进行GC，清除非存活对象，并且把尚且存活的对象移动到Survivor区。然后整理Survivor的两个区。</li>
+<li>Full GC<br>对整个堆进行整理，包括Young、Tenured和Perm。Full GC比Scavenge GC要慢，因此应该尽可能减少Full GC。有如下原因可能导致Full GC：<pre><code>* Tenured被写满
+* Perm域被写满
+* System.gc()被显示调用
+* 上一次GC之后Heap的各域分配策略动态变化
+</code></pre></li>
+</ol>
+<p>四、垃圾回收器<br>目前的收集器主要有三种：串行收集器、并行收集器、并发收集器。</p>
+<ol>
+<li>串行收集器<br>使用单线程处理所有垃圾回收工作，因为无需多线程交互，所以效率比较高。但是，也无法使用多处理器的优势，所以此收集器适合单处理器机器。当然，此收集器也可以用在小数据量（100M左右）情况下的多处理器机器上。可以使用-XX:+UseSerialGC打开。</li>
+<li>并行收集器<br>   1). 对年轻代进行并行垃圾回收，因此可以减少垃圾回收时间。一般在多线程多处理器机器上使用。使用-XX:+UseParallelGC.打开。并行收集器在J2SE5.0第六6更新上引入，在Java SE6.0中进行了增强–可以堆年老代进行并行收集。如果年老代不使用并发收集的话，是使用单线程进行垃圾回收，因此会制约扩展能力。使用-XX:+UseParallelOldGC打开。<br>   2). 使用-XX:ParallelGCThreads=<n>设置并行垃圾回收的线程数。此值可以设置与机器处理器数量相等。<br>   3). 此收集器可以进行如下配置：<pre><code>* 最大垃圾回收暂停:指定垃圾回收时的最长暂停时间，通过-XX:MaxGCPauseMillis=&lt;N&gt;指定。&lt;N&gt;为毫秒.如果指定了此值的话，堆大小和垃圾回收相关参数会进行调整以达到指定值。设定此值可能会减少应用的吞吐量。
+* 吞吐量:吞吐量为垃圾回收时间与非垃圾回收时间的比值，通过-XX:GCTimeRatio=&lt;N&gt;来设定，公式为1/（1+N）。例如，-XX:GCTimeRatio=19时，表示5%的时间用于垃圾回收。默认情况为99，即1%的时间用于垃圾回收。
+</code></pre></n></li>
+<li>并发收集器<br>可以保证大部分工作都并发进行（应用不停止），垃圾回收只暂停很少的时间，此收集器适合对响应时间要求比较高的中、大规模应用。使用-XX:+UseConcMarkSweepGC打开。<br>   1). 并发收集器主要减少年老代的暂停时间，他在应用不停止的情况下使用独立的垃圾回收线程，跟踪可达对象。在每个年老代垃圾回收周期中，在收集初期并发收集器会对整个应用进行简短的暂停，在收集中还会再暂停一次。第二次暂停会比第一次稍长，在此过程中多个线程同时进行垃圾回收工作。<br>   2). 并发收集器使用处理器换来短暂的停顿时间。在一个N个处理器的系统上，并发收集部分使用K/N个可用处理器进行回收，一般情况下1&lt;=K&lt;=N/4。<br>   3). 在只有一个处理器的主机上使用并发收集器，设置为incremental mode模式也可获得较短的停顿时间。<br>   4). 浮动垃圾：由于在应用运行的同时进行垃圾回收，所以有些垃圾可能在垃圾回收进行完成时产生，这样就造成了“Floating Garbage”，这些垃圾需要在下次垃圾回收周期时才能回收掉。所以，并发收集器一般需要20%的预留空间用于这些浮动垃圾。<br>   5). Concurrent Mode Failure：并发收集器在应用运行时进行收集，所以需要保证堆在垃圾回收的这段时间有足够的空间供程序使用，否则，垃圾回收还未完成，堆空间先满了。这种情况下将会发生“并发模式失败”，此时整个应用将会暂停，进行垃圾回收。<br>   6). 启动并发收集器：因为并发收集在应用运行时进行收集，所以必须保证收集完成之前有足够的内存空间供程序使用，否则会出现“Concurrent Mode Failure”。通过设置-XX:CMSInitiatingOccupancyFraction=<n>指定还有多少剩余堆时开始执行并发收集</n></li>
+</ol>
+<ol>
+<li>小结<pre><code>* 串行处理器：
+   --适用情况：数据量比较小（100M左右）；单处理器下并且对响应时间无要求的应用。
+   --缺点：只能用于小型应用
+* 并行处理器：
+   --适用情况：“对吞吐量有高要求”，多CPU、对应用响应时间无要求的中、大型应用。举例：后台处理、科学计算。
+   --缺点：应用响应时间可能较长
+* 并发处理器：
+   --适用情况：“对响应时间有高要求”，多CPU、对应用响应时间有较高要求的中、大型应用。举例：Web服务器/应用服务器、电信交换、集成开发环境。
+</code></pre></li>
+</ol>
+<p>Class文件结构</p>
+<p>类创建机制，类加载器的工作原理</p>
+<p>JVN内存模型的结构和操作</p>
+<p>线程的实现原理</p>
+<p>锁优化操作</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Java/">Java</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  
+<div class="jiathis_style">
+    <span class="jiathis_txt">分享到：</span>
+    <a class="jiathis_button_tsina">新浪微博</a>
+    <a class="jiathis_button_weixin">微信</a>
+    <a class="jiathis_button_twitter">Twitter</a>
+    <a class="jiathis_button_evernote">EverNote</a>
+    <a href="http://www.jiathis.com/share?uid=1501277" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+</div>
+<script type="text/javascript" >
+    var jiathis_config={
+    data_track_clickback:true,
+    sm:"copy,renren,cqq",
+    pic:"",
+    summary:"",
+    
+  </script> 
+<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=
+" charset="utf-8"></script>      
+
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2014/10/31/Java/《Java反射机制》/" title="《Java反射机制》">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  《Java反射机制》</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2014/10/23/Java/《Java并发编程实战》/"  title="《Java并发编程实战》">
+ <strong>NEXT:</strong><br/> 
+ <span>《Java并发编程实战》
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#u300A_u6DF1_u5165_u7406_u89E3Java_u865A_u62DF_u673A_u300B"><span class="toc-number">1.</span> <span class="toc-text">《深入理解Java虚拟机》</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#u7B2C_u4E8C_u90E8_u5206__u81EA_u52A8_u5185_u5B58_u7BA1_u7406_u673A_u5236"><span class="toc-number">2.</span> <span class="toc-text">第二部分 自动内存管理机制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#u865A_u62DF_u673A_u5185_u5B58_u533A_u57DF_u5212_u5206_u539F_u7406"><span class="toc-number">2.1.</span> <span class="toc-text">虚拟机内存区域划分原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2__u8FD0_u884C_u65F6_u6570_u636E_u533A_u57DF"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 运行时数据区域</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-1__u7A0B_u5E8F_u8BA1_u6570_u5668_Program_Counter_Register__u8F83_u5C0F_u7684_u5185_u5B58_u7A7A_u95F4_u3002"><span class="toc-number">2.2.1.</span> <span class="toc-text">2.2.1 程序计数器 Program Counter Register 较小的内存空间。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-2_Java_u865A_u62DF_u673A_u6808__uFF08_u6808_u5E27_u662F_u65B9_u6CD5_u8FD0_u884C_u671F_u7684_u57FA_u7840_u6570_u636E_u7ED3_u6784_uFF09"><span class="toc-number">2.2.2.</span> <span class="toc-text">2.2.2 Java虚拟机栈  （栈帧是方法运行期的基础数据结构）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-3__u672C_u5730_u65B9_u6CD5_u6808"><span class="toc-number">2.2.3.</span> <span class="toc-text">2.2.3 本地方法栈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-4_Java_u5806"><span class="toc-number">2.2.4.</span> <span class="toc-text">2.2.4 Java堆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-5__u65B9_u6CD5_u533A"><span class="toc-number">2.2.5.</span> <span class="toc-text">2.2.5 方法区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-6__u8FD0_u884C_u65F6_u5E38_u91CF_u6C60"><span class="toc-number">2.2.6.</span> <span class="toc-text">2.2.6 运行时常量池</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-7__u76F4_u63A5_u5185_u5B58"><span class="toc-number">2.2.7.</span> <span class="toc-text">2.2.7 直接内存</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3__u5BF9_u8C61_u8BBF_u95EE"><span class="toc-number">2.3.</span> <span class="toc-text">2.3 对象访问</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#JVM_u4E2D_u5806_u5185_u5B58_u7684_u5206_u7C7B"><span class="toc-number">2.3.1.</span> <span class="toc-text">JVM中堆内存的分类</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u5185_u5B58_u6EA2_u51FA_u5F02_u5E38_u7684_u539F_u56E0"><span class="toc-number">2.4.</span> <span class="toc-text">内存溢出异常的原因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u81EA_u5DF1_u9879_u76EE_u4E2D_u9047_u5230_u7684_u5185_u5B58_u6EA2_u51FA_u65B9_u9762_u7684_u95EE_u9898"><span class="toc-number">2.5.</span> <span class="toc-text">自己项目中遇到的内存溢出方面的问题</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#u5783_u573E_u6536_u96C6_u7B97_u6CD5_uFF0C_u5783_u573E_u6536_u96C6_u5668_u7684_u7279_u70B9_u548C_u5DE5_u4F5C_u539F_u7406_uFF0C_u5185_u5B58_u52A8_u6001_u5206_u914D_u4E0E_u56DE_u6536_u7B56_u7565"><span class="toc-number">3.</span> <span class="toc-text">垃圾收集算法，垃圾收集器的特点和工作原理，内存动态分配与回收策略</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2__u5BF9_u8C61_u5DF2_u6B7B_u5417_uFF1F"><span class="toc-number">3.1.</span> <span class="toc-text">3.2 对象已死吗？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3__u5783_u573E_u6536_u96C6_u7B97_u6CD5"><span class="toc-number">3.2.</span> <span class="toc-text">3.3 垃圾收集算法</span></a></li></ol></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/C/" title="C++">C++<sup>4</sup></a></li>
+		
+			<li><a href="/categories/Github/" title="Github">Github<sup>3</sup></a></li>
+		
+			<li><a href="/categories/Java/" title="Java">Java<sup>11</sup></a></li>
+		
+			<li><a href="/categories/Linux/" title="Linux">Linux<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Lisp/" title="Lisp">Lisp<sup>0</sup></a></li>
+		
+			<li><a href="/categories/Python/" title="Python">Python<sup>0</sup></a></li>
+		
+			<li><a href="/categories/Spark/" title="Spark">Spark<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Web/" title="Web">Web<sup>1</sup></a></li>
+		
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>1</sup></a></li>
+		
+			<li><a href="/categories/数据结构/" title="数据结构">数据结构<sup>4</sup></a></li>
+		
+			<li><a href="/categories/算法/" title="算法">算法<sup>4</sup></a></li>
+		
+			<li><a href="/categories/职业生涯/" title="职业生涯">职业生涯<sup>7</sup></a></li>
+		
+			<li><a href="/categories/随笔生活/" title="随笔生活">随笔生活<sup>4</sup></a></li>
+		
+			<li><a href="/categories/面试/" title="面试">面试<sup>4</sup></a></li>
+		
+			<li><a href="/categories/项目总结/" title="项目总结">项目总结<sup>0</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+      <li><a href="http://yangjian.me" target="_blank" title="YangJian">Alimon's Blog</a></li>
+      <li><a href="http://zespia.tw/hexo" target="_blank" title="Hexo">Hexo</a></li>
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="http://weibo.com/lsx1993" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  
+  <div class="archiveslist">
+    <p class="asidetitle"><a href="/archives">归档</a></p>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">九月 2014</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">五月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">四月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/03/">三月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">二月 2014</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/10/">十月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/09/">九月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/02/">二月 2013</a><span class="archive-list-count">2</span></li></ul>
+  </div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello,This is my blog. <br/>
+			I will share my learing experience here.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/lsx1993" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/lisuxuan1993" target="_blank" title="github"></a>
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2016 
+		
+		<a href="http://lisuxuan1993.github.com" target="_blank" title="Leo_璇哥">Leo_璇哥</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"null"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'null', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+  </body>
+</html>

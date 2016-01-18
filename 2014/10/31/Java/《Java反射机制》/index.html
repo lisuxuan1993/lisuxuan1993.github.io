@@ -1,0 +1,419 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>《Java反射机制》 | Leo&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="Leo_璇哥">
+    
+    <meta name="description" content="反射机制《JAVA反射机制》：[http://blog.csdn.net/justinavril/article/details/2873664]
+Reflection是Java 程序开发语言的特征之一，它允许运行中的 Java 程序对自身进行检查，或者说”自审”，并能直接操作程序的内部属性。例如，">
+    
+    
+    
+    
+    <link rel="alternative" href="http://weibo.com/lsx1993" title="Leo&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/author.jpg" alt="Leo&#39;s Blog" title="Leo&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Leo&#39;s Blog">Leo&#39;s Blog</a></h1>
+				<h2 class="blog-motto">华南理工大学2010级计算机全英创新班，2013级研究生。Java程序员，研究PaaS平台。积极向上，追求卓越。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">博客主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/page/lab">实验室</a></li>
+					
+						<li><a href="/page">关于</a></li>
+					
+					<li>
+					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/10/31/Java/《Java反射机制》/" title="《Java反射机制》" itemprop="url">《Java反射机制》</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://lisuxuan1993.github.com" title="Leo_璇哥">Leo_璇哥</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2014-10-31T15:15:57.000Z" itemprop="datePublished">Oct 31 2014</time>
+    更新日期:<time datetime="2014-10-31T07:23:00.000Z" itemprop="dateModified">Oct 31 2014</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#u53CD_u5C04_u673A_u5236"><span class="toc-number">1.</span> <span class="toc-text">反射机制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Class-isInstance__u65B9_u6CD5_u53EF_u4EE5_u7528_u4E8E_u6A21_u62DF_instanceof__u64CD_u4F5C_u7B26"><span class="toc-number">1.1.</span> <span class="toc-text">Class.isInstance 方法可以用于模拟 instanceof 操作符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u627E_u51FA_u7C7B_u7684_u65B9_u6CD5"><span class="toc-number">1.2.</span> <span class="toc-text">找出类的方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u83B7_u53D6_u6784_u9020_u5668_u4FE1_u606F"><span class="toc-number">1.3.</span> <span class="toc-text">获取构造器信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u83B7_u53D6_u7C7B_u7684_u5B57_u6BB5_28_u57DF_29"><span class="toc-number">1.4.</span> <span class="toc-text">获取类的字段(域)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u6839_u636E_u65B9_u6CD5_u7684_u540D_u79F0_u6765_u6267_u884C_u65B9_u6CD5"><span class="toc-number">1.5.</span> <span class="toc-text">根据方法的名称来执行方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u521B_u5EFA_u65B0_u7684_u5BF9_u8C61"><span class="toc-number">1.6.</span> <span class="toc-text">创建新的对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u6539_u53D8_u5B57_u6BB5_28_u57DF_29_u7684_u503C"><span class="toc-number">1.7.</span> <span class="toc-text">改变字段(域)的值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u4F7F_u7528_u6570_u7EC4"><span class="toc-number">1.8.</span> <span class="toc-text">使用数组</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#java-lang-Class"><span class="toc-number">2.</span> <span class="toc-text">java.lang.Class</span></a></li></ol>
+		</div>
+		
+		<h1 id="u53CD_u5C04_u673A_u5236"><a href="#u53CD_u5C04_u673A_u5236" class="headerlink" title="反射机制"></a>反射机制</h1><p>《JAVA反射机制》：[<a href="http://blog.csdn.net/justinavril/article/details/2873664" target="_blank" rel="external">http://blog.csdn.net/justinavril/article/details/2873664</a>]</p>
+<p>Reflection是Java 程序开发语言的特征之一，它允许运行中的 Java 程序对自身进行检查，或者说”自审”，并能直接操作程序的内部属性。例如，使用它能获得 Java 类中各成员的名称并显示出来。 Java 的这一能力在实际应用中也许用得不是很多，但是在其它的程序设计语言中根本就不存在这一特性。例如，Pascal、C 或者 C++ 中就没有办法在程序中获得函数定义相关的信息。 </p>
+<p>JavaBean 是 reflection 的实际应用之一，它能让一些工具可视化地操作软件组件。这些工具通过 reflection 动态的载入并取得 Java 组件(类) 的属性。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import java.lang.reflect.*;&#10;public class DumpMethods &#123;&#10;   public static void main(String args[]) &#123;&#10;      try &#123;&#10;           Class c = Class.forName(&#34;java.util.Stack&#34;);&#10;           Method m[] = c.getDeclaredMethods();&#10;           &#10;           for (int i = 0; i &#60; m.length; i++)&#10;               System.out.println(m[i].toString());&#10;      &#125;&#10;      catch (Throwable e)&#123;&#10;            System.err.println(e);&#10;      &#125;&#10;   &#125;&#10;&#125;&#10;&#10;//Output&#65306;&#10;public synchronized java.lang.Object java.util.Stack.pop()&#10;public java.lang.Object java.util.Stack.push(java.lang.Object)&#10;public boolean java.util.Stack.empty()&#10;public synchronized java.lang.Object java.util.Stack.peek()&#10;public synchronized int java.util.Stack.search(java.lang.Object)</span><br></pre></td></tr></table></figure></p>
+<p>这样就列出了java.util.Stack 类的各方法名以及它们的限制符和返回类型。</p>
+<p>这个程序使用 Class.forName 载入指定的类，然后调用 getDeclaredMethods 来获取这个类中定义了的方法列表。<br>java.lang.reflect.Methods 是用来描述某个类中单个方法的一个类。</p>
+<p>用于 reflection 的类，如 Method，可以在 java.lang.relfect 包中找到。使用这些类的时候必须要遵循三个步骤：<br>第一步是获得你想操作的类的 java.lang.Class 对象。在运行中的 Java 程序中，用 java.lang.Class 类来描述类和接口等。<br>下面就是获得一个 Class 对象的方法之一：<br>Class c = Class.forName(“java.lang.String”);<br>这条语句得到一个 String 类的类对象。还有另一种方法，如下面的语句：<br>Class c = int.class; 或者 Class c = Integer.TYPE;<br>它们可获得基本类型的类信息。其中后一种方法中访问的是基本类型的封装类 (如 Integer) 中预先定义好的 TYPE 字段。</p>
+<p>第二步是调用诸如 getDeclaredMethods 的方法，以取得该类中定义的所有方法的列表。<br>一旦取得这个信息，就可以进行第三步了——使用 reflection API 来操作这些信息，如下面这段代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Class c = Class.forName(&#34;java.lang.String&#34;);&#10;Method m[] = c.getDeclaredMethods();&#10;System.out.println(m[0].toString());</span><br></pre></td></tr></table></figure></p>
+<h2 id="Class-isInstance__u65B9_u6CD5_u53EF_u4EE5_u7528_u4E8E_u6A21_u62DF_instanceof__u64CD_u4F5C_u7B26"><a href="#Class-isInstance__u65B9_u6CD5_u53EF_u4EE5_u7528_u4E8E_u6A21_u62DF_instanceof__u64CD_u4F5C_u7B26" class="headerlink" title="Class.isInstance 方法可以用于模拟 instanceof 操作符"></a>Class.isInstance 方法可以用于模拟 instanceof 操作符</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">class S &#123;&#10;&#125;&#10;public class IsInstance &#123;&#10;   public static void main(String args[]) &#123;&#10;      try &#123;&#10;           Class cls = Class.forName(&#34;S&#34;);&#10;           boolean b1 = cls.isInstance(new Integer(37));&#10;           System.out.println(b1);&#10;           boolean b2 = cls.isInstance(new S());&#10;           System.out.println(b2);&#10;      &#125;&#10;      catch (Throwable e) &#123;&#10;           System.err.println(e);&#10;      &#125;&#10;   &#125;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p>在这个例子中创建了一个S 类的 Class 对象，然后检查一些对象是否是S的实例。Integer(37) 不是，但 new S()是。</p>
+<h2 id="u627E_u51FA_u7C7B_u7684_u65B9_u6CD5"><a href="#u627E_u51FA_u7C7B_u7684_u65B9_u6CD5" class="headerlink" title="找出类的方法"></a>找出类的方法</h2><p>找出一个类中定义了些什么方法，这是一个非常有价值也非常基础的 reflection 用法。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import java.lang.reflect.*;&#10;public class Method1 &#123;&#10;   private int f1(Object p, int x) throws NullPointerException &#123;&#10;   if (p == null)&#10;      throw new NullPointerException();&#10;   return x;&#10;&#125;&#10;   public static void main(String args[]) &#123;&#10;       try &#123;&#10;           Class cls = Class.forName(&#34;Method1&#34;);&#10;           Method methlist[] = cls.getDeclaredMethods();&#10;           for (int i = 0; i &#60; methlist.length; i++) &#123;&#10;               Method m = methlist[i];&#10;               System.out.println(&#34;name = &#34; + m.getName());&#10;               System.out.println(&#34;decl class = &#34; + m.getDeclaringClass());&#10;               Class pvec[] = m.getParameterTypes();&#10;               for (int j = 0; j &#60; pvec.length; j++)&#10;                   System.out.println(&#34;param #&#34; + j + &#34; &#34; + pvec[j]);&#10;               Class evec[] = m.getExceptionTypes();&#10;               for (int j = 0; j &#60; evec.length; j++)&#10;                   System.out.println(&#34;exc #&#34; + j + &#34; &#34; + evec[j]);&#10;               System.out.println(&#34;return type = &#34; + m.getReturnType());&#10;               System.out.println(&#34;-----&#34;);&#10;           &#125;&#10;       &#125;&#10;       catch (Throwable e) &#123;&#10;           System.err.println(e);&#10;       &#125;&#10;   &#125;&#10;&#125;&#10;&#10;//&#36755;&#20986;&#10;name = f1&#10;decl class = class method1&#10;param #0 class java.lang.Object&#10;param #1 int&#10;exc #0 class java.lang.NullPointerException&#10;return type = int&#10;-----&#10;name = main&#10;decl class = class method1&#10;param #0 class [Ljava.lang.String;&#10;return type = void</span><br></pre></td></tr></table></figure></p>
+<p>这个程序首先取得 method1 类的描述，然后调用 getDeclaredMethods 来获取一系列的 Method 对象，它们分别描述了定义在类中的每一个方法，包括 public 方法、protected 方法、package 方法和 private 方法等。如果你在程序中使用 getMethods 来代替 getDeclaredMethods，你还能获得继承来的各个方法的信息。</p>
+<p>取得了 Method 对象列表之后，要显示这些方法的参数类型、异常类型和返回值类型等就不难了。这些类型是基本类型还是类类型，都可以由描述类的对象按顺序给出。</p>
+<h2 id="u83B7_u53D6_u6784_u9020_u5668_u4FE1_u606F"><a href="#u83B7_u53D6_u6784_u9020_u5668_u4FE1_u606F" class="headerlink" title="获取构造器信息"></a>获取构造器信息</h2><p>获取类构造器的用法与上述获取方法的用法类似。</p>
+<h2 id="u83B7_u53D6_u7C7B_u7684_u5B57_u6BB5_28_u57DF_29"><a href="#u83B7_u53D6_u7C7B_u7684_u5B57_u6BB5_28_u57DF_29" class="headerlink" title="获取类的字段(域)"></a>获取类的字段(域)</h2><p>找出一个类中定义了哪些数据字段也是可能的，下面的代码就在干这个事情：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import java.lang.reflect.*;&#10;public class Field1 &#123;&#10;   private double d;&#10;   public static final int i = 37;&#10;   String s = &#34;testing&#34;;&#10;   public static void main(String args[]) &#123;&#10;      try &#123;&#10;           Class cls = Class.forName(&#34;Field1&#34;);&#10;           Field fieldlist[] = cls.getDeclaredFields();&#10;           for (int i = 0; i &#60; fieldlist.length; i++) &#123;&#10;              Field fld = fieldlist[i];&#10;              System.out.println(&#34;name = &#34; + fld.getName());&#10;              System.out.println(&#34;decl class = &#34; + fld.getDeclaringClass());&#10;              System.out.println(&#34;type = &#34; + fld.getType());&#10;              int mod = fld.getModifiers();&#10;              System.out.println(&#34;modifiers = &#34; + Modifier.toString(mod));&#10;              System.out.println(&#34;-----&#34;);&#10;           &#125;&#10;      &#125;&#10;      catch (Throwable e) &#123;&#10;           System.err.println(e);&#10;      &#125;&#10;   &#125;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个例子和前面那个例子非常相似。例中使用了一个新东西 Modifier，它也是一个 reflection 类，用来【描述字段成员的修饰语】，如“private int”。这些修饰语自身由整数描述，而且使用 Modifier.toString 来返回以“官方”顺序排列的字符串描述 (如“static”在“final”之前)。这个程序的输出是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">name = d&#10;decl class = class Field1&#10;type = double&#10;modifiers = private&#10;-----&#10;name = i&#10;decl class = class Field1&#10;type = int&#10;modifiers = public static final&#10;-----&#10;name = s&#10;decl class = class Field1&#10;type = class java.lang.String&#10;modifiers =&#10;-----</span><br></pre></td></tr></table></figure></p>
+<p>和获取方法的情况一下，获取字段的时候也可以只取得在当前类中申明了的字段信息 (getDeclaredFields)，或者也可以取得父类中定义的字段 (getFields) 。</p>
+<h2 id="u6839_u636E_u65B9_u6CD5_u7684_u540D_u79F0_u6765_u6267_u884C_u65B9_u6CD5"><a href="#u6839_u636E_u65B9_u6CD5_u7684_u540D_u79F0_u6765_u6267_u884C_u65B9_u6CD5" class="headerlink" title="根据方法的名称来执行方法"></a>根据方法的名称来执行方法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import java.lang.reflect.*;&#10;public class Method2 &#123;&#10;   public int add(int a, int b) &#123;&#10;      return a + b;&#10;   &#125;&#10;   public static void main(String args[]) &#123;&#10;      try &#123;&#10;           Class cls = Class.forName(&#34;Method2&#34;);&#10;           Class partypes[] = new Class[2];&#10;           partypes[0] = Integer.TYPE;&#10;           partypes[1] = Integer.TYPE;&#10;       &#10;           Method meth = cls.getMethod(&#34;add&#34;, partypes);&#10;&#10;           Method2 methobj = new Method2();&#10;&#10;           Object arglist[] = new Object[2];&#10;           arglist[0] = new Integer(37);&#10;           arglist[1] = new Integer(47);&#10;&#10;           Object retobj = meth.invoke(methobj, arglist);&#10;           Integer retval = (Integer) retobj;&#10;           System.out.println(retval.intValue());&#10;      &#125;&#10;      catch (Throwable e) &#123;&#10;           System.err.println(e);&#10;      &#125;&#10;   &#125;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p>假如一个程序在执行的某处的时候才知道需要执行某个方法，这个方法的名称是在程序的运行过程中指定的 (例如，JavaBean 开发环境中就会做这样的事)，那么上面的程序演示了如何做到。<br>上例中，getMethod用于查找一个具有两个整型参数且名为 add 的方法。找到该方法并创建了相应的Method 对象之后，在正确的对象实例中执行它。执行该方法的时候，需要提供一个参数列表，这在上例中是分别包装了整数 37 和 47 的两个 Integer 对象。执行方法的返回的同样是一个 Integer 对象，它封装了返回值 84。</p>
+<h2 id="u521B_u5EFA_u65B0_u7684_u5BF9_u8C61"><a href="#u521B_u5EFA_u65B0_u7684_u5BF9_u8C61" class="headerlink" title="创建新的对象"></a>创建新的对象</h2><p>对于构造器，则不能像执行方法那样进行，因为执行一个构造器就意味着创建了一个新的对象 (准确的说，创建一个对象的过程包括分配内存和构造对象)。所以，与上例最相似的例子如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import java.lang.reflect.*;&#10;public class Constructor2 &#123;&#10;   public Constructor2() &#123;&#10;   &#125;&#10;   public Constructor2(int a, int b) &#123;&#10;      System.out.println(&#34;a = &#34; + a + &#34; b = &#34; + b);&#10;   &#125;&#10;   public static void main(String args[]) &#123;&#10;      try &#123;&#10;           Class cls = Class.forName(&#34;Constructor2&#34;);&#10;           Class partypes[] = new Class[2];&#10;           partypes[0] = Integer.TYPE;&#10;           partypes[1] = Integer.TYPE;&#10;           Constructor ct = cls.getConstructor(partypes);&#10;           Object arglist[] = new Object[2];&#10;           arglist[0] = new Integer(37);&#10;           arglist[1] = new Integer(47);&#10;           Object retobj = ct.newInstance(arglist);&#10;      &#125;&#10;      catch (Throwable e) &#123;&#10;           System.err.println(e);&#10;      &#125;&#10;   &#125;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>根据指定的参数类型找到相应的构造函数并执行它，以创建一个新的对象实例。使用这种方法可以在程序运行时动态地创建对象，而不是在编译的时候创建对象，这一点非常有价值。</p>
+<h2 id="u6539_u53D8_u5B57_u6BB5_28_u57DF_29_u7684_u503C"><a href="#u6539_u53D8_u5B57_u6BB5_28_u57DF_29_u7684_u503C" class="headerlink" title="改变字段(域)的值"></a>改变字段(域)的值</h2><p>reflection 的还有一个用处就是改变对象数据字段的值。reflection 可以从正在运行的程序中根据名称找到对象的字段并改变它，下面的例子可以说明这一点：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import java.lang.reflect.*;&#10;public class Field2 &#123;&#10;   public double d;&#10;   public static void main(String args[]) &#123;&#10;      try &#123;&#10;           Class cls = Class.forName(&#34;Field2&#34;);&#10;           Field fld = cls.getField(&#34;d&#34;);&#10;           Field2 f2obj = new Field2();&#10;           System.out.println(&#34;d = &#34; + f2obj.d);&#10;           fld.setDouble(f2obj, 12.34);&#10;           System.out.println(&#34;d = &#34; + f2obj.d);&#10;      &#125;&#10;      catch (Throwable e) &#123;&#10;           System.err.println(e);&#10;      &#125;&#10;   &#125;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个例子中，字段 d 的值被变为了 12.34。</p>
+<h2 id="u4F7F_u7528_u6570_u7EC4"><a href="#u4F7F_u7528_u6570_u7EC4" class="headerlink" title="使用数组"></a>使用数组</h2><p>本文介绍的 reflection 的最后一种用法是创建的操作数组。数组在 Java 语言中是一种特殊的类类型，一个数组的引用可以赋给 Object 引用。观察下面的例子看看数组是怎么工作的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import java.lang.reflect.*;&#10;public class Array1 &#123;&#10;   public static void main(String args[]) &#123;&#10;      try &#123;&#10;           Class cls = Class.forName(&#34;java.lang.String&#34;);&#10;           Object arr = Array.newInstance(cls, 10);&#10;           Array.set(arr, 5, &#34;this is a test&#34;);&#10;           String s = (String) Array.get(arr, 5);&#10;           System.out.println(s);&#10;      &#125;&#10;      catch (Throwable e) &#123;&#10;           System.err.println(e);&#10;      &#125;&#10;   &#125;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>例中创建了 10 个单位长度的 String 数组，为第 5 个位置的字符串赋了值，最后将这个字符串从数组中取得并打印了出来。<br>下面这段代码提供了一个更复杂的例子：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import java.lang.reflect.*;&#10;public class Array2 &#123;&#10;   public static void main(String args[]) &#123;&#10;      int dims[] = new int[]&#123;5, 10, 15&#125;;&#10;      Object arr = Array.newInstance(Integer.TYPE, dims);&#10;      Object arrobj = Array.get(arr, 3);&#10;      Class cls = arrobj.getClass().getComponentType();&#10;      System.out.println(cls);&#10;      arrobj = Array.get(arrobj, 5);&#10;      Array.setInt(arrobj, 10, 37);&#10;      int arrcast[][][] = (int[][][]) arr;&#10;      System.out.println(arrcast[3][5][10]);&#10;   &#125;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>例中创建了一个 5 x 10 x 15 的整型数组，并为处于 [3][5][10] 的元素赋了值为 37。注意，多维数组实际上就是数组的数组，例如，第一个 Array.get 之后，arrobj 是一个 10 x 15 的数组。进而取得其中的一个元素，即长度为 15 的数组，并使用 Array.setInt 为它的第 10 个元素赋值。<br>注意创建数组时的类型是动态的，在编译时并不知道其类型。</p>
+<h1 id="java-lang-Class"><a href="#java-lang-Class" class="headerlink" title="java.lang.Class"></a>java.lang.Class</h1><p>每当JVM创建一个对象的时候，也创建一个java.lang.Class对象，用来描述这个对象的类型。同一个类的所有实例都共有一个Class对象。<br>通过调用对象的getClass方法可以得到这个Class对象。这个方法是从java.lang.Object处继承得到的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String country = &#34;Fiji&#34;;&#10;Class myClass = country.getClass();//&#36733;&#20837;&#25351;&#23450;&#30340;&#31867;&#10;System.out,println(myClass.getName());//&#36755;&#20986;java.lang.String&#10;getName()&#26041;&#27861;&#36820;&#22238;Class&#23545;&#35937;&#25152;&#34920;&#31034;&#30340;&#37027;&#20010;&#31867;&#30340;&#20840;&#31867;&#21517;&#12290;&#10;&#10;public static Class forName (String className)&#10;//&#21019;&#24314;&#19968;&#20010;&#25351;&#23450;&#31867;&#21517;&#30340;Class&#23545;&#35937;&#12290;&#10;&#10;public Object newInstance()&#10;//&#21019;&#24314;&#19968;&#20010;&#31867;&#30340;&#19968;&#20010;&#26032;&#23454;&#20363;&#12290;</span><br></pre></td></tr></table></figure></p>
+<p>为什么需要forName()和newInstance()方法：<br>    因为有的时候，在编写程序的时候还不知道这个类的名称。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Class klass = null;&#10;try&#123;&#10; klass = Class.forName(app05.Test);&#10;&#125;catch(ClassNotFoundException e)&#123;&#10;&#125;&#10;if(klass = null)&#123;&#10; try&#123;&#10;  //&#21019;&#24314;Test&#31867;&#30340;&#19968;&#20010;&#23454;&#20363;&#10;  Test test = (Test) klass.newInstance();&#10; &#125;catch(IllegalAccessException e)&#123;&#10; &#125;catch(InstantiationException e)&#123;&#10; &#125;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Java/">Java</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  
+<div class="jiathis_style">
+    <span class="jiathis_txt">分享到：</span>
+    <a class="jiathis_button_tsina">新浪微博</a>
+    <a class="jiathis_button_weixin">微信</a>
+    <a class="jiathis_button_twitter">Twitter</a>
+    <a class="jiathis_button_evernote">EverNote</a>
+    <a href="http://www.jiathis.com/share?uid=1501277" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+</div>
+<script type="text/javascript" >
+    var jiathis_config={
+    data_track_clickback:true,
+    sm:"copy,renren,cqq",
+    pic:"",
+    summary:"",
+    
+  </script> 
+<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=
+" charset="utf-8"></script>      
+
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2014/11/23/Java/java对象的生命周期/" title="Java对象的生命周期">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  Java对象的生命周期</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2014/10/25/Java/《深入理解Java虚拟机》/"  title="《深入理解Java虚拟机》">
+ <strong>NEXT:</strong><br/> 
+ <span>《深入理解Java虚拟机》
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#u53CD_u5C04_u673A_u5236"><span class="toc-number">1.</span> <span class="toc-text">反射机制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Class-isInstance__u65B9_u6CD5_u53EF_u4EE5_u7528_u4E8E_u6A21_u62DF_instanceof__u64CD_u4F5C_u7B26"><span class="toc-number">1.1.</span> <span class="toc-text">Class.isInstance 方法可以用于模拟 instanceof 操作符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u627E_u51FA_u7C7B_u7684_u65B9_u6CD5"><span class="toc-number">1.2.</span> <span class="toc-text">找出类的方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u83B7_u53D6_u6784_u9020_u5668_u4FE1_u606F"><span class="toc-number">1.3.</span> <span class="toc-text">获取构造器信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u83B7_u53D6_u7C7B_u7684_u5B57_u6BB5_28_u57DF_29"><span class="toc-number">1.4.</span> <span class="toc-text">获取类的字段(域)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u6839_u636E_u65B9_u6CD5_u7684_u540D_u79F0_u6765_u6267_u884C_u65B9_u6CD5"><span class="toc-number">1.5.</span> <span class="toc-text">根据方法的名称来执行方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u521B_u5EFA_u65B0_u7684_u5BF9_u8C61"><span class="toc-number">1.6.</span> <span class="toc-text">创建新的对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u6539_u53D8_u5B57_u6BB5_28_u57DF_29_u7684_u503C"><span class="toc-number">1.7.</span> <span class="toc-text">改变字段(域)的值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u4F7F_u7528_u6570_u7EC4"><span class="toc-number">1.8.</span> <span class="toc-text">使用数组</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#java-lang-Class"><span class="toc-number">2.</span> <span class="toc-text">java.lang.Class</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/C/" title="C++">C++<sup>4</sup></a></li>
+		
+			<li><a href="/categories/Github/" title="Github">Github<sup>3</sup></a></li>
+		
+			<li><a href="/categories/Java/" title="Java">Java<sup>11</sup></a></li>
+		
+			<li><a href="/categories/Linux/" title="Linux">Linux<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Lisp/" title="Lisp">Lisp<sup>0</sup></a></li>
+		
+			<li><a href="/categories/Python/" title="Python">Python<sup>0</sup></a></li>
+		
+			<li><a href="/categories/Spark/" title="Spark">Spark<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Web/" title="Web">Web<sup>1</sup></a></li>
+		
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>1</sup></a></li>
+		
+			<li><a href="/categories/数据结构/" title="数据结构">数据结构<sup>4</sup></a></li>
+		
+			<li><a href="/categories/算法/" title="算法">算法<sup>4</sup></a></li>
+		
+			<li><a href="/categories/职业生涯/" title="职业生涯">职业生涯<sup>7</sup></a></li>
+		
+			<li><a href="/categories/随笔生活/" title="随笔生活">随笔生活<sup>4</sup></a></li>
+		
+			<li><a href="/categories/面试/" title="面试">面试<sup>4</sup></a></li>
+		
+			<li><a href="/categories/项目总结/" title="项目总结">项目总结<sup>0</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+      <li><a href="http://yangjian.me" target="_blank" title="YangJian">Alimon's Blog</a></li>
+      <li><a href="http://zespia.tw/hexo" target="_blank" title="Hexo">Hexo</a></li>
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="http://weibo.com/lsx1993" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  
+  <div class="archiveslist">
+    <p class="asidetitle"><a href="/archives">归档</a></p>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">九月 2014</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">五月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">四月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/03/">三月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">二月 2014</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/10/">十月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/09/">九月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/02/">二月 2013</a><span class="archive-list-count">2</span></li></ul>
+  </div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello,This is my blog. <br/>
+			I will share my learing experience here.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/lsx1993" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/lisuxuan1993" target="_blank" title="github"></a>
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2016 
+		
+		<a href="http://lisuxuan1993.github.com" target="_blank" title="Leo_璇哥">Leo_璇哥</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"null"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'null', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+  </body>
+</html>

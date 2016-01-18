@@ -1,0 +1,442 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>《Java并发编程实战》 | Leo&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="Leo_璇哥">
+    
+    <meta name="description" content="多线程。同步。Java线程和并发编程知识。
+从并发性和线程安全性的基本概念出发，介绍了如何使用类库提供的基本并发构建块来避免并发危险。
+使用线程，并且关注程序执行性能的开发人员。如何有效地利用并发性。如何在Java并发应用程序中正确且高效的使用底层提供的基本的并发功能。
+Java虚拟机中能支持一些高">
+    
+    
+    
+    
+    <link rel="alternative" href="http://weibo.com/lsx1993" title="Leo&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/author.jpg" alt="Leo&#39;s Blog" title="Leo&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Leo&#39;s Blog">Leo&#39;s Blog</a></h1>
+				<h2 class="blog-motto">华南理工大学2010级计算机全英创新班，2013级研究生。Java程序员，研究PaaS平台。积极向上，追求卓越。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">博客主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/page/lab">实验室</a></li>
+					
+						<li><a href="/page">关于</a></li>
+					
+					<li>
+					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/10/23/Java/《Java并发编程实战》/" title="《Java并发编程实战》" itemprop="url">《Java并发编程实战》</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://lisuxuan1993.github.com" title="Leo_璇哥">Leo_璇哥</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2014-10-22T20:15:12.000Z" itemprop="datePublished">Oct 23 2014</time>
+    更新日期:<time datetime="2014-10-22T12:24:05.000Z" itemprop="dateModified">Oct 22 2014</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#u672C_u4E66_u5185_u5BB9_uFF1A"><span class="toc-number">1.</span> <span class="toc-text">本书内容：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#u7B2C1_u7AE0__u7B80_u4ECB"><span class="toc-number">2.</span> <span class="toc-text">第1章 简介</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#u7EBF_u7A0B_u7684_u4F18_u52BF_uFF1A"><span class="toc-number">2.1.</span> <span class="toc-text">线程的优势：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u95EE_u9898_uFF1A"><span class="toc-number">2.2.</span> <span class="toc-text">问题：</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#u7B2C2_u7AE0__u7EBF_u7A0B_u5B89_u5168_u6027"><span class="toc-number">3.</span> <span class="toc-text">第2章 线程安全性</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1__u4EC0_u4E48_u662F_u7EBF_u7A0B_u5B89_u5168_u6027"><span class="toc-number">3.1.</span> <span class="toc-text">2.1 什么是线程安全性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2__u539F_u5B50_u6027"><span class="toc-number">3.2.</span> <span class="toc-text">2.2 原子性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3__u52A0_u9501_u673A_u5236"><span class="toc-number">3.3.</span> <span class="toc-text">2.3 加锁机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4__u7528_u9501_u6765_u4FDD_u62A4_u72B6_u6001"><span class="toc-number">3.4.</span> <span class="toc-text">2.4 用锁来保护状态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-5__u6D3B_u8DC3_u6027_u548C_u6027_u80FD"><span class="toc-number">3.5.</span> <span class="toc-text">2.5 活跃性和性能</span></a></li></ol></li></ol>
+		</div>
+		
+		<p>多线程。同步。Java线程和并发编程知识。</p>
+<p>从并发性和线程安全性的基本概念出发，介绍了如何使用类库提供的基本并发构建块来避免并发危险。</p>
+<p>使用线程，并且关注程序执行性能的开发人员。如何有效地利用并发性。<br>如何在Java并发应用程序中正确且高效的使用底层提供的基本的并发功能。</p>
+<p>Java虚拟机中能支持一些高性能的并且具有高可伸缩性的并发类，此外还支持一组新的并发基础构建模块。工作原理、使用方式、研究背景与设计模式。<br>并发的理论基础，实际的开发技术。<br>构建可靠的，可伸缩的，可维护的并发应用程序。<br>并发API及机制，设计原则，设计模式，思维模式。</p>
+<h1 id="u672C_u4E66_u5185_u5BB9_uFF1A"><a href="#u672C_u4E66_u5185_u5BB9_uFF1A" class="headerlink" title="本书内容："></a>本书内容：</h1><p>并发性与线程安全性的基本概念<br>构建，组合各种线程安全类的技术。<br>使用java.util.concurrent包中的各种并发构建基础模块。<br>性能优化中的注意事项。<br>高级主题：原子变量，无阻塞算法，Java内存模型。</p>
+<p>第一部分：Java并发编程的基础理论<br>    线程安全性、状态对象的基础知识，如何构造线程安全的类并将多个小型的线程安全类构建成更大的线程安全类。Java平台库中的一些基础并发模块。<br>第二部分：并发应用程序的构造理论<br>    应用程序中并行语义的分解及其与逻辑任务的映射，任务的取消与关闭等行为的实现。Java线程池中的一些高级功能。<br>第三部分：并发编程的性能调优<br>    测试并发代码性能。<br>第四部分：并发编程中的一些高级主题<br>    显式锁，原子变量，非阻塞算法，开发自定义的同步工具类。</p>
+<p>前提：了解Java基本的并发机制。</p>
+<p>本书提供各种实用的设计规则，用于帮助开发人员创建安全的和高性能的并发类。<br>本书诞生于JSR166为Java 5.0开发java.util.concurrent包的过程。</p>
+<h1 id="u7B2C1_u7AE0__u7B80_u4ECB"><a href="#u7B2C1_u7AE0__u7B80_u4ECB" class="headerlink" title="第1章 简介"></a>第1章 简介</h1><p>使用线程，发挥多处理器的计算能力。如何高效使用并发（异步性）很重要。<br>线程共享进程的内存地址空间。需要比进程间共享数据粒度更细的数据共享机制。</p>
+<h2 id="u7EBF_u7A0B_u7684_u4F18_u52BF_uFF1A"><a href="#u7EBF_u7A0B_u7684_u4F18_u52BF_uFF1A" class="headerlink" title="线程的优势："></a>线程的优势：</h2><p>发挥多处理器的强大能力。<br>建模的简单性：程序中只包含一种类型的任务。<br>异步事件的简化处理：如果每个请求都有自己的处理线程，那么在处理某个请求时发生的阻塞将不会影响其他请求的处理。</p>
+<p>Java提供了各种同步机制来协同对共享变量的访问操作。</p>
+<p>根据本书第二章和第三章提出的指导原则，就可以绕开底层JVM优化的细节问题。</p>
+<h2 id="u95EE_u9898_uFF1A"><a href="#u95EE_u9898_uFF1A" class="headerlink" title="问题："></a>问题：</h2><p>安全性问题<br>活跃性问题：死锁，困难因为这依赖于不同线程的事件发生的时序。因此在开发或者测试中并不总是能够重视。<br>性能问题：上下文切换操作。</p>
+<p>熟悉并发性和线程安全性。</p>
+<p>框架通过在框架线程中调用应用程序代码将并发性引入到程序中。在代码中将不可避免的访问应用程序状态，因为所有访问这些状态的代码路径都必须是线程安全的。</p>
+<p>Servlet需要是线程安全的。<br>RMI对象应该做好被多个线程同时调用的准备，并且必须确保它们自身的线程安全性。</p>
+<p>部分：基础知识</p>
+<h1 id="u7B2C2_u7AE0__u7EBF_u7A0B_u5B89_u5168_u6027"><a href="#u7B2C2_u7AE0__u7EBF_u7A0B_u5B89_u5168_u6027" class="headerlink" title="第2章 线程安全性"></a>第2章 线程安全性</h1><p>线程和锁在并发编程中很重要。<br>核心在于：对状态访问操作进行管理，特别是对共享的和可变的状态的访问。<br>要使得对象是线程安全的，需要采用同步机制，来协同对对象可变状态的访问。</p>
+<p>Java中的主要同步机制是关键字synchronized，提供独占的加锁方式。“同步”还包括volatile类型的变量，显式锁Explicit Lock和原子变量。</p>
+<p>如果当多个线程访问同一个可变的状态变量时，没有使用合适的同步，那么程序就会出现错误。有三种方式可以修复这个问题。<br>不在线程之间共享该状态变量。<br>将状态变量修改为不可变的变量。<br>在访问状态变量时使用同步。</p>
+<p>程序状态的封装性越好，就越容易实现程序的线程安全性。</p>
+<p>原则：首先使代码正确运行，然后再提高代码的速度。即便如此，最好也只是当性能测试结果表示必须提高性能的时候才进行优化。</p>
+<p>线程安全性主要针对：封装自己状态的整个代码。</p>
+<h2 id="2-1__u4EC0_u4E48_u662F_u7EBF_u7A0B_u5B89_u5168_u6027"><a href="#2-1__u4EC0_u4E48_u662F_u7EBF_u7A0B_u5B89_u5168_u6027" class="headerlink" title="2.1 什么是线程安全性"></a>2.1 什么是线程安全性</h2><p>当多个线程访问某个类时，不管运行时环境采用何种调度方式或者这些线程如何交替执行，并且在主调代码中不需要任何额外的同步或者协同，这个类都能表现出正确的行为，那么称这个类是线程安全的。</p>
+<p>在线程安全类中封装了必要的同步机制，因此客户端无须进一步采取同步措施。</p>
+<p>通常，线程安全性的需求并非来源于对线程的直接使用，而是使用Servlet这样的框架。</p>
+<p>无状态对象：即不包含任何域，也不包含任何其他类中域的引用。<br>无状态对象一定是线程安全的，因为计算过程中的临时状态仅存在于线程栈上的局部变量中，并且只能正在执行的线程访问。两个线程没有共享状态，就好像它们都在访问不同的实例。</p>
+<p>大多数Servlet都是无状态的，从而极大降低了实现Servlet线程安全性时候的复杂性，只有当Servlet在处理请求时需要保存一些信息，线程安全性才会成为一个问题。</p>
+<h2 id="2-2__u539F_u5B50_u6027"><a href="#2-2__u539F_u5B50_u6027" class="headerlink" title="2.2 原子性"></a>2.2 原子性</h2><p>在并发编程中，由于不恰当的执行时序而出现不正确的结果是一种非常重要的情况。叫做竞争条件。</p>
+<p>大多数竞争条件的本质：基于一种可能失效的观察结构来做出判断或者执行某个计算。<br>这种类型的竞争条件称为”先检查后执行“。（读取，修改，写入）</p>
+<p>2.2.2 延迟初始化中的竞争条件<br>    单例模式。</p>
+<p>2.2.3 复合操作<br>加锁机制：用于确保原子性的内置机制。<br>使用AtomicLong类型的变量来统计已处理请求的数量：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public class CountingFactorizer implements Servlet&#123;&#10;    private final AtomicLong count = new AtomicLong (0);&#10;    public long getCount()&#123;return count.get();&#125;&#10;    public void service(ServiceRequest req,ServletResponse resp)&#123;&#10;        BigInteger i = extractFromRequest(req);&#10;        BigInteger[] factors = factor(i);&#10;        count.incrementAndGet();&#10;        encodeIntoResponse(resp,factors);&#10;&#125;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在java.util.concurrent.atomic包中包含了一些原子变量类。</p>
+<p>在实际情况中，应该尽可能使用现有的线程安全对象例如AcomicLong来管理类的状态。与非线程安全的对象相对，判断线程安全对象的可能状态及其状态转换情况要更为容易。从而也更容易维护和验证线程安全性。</p>
+<h2 id="2-3__u52A0_u9501_u673A_u5236"><a href="#2-3__u52A0_u9501_u673A_u5236" class="headerlink" title="2.3 加锁机制"></a>2.3 加锁机制</h2><p>当更新同一个变量时，需要在同一个原子操作中对其他变量同时进行更新。</p>
+<p>要保持状态的一致性，就需要在单个原子操作中更新所有相关的状态变量。</p>
+<p>2.3.1 内置锁<br>内置的锁机制来支持原子性：同步代码快（Synchronized Block）<br>此方法较为极端，因为多个客户端无法同时访问，服务的响应性非常低。【并发性非常糟糕】<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public class SynchronizedFactorizer implements Servlet&#123;&#10; @GuardedBy(&#34;this&#34;) private BigInteger lastNumber;&#10; @GuardedBy(&#34;this&#34;) private BigInteger lastFactors;&#10;//&#37117;&#30001;Servlet&#23545;&#35937;&#30340;&#20869;&#32622;&#38145;&#26469;&#20445;&#25252;&#10;&#10; public synchronized void service(ServletRequest req,ServletResponse resp)&#123;&#10;  BigInteger i = extractFromRequest(req);&#10;  if(i.equals(lastNumber))&#10;   encodeIntoResponse(resp,lastFactors);&#10;  else&#123;&#10;   BigInteger[] factors = factor[i];&#10;   lastNumber = i;&#10;   lastFactors = factors;&#10;   encodeIntoResponse(resp,factors);&#10;  &#125;&#10; &#125;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>2.3.2 重入<br>由于内置锁是可重入的，因此如果某个线程试图获得一个已经由它自己持有的锁，那么这个请求可以成功。重入意味着获取锁的操作的粒度是“线程”，而不是“调用”。</p>
+<p>可重入避免死锁：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public class Widget&#123;&#10; public synchronized void doSomething()&#123;&#10;  ...&#10; &#125;&#10;&#125;&#10;public class LoggingWidget extends Widget&#123;&#10; public synchronized void doSomething()&#123;&#10;  System.out.println(toString() + &#34;:calling doSomething&#34;);&#10;  super.doSomething();&#10; &#125;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="2-4__u7528_u9501_u6765_u4FDD_u62A4_u72B6_u6001"><a href="#2-4__u7528_u9501_u6765_u4FDD_u62A4_u72B6_u6001" class="headerlink" title="2.4 用锁来保护状态"></a>2.4 用锁来保护状态</h2><p>对于可能被多个线程同时访问的可变状态变量，在访问它时都需要持有同一个锁，在这种情况下，我们称状态变量是由这个锁保护的。</p>
+<p>一种常见的加锁约定是：将所有的可变状态都封装在对象内部，并通过对象的内置锁对所有访问可变状态的代码路径进行同步。使得在该对象上不会发生并发访问。</p>
+<p>只有被多个线程同时访问的可变数据才需要通过锁来保护。</p>
+<p>虽然synchronized方法可以确保单个操作的原子性，但如果把多个操作合并为一个复合操作，还是需要额外的加锁机制。</p>
+<p>将每个方法都作为同步方法还可能导致活跃性问题或者性能问题。</p>
+<h2 id="2-5__u6D3B_u8DC3_u6027_u548C_u6027_u80FD"><a href="#2-5__u6D3B_u8DC3_u6027_u548C_u6027_u80FD" class="headerlink" title="2.5 活跃性和性能"></a>2.5 活跃性和性能</h2><p>尽量将不影响共享状态，且执行时间较长的操作从同步代码中分离出去。从而在这些操作执行过程中，其他线程可以访问共享状态。</p>
+<p>——简单性：对整个方法进行同步。<br>——并发性：对尽可能短的代码路径进行同步。</p>
+<p>通常，在简单性与性能之间存在着相互制约的因素。当实现某个同步策略时，一定不要盲目地为了性能而牺牲简单性（这可能会破坏安全性）</p>
+<p>重要：<br>当执行时间较长的计算或者可能无法快速完成的操作时，例如网络I/O或控制台 I/O，一定不要持有锁。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Java/">Java</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  
+<div class="jiathis_style">
+    <span class="jiathis_txt">分享到：</span>
+    <a class="jiathis_button_tsina">新浪微博</a>
+    <a class="jiathis_button_weixin">微信</a>
+    <a class="jiathis_button_twitter">Twitter</a>
+    <a class="jiathis_button_evernote">EverNote</a>
+    <a href="http://www.jiathis.com/share?uid=1501277" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+</div>
+<script type="text/javascript" >
+    var jiathis_config={
+    data_track_clickback:true,
+    sm:"copy,renren,cqq",
+    pic:"",
+    summary:"",
+    
+  </script> 
+<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=
+" charset="utf-8"></script>      
+
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2014/10/25/Java/《深入理解Java虚拟机》/" title="《深入理解Java虚拟机》">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  《深入理解Java虚拟机》</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2014/10/16/Java/Axis2发布WebService/"  title="《使用Axis2框架发布Web项目中WebService》">
+ <strong>NEXT:</strong><br/> 
+ <span>《使用Axis2框架发布Web项目中WebService》
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#u672C_u4E66_u5185_u5BB9_uFF1A"><span class="toc-number">1.</span> <span class="toc-text">本书内容：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#u7B2C1_u7AE0__u7B80_u4ECB"><span class="toc-number">2.</span> <span class="toc-text">第1章 简介</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#u7EBF_u7A0B_u7684_u4F18_u52BF_uFF1A"><span class="toc-number">2.1.</span> <span class="toc-text">线程的优势：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#u95EE_u9898_uFF1A"><span class="toc-number">2.2.</span> <span class="toc-text">问题：</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#u7B2C2_u7AE0__u7EBF_u7A0B_u5B89_u5168_u6027"><span class="toc-number">3.</span> <span class="toc-text">第2章 线程安全性</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1__u4EC0_u4E48_u662F_u7EBF_u7A0B_u5B89_u5168_u6027"><span class="toc-number">3.1.</span> <span class="toc-text">2.1 什么是线程安全性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2__u539F_u5B50_u6027"><span class="toc-number">3.2.</span> <span class="toc-text">2.2 原子性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3__u52A0_u9501_u673A_u5236"><span class="toc-number">3.3.</span> <span class="toc-text">2.3 加锁机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4__u7528_u9501_u6765_u4FDD_u62A4_u72B6_u6001"><span class="toc-number">3.4.</span> <span class="toc-text">2.4 用锁来保护状态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-5__u6D3B_u8DC3_u6027_u548C_u6027_u80FD"><span class="toc-number">3.5.</span> <span class="toc-text">2.5 活跃性和性能</span></a></li></ol></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/C/" title="C++">C++<sup>4</sup></a></li>
+		
+			<li><a href="/categories/Github/" title="Github">Github<sup>3</sup></a></li>
+		
+			<li><a href="/categories/Java/" title="Java">Java<sup>11</sup></a></li>
+		
+			<li><a href="/categories/Linux/" title="Linux">Linux<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Lisp/" title="Lisp">Lisp<sup>0</sup></a></li>
+		
+			<li><a href="/categories/Python/" title="Python">Python<sup>0</sup></a></li>
+		
+			<li><a href="/categories/Spark/" title="Spark">Spark<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Web/" title="Web">Web<sup>1</sup></a></li>
+		
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>1</sup></a></li>
+		
+			<li><a href="/categories/数据结构/" title="数据结构">数据结构<sup>4</sup></a></li>
+		
+			<li><a href="/categories/算法/" title="算法">算法<sup>4</sup></a></li>
+		
+			<li><a href="/categories/职业生涯/" title="职业生涯">职业生涯<sup>7</sup></a></li>
+		
+			<li><a href="/categories/随笔生活/" title="随笔生活">随笔生活<sup>4</sup></a></li>
+		
+			<li><a href="/categories/面试/" title="面试">面试<sup>4</sup></a></li>
+		
+			<li><a href="/categories/项目总结/" title="项目总结">项目总结<sup>0</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+      <li><a href="http://yangjian.me" target="_blank" title="YangJian">Alimon's Blog</a></li>
+      <li><a href="http://zespia.tw/hexo" target="_blank" title="Hexo">Hexo</a></li>
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="http://weibo.com/lsx1993" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  
+  <div class="archiveslist">
+    <p class="asidetitle"><a href="/archives">归档</a></p>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">九月 2014</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">五月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">四月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/03/">三月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">二月 2014</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/10/">十月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/09/">九月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/02/">二月 2013</a><span class="archive-list-count">2</span></li></ul>
+  </div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello,This is my blog. <br/>
+			I will share my learing experience here.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/lsx1993" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/lisuxuan1993" target="_blank" title="github"></a>
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2016 
+		
+		<a href="http://lisuxuan1993.github.com" target="_blank" title="Leo_璇哥">Leo_璇哥</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"null"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'null', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+  </body>
+</html>

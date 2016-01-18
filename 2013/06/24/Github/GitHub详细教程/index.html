@@ -1,0 +1,651 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>GitHub详细教程 | Leo&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="Leo_璇哥">
+    
+    <meta name="description" content="[http://blog.csdn.net/tangbin330/article/details/9128765] 
+Table of Contents1 Git详细教程1.1 Git简介1.1.1 Git是何方神圣?1.1.2 重要的术语1.1.3 索引1.2 Git安装1.3 Git配置1.3.">
+    
+    
+    
+    
+    <link rel="alternative" href="http://weibo.com/lsx1993" title="Leo&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/author.jpg" alt="Leo&#39;s Blog" title="Leo&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Leo&#39;s Blog">Leo&#39;s Blog</a></h1>
+				<h2 class="blog-motto">华南理工大学2010级计算机全英创新班，2013级研究生。Java程序员，研究PaaS平台。积极向上，追求卓越。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">博客主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/page/lab">实验室</a></li>
+					
+						<li><a href="/page">关于</a></li>
+					
+					<li>
+					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2013/06/24/Github/GitHub详细教程/" title="GitHub详细教程" itemprop="url">GitHub详细教程</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://lisuxuan1993.github.com" title="Leo_璇哥">Leo_璇哥</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2013-06-24T13:17:39.000Z" itemprop="datePublished">Jun 24 2013</time>
+    更新日期:<time datetime="2014-09-24T05:20:32.000Z" itemprop="dateModified">Sep 24 2014</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Set_default_so_that_all_changes_are_always_pushed_to_the_repository"><span class="toc-number">1.</span> <span class="toc-text">Set default so that all changes are always pushed to the repository</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Create_a_directory"><span class="toc-number">2.</span> <span class="toc-text">Create a directory</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Switch_into_it"><span class="toc-number">3.</span> <span class="toc-text">Switch into it</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Create_a_new_directory"><span class="toc-number">4.</span> <span class="toc-text">Create a new directory</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Create_a_few_files"><span class="toc-number">5.</span> <span class="toc-text">Create a few files</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Put_a_little_text_into_the_first_file"><span class="toc-number">6.</span> <span class="toc-text">Put a little text into the first file</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Initialize_the_local_Git_repository"><span class="toc-number">7.</span> <span class="toc-text">Initialize the local Git repository</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Add_all__28files_and_directories_29_to_the_Git_repository"><span class="toc-number">8.</span> <span class="toc-text">Add all (files and directories) to the Git repository</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Make_a_commit_of_your_file_to_the_local_repository"><span class="toc-number">9.</span> <span class="toc-text">Make a commit of your file to the local repository</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Show_the_log_file"><span class="toc-number">10.</span> <span class="toc-text">Show the log file</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Make_some_changes_to_the_file"><span class="toc-number">11.</span> <span class="toc-text">Make some changes to the file</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Check_the_changes_via_the_diff_command"><span class="toc-number">12.</span> <span class="toc-text">Check the changes via the diff command</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Commit_the_changes_2C_-a_will_commit_changes_for_modified_files"><span class="toc-number">13.</span> <span class="toc-text">Commit the changes, -a will commit changes for modified files</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#but_will_not_add_automatically_new_files"><span class="toc-number">14.</span> <span class="toc-text">but will not add automatically new files</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Make_some_changes_in_the_file"><span class="toc-number">15.</span> <span class="toc-text">Make some changes in the file</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#See_the_current_status_of_your_repository"><span class="toc-number">16.</span> <span class="toc-text">See the current status of your repository</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#28which_files_are_changed_/_new_/_deleted_29"><span class="toc-number">17.</span> <span class="toc-text">(which files are changed / new / deleted)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Show_the_differences_between_the_uncommitted_files"><span class="toc-number">18.</span> <span class="toc-text">Show the differences between the uncommitted files</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#and_the_last_commit_in_the_current_branch"><span class="toc-number">19.</span> <span class="toc-text">and the last commit in the current branch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Add_the_changes_to_the_index_and_commit"><span class="toc-number">20.</span> <span class="toc-text">Add the changes to the index and commit</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Show_the_history_of_commits_in_the_current_branch"><span class="toc-number">21.</span> <span class="toc-text">Show the history of commits in the current branch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#This_starts_a_nice_graphical_view_of_the_changes"><span class="toc-number">22.</span> <span class="toc-text">This starts a nice graphical view of the changes</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Create_a_file_and_put_it_under_version_control"><span class="toc-number">23.</span> <span class="toc-text">Create a file and put it under version control</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Remove_the_file"><span class="toc-number">24.</span> <span class="toc-text">Remove the file</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Try_standard_way_of_committing_-_26gt_3B_will_not_work"><span class="toc-number">25.</span> <span class="toc-text">Try standard way of committing -> will not work</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Now_commit_with_the_-a_flag"><span class="toc-number">26.</span> <span class="toc-text">Now commit with the -a flag</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Alternatively_you_could_add_deleted_files_to_the_staging_index_via"><span class="toc-number">27.</span> <span class="toc-text">Alternatively you could add deleted files to the staging index via</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Switch_to_the_first_repository"><span class="toc-number">28.</span> <span class="toc-text">Switch to the first repository</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Check_the_content_2C_it_is_identical_to_the_-git_directory_in_repo01"><span class="toc-number">29.</span> <span class="toc-text">Check the content, it is identical to the .git directory in repo01</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Add_-/remote-repository-git_with_the_name_origin"><span class="toc-number">30.</span> <span class="toc-text">Add ../remote-repository.git with the name origin</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Again_some_changes"><span class="toc-number">31.</span> <span class="toc-text">Again some changes</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Commit"><span class="toc-number">32.</span> <span class="toc-text">Commit</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#If_you_do_not_label_a_repository_it_will_push_to_origin"><span class="toc-number">33.</span> <span class="toc-text">If you do not label a repository it will push to origin</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Show_the_existing_defined_remote_repositories"><span class="toc-number">34.</span> <span class="toc-text">Show the existing defined remote repositories</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Switch_to_home"><span class="toc-number">35.</span> <span class="toc-text">Switch to home</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Make_new_directory"><span class="toc-number">36.</span> <span class="toc-text">Make new directory</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Switch_to_new_directory"><span class="toc-number">37.</span> <span class="toc-text">Switch to new directory</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Clone"><span class="toc-number">38.</span> <span class="toc-text">Clone</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Switch_to_home-1"><span class="toc-number">39.</span> <span class="toc-text">Switch to home</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Switch_to_second_directory"><span class="toc-number">40.</span> <span class="toc-text">Switch to second directory</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Make_changes"><span class="toc-number">41.</span> <span class="toc-text">Make changes</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Commit-1"><span class="toc-number">42.</span> <span class="toc-text">Commit</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Push_changes_to_remote_repository"><span class="toc-number">43.</span> <span class="toc-text">Push changes to remote repository</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Origin_is_automatically_maintained_as_we_cloned_from_this_repository"><span class="toc-number">44.</span> <span class="toc-text">Origin is automatically maintained as we cloned from this repository</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Switch_to_the_first_repository_and_pull_in_the_changes"><span class="toc-number">45.</span> <span class="toc-text">Switch to the first repository and pull in the changes</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Check_the_changes"><span class="toc-number">46.</span> <span class="toc-text">Check the changes</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Create_a_new_file_with_content"><span class="toc-number">47.</span> <span class="toc-text">Create a new file with content</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Make_a_dry-run_to_see_what_would_happen"><span class="toc-number">48.</span> <span class="toc-text">Make a dry-run to see what would happen</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#n_is_the_same_as__u2013dry-run"><span class="toc-number">49.</span> <span class="toc-text">-n is the same as –dry-run</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Now_delete"><span class="toc-number">50.</span> <span class="toc-text">Now delete</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Switch_to_home-2"><span class="toc-number">51.</span> <span class="toc-text">Switch to home</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Get_the_log"><span class="toc-number">52.</span> <span class="toc-text">Get the log</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Copy_one_of_the_older_commits_and_checkout_the_older_revision_via__u8BD1_u8005_u6CE8_uFF1Acheckout__u540E_u52A0commit_id_u5C31_u662F_u628Acommit_u7684_u5185_u5BB9_u590D_u5236_u5230index_u548C_u5DE5_u4F5C_u526F_u672C_u4E2D"><span class="toc-number">53.</span> <span class="toc-text">Copy one of the older commits and checkout the older revision via  译者注：checkout 后加commit id就是把commit的内容复制到index和工作副本中</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Not_added_to_the_staging_index-_Therefore_we_can"><span class="toc-number">54.</span> <span class="toc-text">Not added to the staging index. Therefore we can</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#just_checkout_the_old_version"><span class="toc-number">55.</span> <span class="toc-text">just checkout the old version</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Check_the_result"><span class="toc-number">56.</span> <span class="toc-text">Check the result</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Another_nonsense_change"><span class="toc-number">57.</span> <span class="toc-text">Another nonsense change</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#We_add_the_file_to_the_staging_index"><span class="toc-number">58.</span> <span class="toc-text">We add the file to the staging index</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Restore_the_file_in_the_staging_index"><span class="toc-number">59.</span> <span class="toc-text">Restore the file in the staging index</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Get_the_old_version_from_the_staging_index"><span class="toc-number">60.</span> <span class="toc-text">Get the old version from the staging index</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Revert_a_commit"><span class="toc-number">61.</span> <span class="toc-text">Revert a commit</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Delete_a_file"><span class="toc-number">62.</span> <span class="toc-text">Delete a file</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Revert_the_deletion"><span class="toc-number">63.</span> <span class="toc-text">Revert the deletion</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Syntax_3A_git_branch"><span class="toc-number">64.</span> <span class="toc-text">Syntax: git branch  </span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#in_the_above_is_optional"><span class="toc-number">65.</span> <span class="toc-text"> in the above is optional</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#if_not_specified_the_last_commit_will_be_used"><span class="toc-number">66.</span> <span class="toc-text">if not specified the last commit will be used</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#If_specified_the_corresponding_commit_will_be_used"><span class="toc-number">67.</span> <span class="toc-text">If specified the corresponding commit will be used</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Switch_to_your_new_branch"><span class="toc-number">68.</span> <span class="toc-text">Switch to your new branch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Some_changes"><span class="toc-number">69.</span> <span class="toc-text">Some changes</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Switch_to_the_master_branch"><span class="toc-number">70.</span> <span class="toc-text">Switch to the master branch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Check_that_the_content_of_test01_is_the_old_one"><span class="toc-number">71.</span> <span class="toc-text">Check that the content of test01 is the old one</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Syntax_3A_git_merge"><span class="toc-number">72.</span> <span class="toc-text">Syntax: git merge </span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Check_if_branch_has_been_deleted"><span class="toc-number">73.</span> <span class="toc-text">Check if branch has been deleted</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Push_testing_branch_to_remote_repository"><span class="toc-number">74.</span> <span class="toc-text">Push testing branch to remote repository</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Switch_to_the_testing_branch"><span class="toc-number">75.</span> <span class="toc-text">Switch to the testing branch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Some_changes-1"><span class="toc-number">76.</span> <span class="toc-text">Some changes</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Push_all_including_branch"><span class="toc-number">77.</span> <span class="toc-text">Push all including branch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Switch_to_the_first_directory"><span class="toc-number">78.</span> <span class="toc-text">Switch to the first directory</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Make_changes-1"><span class="toc-number">79.</span> <span class="toc-text">Make changes</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Stage_and_commit"><span class="toc-number">80.</span> <span class="toc-text">Stage and commit</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Switch_to_the_second_directory"><span class="toc-number">81.</span> <span class="toc-text">Switch to the second directory</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Make_changes-2"><span class="toc-number">82.</span> <span class="toc-text">Make changes</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Stage_and_commit-1"><span class="toc-number">83.</span> <span class="toc-text">Stage and commit</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Push_to_the_master_repository"><span class="toc-number">84.</span> <span class="toc-text">Push to the master repository</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Now_try_to_push_from_the_first_directory"><span class="toc-number">85.</span> <span class="toc-text">Now try to push from the first directory</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Switch_to_the_first_directory-1"><span class="toc-number">86.</span> <span class="toc-text">Switch to the first directory</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Try_to_push__u2013_26gt_3B_you_will_get_an_error_message"><span class="toc-number">87.</span> <span class="toc-text">Try to push –> you will get an error message</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Get_the_changes"><span class="toc-number">88.</span> <span class="toc-text">Get the changes</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Change_in_the_first_repository"><span class="toc-number">89.</span> <span class="toc-text">Change in the first repository</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Either_edit_the_file_manually_or_use"><span class="toc-number">90.</span> <span class="toc-text">Either edit the file manually or use</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#You_will_be_prompted_to_select_which_merge_tool_you_want_to_use"><span class="toc-number">91.</span> <span class="toc-text">You will be prompted to select which merge tool you want to use</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#For_example_on_Ubuntu_you_can_use_the_tool__u201Cmeld_u201D"><span class="toc-number">92.</span> <span class="toc-text">For example on Ubuntu you can use the tool “meld”</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#After_merging_the_changes_manually_2C_commit_them"><span class="toc-number">93.</span> <span class="toc-text">After  merging the changes manually, commit them</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Create_a_new_file"><span class="toc-number">94.</span> <span class="toc-text">Create a new file</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Add_it_to_git"><span class="toc-number">95.</span> <span class="toc-text">Add it to git</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Do_some_silly_changes_and_commit"><span class="toc-number">96.</span> <span class="toc-text">Do some silly changes and commit</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Check_the_git_log_message"><span class="toc-number">97.</span> <span class="toc-text">Check the git log message</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Create_new_branch"><span class="toc-number">98.</span> <span class="toc-text">Create new branch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Checkout_the_branch"><span class="toc-number">99.</span> <span class="toc-text">Checkout the branch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Make_some_changes"><span class="toc-number">100.</span> <span class="toc-text">Make some changes</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Commit_into_testing_branch"><span class="toc-number">101.</span> <span class="toc-text">Commit into testing branch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Rebase_the_master"><span class="toc-number">102.</span> <span class="toc-text">Rebase the master</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Create_a_new_branch"><span class="toc-number">103.</span> <span class="toc-text">Create a new branch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Use_this_new_branch"><span class="toc-number">104.</span> <span class="toc-text">Use this new branch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Make_some_changes-1"><span class="toc-number">105.</span> <span class="toc-text">Make some changes</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Change_some_content_in_an_existing_file"><span class="toc-number">106.</span> <span class="toc-text">Change some content in an existing file</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Commit_this_to_the_branch"><span class="toc-number">107.</span> <span class="toc-text">Commit this to the branch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Create_a_patch__u2013_26gt_3B_git_format-patch_master"><span class="toc-number">108.</span> <span class="toc-text">Create a patch –> git format-patch master</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#This_created_patch_0001-First-commit-in-the-branch-patch"><span class="toc-number">109.</span> <span class="toc-text">This created patch 0001-First-commit-in-the-branch.patch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Switch_to_the_master"><span class="toc-number">110.</span> <span class="toc-text">Switch to the master</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Apply_the_patch"><span class="toc-number">111.</span> <span class="toc-text">Apply the patch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Do_your_normal_commit_in_the_master"><span class="toc-number">112.</span> <span class="toc-text">Do your normal commit in the master</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Delete_the_patch"><span class="toc-number">113.</span> <span class="toc-text">Delete the patch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Remove_directory_-metadata_from_git_repo"><span class="toc-number">114.</span> <span class="toc-text">Remove directory .metadata from git repo</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Remove_file_test-txt_from_repo"><span class="toc-number">115.</span> <span class="toc-text">Remove file test.txt from repo</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Login_to_server"><span class="toc-number">116.</span> <span class="toc-text">Login to server</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#to_test_use_localhost"><span class="toc-number">117.</span> <span class="toc-text">to test use localhost</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Create_repository"><span class="toc-number">118.</span> <span class="toc-text">Create repository</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#The_following_will_clone_via_HTTP"><span class="toc-number">119.</span> <span class="toc-text">The following will clone via HTTP</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Linux"><span class="toc-number">120.</span> <span class="toc-text">Linux</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#On_Windows"><span class="toc-number">121.</span> <span class="toc-text">On Windows</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Set_http_proxy_3Dhttp_3A//proxy_3A8080"><span class="toc-number">122.</span> <span class="toc-text">Set http_proxy=http://proxy:8080</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Push_back_to_the_origin_using_http"><span class="toc-number">123.</span> <span class="toc-text">Push back to the origin using http</span></a></li></ol>
+		</div>
+		
+		<p>[<a href="http://blog.csdn.net/tangbin330/article/details/9128765" target="_blank" rel="external">http://blog.csdn.net/tangbin330/article/details/9128765</a>] </p>
+<p>Table of Contents<br>1 Git详细教程<br>1.1 Git简介<br>1.1.1 Git是何方神圣?<br>1.1.2 重要的术语<br>1.1.3 索引<br>1.2 Git安装<br>1.3 Git配置<br>1.3.1 用户信息<br>1.3.2 高亮显示<br>1.3.3 忽略特定的文件<br>1.3.4 使用.gitkeep来追踪空的文件夹<br>1.4 开始操作Git<br>1.4.1 创建内容<br>1.4.2 创建仓库、添加文件和提交更改<br>1.4.3 diff命令与commit更改<br>1.4.4 Status, Diff 和 Commit Log<br>1.4.5 更正提交的信息 - git amend<br>1.4.6 删除文件<br>1.5 远端仓库（remote repositories）<br>1.5.1 设置一个远端的Git仓库<br>1.5.2 推送更改到其他的仓库<br>1.5.3 添加远端仓库<br>1.5.4 显示已有的远端仓库<br>1.5.5 克隆仓库<br>1.5.6 拉取（Pull）更改<br>1.5.7 还原更改<br>1.5.8 标记<br>1.6 分支、合并<br>1.6.1 分支<br>1.6.2 合并<br>1.6.3 删除分支<br>1.6.4 推送（push）一个分支到远端仓库<br>1.7 解决合并冲突<br>1.8 变基（Rebase）<br>1.8.1 在同一分支中应用Rebase Commit<br>1.8.2 Rebasing多个分支<br>1.8.3 Rebase最佳实践<br>1.8.4 创建和应用补丁<br>1.9 定义同名命令<br>1.10 放弃跟踪文件<br>1.11 其他有用的命令<br>1.12 安装Git服务<br>1.13 在线的远端仓库<br>1.13.1 克隆远端仓库<br>1.13.2 添加远端仓库<br>1.13.3 通过http和代理服务器进行远端操作<br>1.14 Git服务提供商<br>1.14.1 GitHub<br>1.14.2 Bitbucket<br>1.15 Git的图形接口<br>1.16 Kindle版本教程<br>1.17 问题与讨论<br>1.18 链接和文章</p>
+<p>1 Git详细教程</p>
+<p>1.1 Git简介</p>
+<p>1.1.1 Git是何方神圣?</p>
+<p>Git是用C语言开发的分布版本控制系统。版本控制系统可以保留一个文件集合的历史记录，并能回滚文件集合到另一个状态（历史记录状态）。另一个状态可以是不同的文件，也可以是不同的文件内容。举个例子，你可以将文件集合转换到两天之前的状态，或者你可以在生产代码和实验性质的代码之间进行切换。文件集合往往被称作是“源代码”。在一个分布版本控制系统中，每个人都有一份完整的源代码（包括源代码所有的历史记录信息），而且可以对这个本地的数据进行操作。分布版本控制系统不需要一个集中式的代码仓库。</p>
+<p>当你对本地的源代码进行了修改，你可以标注他们跟下一个版本相关（将他们加到index中），然后提交到仓库中来（commit）。Git保存了所有的版本信息，所以你可以转换你的源代码到任何的历史版本。你可以对本地的仓库进行代码的提交，然后与其他的仓库进行同步。你可以使用Git来进行仓库的克隆（clone）操作，完整的复制一个已有的仓库。仓库的所有者可以通过push操作（推送变更到别处的仓库）或者Pull操作（从别处的仓库拉取变更）来同步变更。</p>
+<p>Git支持分支功能（branch）。如果你想开发一个新的产品功能，你可以建立一个分支，对这个分支的进行修改，而不至于会影响到主支上的代码。</p>
+<p>Git提供了命令行工具；这个教程会使用命令行。你也可以找到图形工具，譬如与Eclipse配套的EGit工具，但是这些都不会在这个教程中进行描述。</p>
+<p>1.1.2 重要的术语</p>
+<p>Git 术语<br>术语    定义<br>仓库    一个仓库包括了所有的版本信息、所有的分支和标记信息.<br>Repository    在Git中仓库的每份拷贝都是完整的。仓库让你可以从中<br>     取得你的工作副本。<br>     一个分支意味着一个独立的、拥有自己历史信息的代码线<br>分支    （code line）。你可以从已有的代码中生成一个新的分支<br>Branches    ，这个分支与剩余的分支完全独立。默认的分支往往是叫<br>     master。用户可以选择一个分支，选择一个分支叫做<br>     checkout.<br>标记    一个标记指的是某个分支某个特定时间点的状态。通过标<br>Tags    记，可以很方便的切换到标记时的状态，例如2009年1月25<br>     号在testing分支上的代码状态<br>提交    提交代码后，仓库会创建一个新的版本。这个版本可以在<br>Commit    后续被重新获得。每次提交都包括作者和提交者，作者和<br>     提交者可以是不同的人<br>URL    URl用来标识一个仓库的位置<br>     用来表示代码的一个版本状态。Git通过用SHA1 hash算法<br>修订    表示的id来标识不同的版本。每一个 SHA1 id都是160位长<br>Revision    ,16进制标识的字符串.最新的版本可以通过HEAD来获取.<br>     之前的版本可以通过”HEAD~1”来获取，以此类推。</p>
+<p>1.1.3 索引</p>
+<p>Git 需要将代码的变化显示的与下一次提交进行关联。举个例子，如果你对一个文件继续了修改，然后想将这些修改提交到下一次提交中，你必须将这个文件提交到索引中，通过git add file命令。这样索引可以保存所有变化的快照。</p>
+<p>新增的文件总是要显示的添加到索引中来。对于那些之前已经提交过的文件，可以在commit命令中使用-a 选项达到提交到索引的目的。</p>
+<p>1.2 Git安装</p>
+<p>在Ubuntu上，你可以通过apt来安装git命令行工具</p>
+<p>sudo apt-get install git-core</p>
+<p>对于其他的Linux版本，请查看相关的软件包安装工具使用方法。msysgit项目提供了Windows版本的Git，地址是<a href="http://code.google.com/p/msysgit/" target="_blank" rel="external">http://code.google.com/p/msysgit/</a></p>
+<p>1.3 Git配置</p>
+<p>你可以在.gitconfig文件中防止git的全局配置。文件位于用户的home目录。上述已经提到每次提交都会保存作者和提交者的信息，这些信息都可以保存在全局配置中。后续将会介绍配置用户信息、高亮显示和忽略特定的文件。</p>
+<p>1.3.1 用户信息</p>
+<p>通过如下命令来配置用户名和Email<br>git config –global user.name “Example Surname”</p>
+<p>git config –global user.email “your.email@gmail.com”</p>
+<h1 id="Set_default_so_that_all_changes_are_always_pushed_to_the_repository"><a href="#Set_default_so_that_all_changes_are_always_pushed_to_the_repository" class="headerlink" title="Set default so that all changes are always pushed to the repository"></a>Set default so that all changes are always pushed to the repository</h1><p>git config –global push.default “matching”</p>
+<p>获取Git配置信息，执行以下命令：<br>git config –list</p>
+<p>1.3.2 高亮显示<br>以下命令会为终端配置高亮<br>git config –global color.status auto<br>git config –global color.branch auto</p>
+<p>1.3.3 忽略特定的文件<br>可以配置Git忽略特定的文件或者是文件夹。这些配置都放在.gitignore文件中。这个文件可以存在于不同的文件夹中，可以包含不同的文件匹配模式。为了让Git忽略bin文件夹，在主目录下放置.gitignore文件，其中内容为bin。<br>同时Git也提供了全局的配置，core.excludesfile。</p>
+<p>1.3.4 使用.gitkeep来追踪空的文件夹<br>Git会忽略空的文件夹。如果你想版本控制包括空文件夹，根据惯例会在空文件夹下放置.gitkeep文件。其实对文件名没有特定的要求。一旦一个空文件夹下有文件后，这个文件夹就会在版本控制范围内。</p>
+<p>1.4 开始操作Git<br>后续将通过一个典型的Git工作流来学习。在这个过程中，你会创建一些文件、创建一个本地的Git仓库、提交你的文件到这个仓库中。这之后，你会克隆一个仓库、在仓库之间通过pull和push操作来交换代码的修改。注释（以#开头）解释了命令的具体含义，让我们打开命令行开始操作吧。</p>
+<p>1.4.1 创建内容<br>下面创建一些文件，它们会被放到版本控制之中</p>
+<p>#Switch to home<br>cd ~/</p>
+<h1 id="Create_a_directory"><a href="#Create_a_directory" class="headerlink" title="Create a directory"></a>Create a directory</h1><p>mkdir ~/repo01</p>
+<h1 id="Switch_into_it"><a href="#Switch_into_it" class="headerlink" title="Switch into it"></a>Switch into it</h1><p>cd repo01</p>
+<h1 id="Create_a_new_directory"><a href="#Create_a_new_directory" class="headerlink" title="Create a new directory"></a>Create a new directory</h1><p>mkdir datafiles</p>
+<h1 id="Create_a_few_files"><a href="#Create_a_few_files" class="headerlink" title="Create a few files"></a>Create a few files</h1><p>touch test01<br>touch test02<br>touch test03<br>touch datafiles/data.txt</p>
+<h1 id="Put_a_little_text_into_the_first_file"><a href="#Put_a_little_text_into_the_first_file" class="headerlink" title="Put a little text into the first file"></a>Put a little text into the first file</h1><p>ls &gt;test01</p>
+<p>1.4.2 创建仓库、添加文件和提交更改<br>每个Git仓库都是放置在.git文件夹下.这个目录包含了仓库的所有历史记录，.git/config文件包含了仓库的本地配置。<br>以下将会创建一个Git仓库，添加文件倒仓库的索引中，提交更改。</p>
+<h1 id="Initialize_the_local_Git_repository"><a href="#Initialize_the_local_Git_repository" class="headerlink" title="Initialize the local Git repository"></a>Initialize the local Git repository</h1><p>git init</p>
+<h1 id="Add_all__28files_and_directories_29_to_the_Git_repository"><a href="#Add_all__28files_and_directories_29_to_the_Git_repository" class="headerlink" title="Add all (files and directories) to the Git repository"></a>Add all (files and directories) to the Git repository</h1><p>git add .</p>
+<h1 id="Make_a_commit_of_your_file_to_the_local_repository"><a href="#Make_a_commit_of_your_file_to_the_local_repository" class="headerlink" title="Make a commit of your file to the local repository"></a>Make a commit of your file to the local repository</h1><p>git commit -m “Initial commit”</p>
+<h1 id="Show_the_log_file"><a href="#Show_the_log_file" class="headerlink" title="Show the log file"></a>Show the log file</h1><p>git log</p>
+<p>1.4.3 diff命令与commit更改<br>通过git diff命令，用户可以查看更改。通过改变一个文件的内容，看看gitdiff命令输出什么，然后提交这个更改到仓库中</p>
+<h1 id="Make_some_changes_to_the_file"><a href="#Make_some_changes_to_the_file" class="headerlink" title="Make some changes to the file"></a>Make some changes to the file</h1><p>echo “This is a change” &gt; test01<br>echo “and this is another change” &gt; test02</p>
+<h1 id="Check_the_changes_via_the_diff_command"><a href="#Check_the_changes_via_the_diff_command" class="headerlink" title="Check the changes via the diff command"></a>Check the changes via the diff command</h1><p>git diff</p>
+<h1 id="Commit_the_changes_2C_-a_will_commit_changes_for_modified_files"><a href="#Commit_the_changes_2C_-a_will_commit_changes_for_modified_files" class="headerlink" title="Commit the changes, -a will commit changes for modified files"></a>Commit the changes, -a will commit changes for modified files</h1><h1 id="but_will_not_add_automatically_new_files"><a href="#but_will_not_add_automatically_new_files" class="headerlink" title="but will not add automatically new files"></a>but will not add automatically new files</h1><p>git commit -a -m “These are new changes”</p>
+<p>1.4.4 Status, Diff 和 Commit Log<br>下面会向你展示仓库现有的状态以及过往的提交历史</p>
+<h1 id="Make_some_changes_in_the_file"><a href="#Make_some_changes_in_the_file" class="headerlink" title="Make some changes in the file"></a>Make some changes in the file</h1><p>echo “This is a new change” &gt; test01<br>echo “and this is another new change” &gt; test02</p>
+<h1 id="See_the_current_status_of_your_repository"><a href="#See_the_current_status_of_your_repository" class="headerlink" title="See the current status of your repository"></a>See the current status of your repository</h1><h1 id="28which_files_are_changed_/_new_/_deleted_29"><a href="#28which_files_are_changed_/_new_/_deleted_29" class="headerlink" title="(which files are changed / new / deleted)"></a>(which files are changed / new / deleted)</h1><p>git status</p>
+<h1 id="Show_the_differences_between_the_uncommitted_files"><a href="#Show_the_differences_between_the_uncommitted_files" class="headerlink" title="Show the differences between the uncommitted files"></a>Show the differences between the uncommitted files</h1><h1 id="and_the_last_commit_in_the_current_branch"><a href="#and_the_last_commit_in_the_current_branch" class="headerlink" title="and the last commit in the current branch"></a>and the last commit in the current branch</h1><p>git diff</p>
+<h1 id="Add_the_changes_to_the_index_and_commit"><a href="#Add_the_changes_to_the_index_and_commit" class="headerlink" title="Add the changes to the index and commit"></a>Add the changes to the index and commit</h1><p>git add . &amp;&amp; git commit -m “More chaanges - typo in the commit message”</p>
+<h1 id="Show_the_history_of_commits_in_the_current_branch"><a href="#Show_the_history_of_commits_in_the_current_branch" class="headerlink" title="Show the history of commits in the current branch"></a>Show the history of commits in the current branch</h1><p>git log</p>
+<h1 id="This_starts_a_nice_graphical_view_of_the_changes"><a href="#This_starts_a_nice_graphical_view_of_the_changes" class="headerlink" title="This starts a nice graphical view of the changes"></a>This starts a nice graphical view of the changes</h1><p>gitk –all</p>
+<p>1.4.5 更正提交的信息 - git amend<br>通过git amend命令，我们可以修改最后提交的的信息。上述的提交信息中存在错误，下面会修改这个错误。<br>git commit –amend -m “More changes - now correct”</p>
+<p>1.4.6 删除文件<br>如果你删除了一个在版本控制之下的文件，那么使用git add .不会在索引中删除这个文件。需要通过带-a选项的git commit命令和-A选项的git add命令来完成</p>
+<h1 id="Create_a_file_and_put_it_under_version_control"><a href="#Create_a_file_and_put_it_under_version_control" class="headerlink" title="Create a file and put it under version control"></a>Create a file and put it under version control</h1><p>touch nonsense.txt<br>git add . &amp;&amp; git commit -m “a new file has been created”</p>
+<h1 id="Remove_the_file"><a href="#Remove_the_file" class="headerlink" title="Remove the file"></a>Remove the file</h1><p>rm nonsense.txt</p>
+<h1 id="Try_standard_way_of_committing_-_26gt_3B_will_not_work"><a href="#Try_standard_way_of_committing_-_26gt_3B_will_not_work" class="headerlink" title="Try standard way of committing -&gt; will not work"></a>Try standard way of committing -&gt; will not work</h1><p>git add . &amp;&amp; git commit -m “a new file has been created”</p>
+<h1 id="Now_commit_with_the_-a_flag"><a href="#Now_commit_with_the_-a_flag" class="headerlink" title="Now commit with the -a flag"></a>Now commit with the -a flag</h1><p>git commit -a -m “File nonsense.txt is now removed”</p>
+<h1 id="Alternatively_you_could_add_deleted_files_to_the_staging_index_via"><a href="#Alternatively_you_could_add_deleted_files_to_the_staging_index_via" class="headerlink" title="Alternatively you could add deleted files to the staging index via"></a>Alternatively you could add deleted files to the staging index via</h1><p>git add -A .<br>git commit -m “File nonsense.txt is now removed”</p>
+<p>1.5 远端仓库（remote repositories）</p>
+<p>1.5.1 设置一个远端的Git仓库</p>
+<p>我们将创建一个远端的Git仓库。这个仓库可以存储在本地或者是网络上。</p>
+<p>远端Git仓库和标准的Git仓库有如下差别：一个标准的Git仓库包括了源代码和历史信息记录。我们可以直接在这个基础上修改代码，因为它已经包含了一个工作副本。但是远端仓库没有包括工作副本，只包括了历史信息。可以使用–bare选项来创建一个这样的仓库。</p>
+<p>为了方便起见，示例中的仓库创建在本地文件系统上</p>
+<h1 id="Switch_to_the_first_repository"><a href="#Switch_to_the_first_repository" class="headerlink" title="Switch to the first repository"></a>Switch to the first repository</h1><p>cd ~/repo01</p>
+<p>#<br>git clone –bare . ../remote-repository.git</p>
+<h1 id="Check_the_content_2C_it_is_identical_to_the_-git_directory_in_repo01"><a href="#Check_the_content_2C_it_is_identical_to_the_-git_directory_in_repo01" class="headerlink" title="Check the content, it is identical to the .git directory in repo01"></a>Check the content, it is identical to the .git directory in repo01</h1><p>ls ~/remote-repository.git</p>
+<p>1.5.2 推送更改到其他的仓库</p>
+<p>做一些更改，然后将这些更改从你的第一个仓库推送到一个远端仓库 </p>
+<p>cd ~/repo01<br>echo “Hello, hello. Turn your radio on” &gt; test01echo “Bye, bye. Turn your radio off” &gt; test02<br>git commit -a -m “Some changes”<br>git push ../remote-repository.git</p>
+<p>1.5.3 添加远端仓库</p>
+<p>除了通过完整的URL来访问Git仓库外，还可以通过git remote add命令为仓库添加一个短名称。当你克隆了一个仓库以后，origin表示所克隆的原始仓库。即使我们从零开始，这个名称也存在。</p>
+<h1 id="Add_-/remote-repository-git_with_the_name_origin"><a href="#Add_-/remote-repository-git_with_the_name_origin" class="headerlink" title="Add ../remote-repository.git with the name origin"></a>Add ../remote-repository.git with the name origin</h1><p>git remote add origin ../remote-repository.git </p>
+<h1 id="Again_some_changes"><a href="#Again_some_changes" class="headerlink" title="Again some changes"></a>Again some changes</h1><p>echo “I added a remote repo” &gt; test02</p>
+<h1 id="Commit"><a href="#Commit" class="headerlink" title="Commit"></a>Commit</h1><p>git commit -a -m “This is a test for the new remote origin”</p>
+<h1 id="If_you_do_not_label_a_repository_it_will_push_to_origin"><a href="#If_you_do_not_label_a_repository_it_will_push_to_origin" class="headerlink" title="If you do not label a repository it will push to origin"></a>If you do not label a repository it will push to origin</h1><p>git push origin</p>
+<p>1.5.4 显示已有的远端仓库</p>
+<p>通过以下命令查看已经存在的远端仓库</p>
+<h1 id="Show_the_existing_defined_remote_repositories"><a href="#Show_the_existing_defined_remote_repositories" class="headerlink" title="Show the existing defined remote repositories"></a>Show the existing defined remote repositories</h1><p>git remote</p>
+<p>1.5.5 克隆仓库<br>通过以下命令在新的目录下创建一个新的仓库</p>
+<h1 id="Switch_to_home"><a href="#Switch_to_home" class="headerlink" title="Switch to home"></a>Switch to home</h1><p>cd ~</p>
+<h1 id="Make_new_directory"><a href="#Make_new_directory" class="headerlink" title="Make new directory"></a>Make new directory</h1><p>mkdir repo02</p>
+<h1 id="Switch_to_new_directory"><a href="#Switch_to_new_directory" class="headerlink" title="Switch to new directory"></a>Switch to new directory</h1><p>cd ~/repo02</p>
+<h1 id="Clone"><a href="#Clone" class="headerlink" title="Clone"></a>Clone</h1><p>git clone ../remote-repository.git .</p>
+<p>1.5.6 拉取（Pull）更改<br>通过拉取，可以从其他的仓库中获取最新的更改。在第二个仓库中，做一些更改，然后将更改推送到远端的仓库中。然后第一个仓库拉取这些更改</p>
+<h1 id="Switch_to_home-1"><a href="#Switch_to_home-1" class="headerlink" title="Switch to home"></a>Switch to home</h1><p>cd ~</p>
+<h1 id="Switch_to_second_directory"><a href="#Switch_to_second_directory" class="headerlink" title="Switch to second directory"></a>Switch to second directory</h1><p>cd ~/repo02</p>
+<h1 id="Make_changes"><a href="#Make_changes" class="headerlink" title="Make changes"></a>Make changes</h1><p>echo “A change” &gt; test01</p>
+<h1 id="Commit-1"><a href="#Commit-1" class="headerlink" title="Commit"></a>Commit</h1><p>git commit -a -m “A change”</p>
+<h1 id="Push_changes_to_remote_repository"><a href="#Push_changes_to_remote_repository" class="headerlink" title="Push changes to remote repository"></a>Push changes to remote repository</h1><h1 id="Origin_is_automatically_maintained_as_we_cloned_from_this_repository"><a href="#Origin_is_automatically_maintained_as_we_cloned_from_this_repository" class="headerlink" title="Origin is automatically maintained as we cloned from this repository"></a>Origin is automatically maintained as we cloned from this repository</h1><p>git push origin</p>
+<h1 id="Switch_to_the_first_repository_and_pull_in_the_changes"><a href="#Switch_to_the_first_repository_and_pull_in_the_changes" class="headerlink" title="Switch to the first repository and pull in the changes"></a>Switch to the first repository and pull in the changes</h1><p>cd ~/repo01<br>git pull ../remote-repository.git/</p>
+<h1 id="Check_the_changes"><a href="#Check_the_changes" class="headerlink" title="Check the changes"></a>Check the changes</h1><p>less test01</p>
+<p>1.5.7 还原更改<br>如果在你的工作副本中，你创建了不想被提交的文件，你可以丢弃它。</p>
+<h1 id="Create_a_new_file_with_content"><a href="#Create_a_new_file_with_content" class="headerlink" title="Create a new file with content"></a>Create a new file with content</h1><p>touch test04<br>echo “this is trash” &gt; test04</p>
+<h1 id="Make_a_dry-run_to_see_what_would_happen"><a href="#Make_a_dry-run_to_see_what_would_happen" class="headerlink" title="Make a dry-run to see what would happen"></a>Make a dry-run to see what would happen</h1><h1 id="n_is_the_same_as__u2013dry-run"><a href="#n_is_the_same_as__u2013dry-run" class="headerlink" title="-n is the same as –dry-run"></a>-n is the same as –dry-run</h1><p>git clean -n</p>
+<h1 id="Now_delete"><a href="#Now_delete" class="headerlink" title="Now delete"></a>Now delete</h1><p>git clean -f</p>
+<p>你可以提取老版本的代码，通过提交的ID。git log命令可以查看提交ID </p>
+<h1 id="Switch_to_home-2"><a href="#Switch_to_home-2" class="headerlink" title="Switch to home"></a>Switch to home</h1><p>cd ~/repo01</p>
+<h1 id="Get_the_log"><a href="#Get_the_log" class="headerlink" title="Get the log"></a>Get the log</h1><p>git log</p>
+<h1 id="Copy_one_of_the_older_commits_and_checkout_the_older_revision_via__u8BD1_u8005_u6CE8_uFF1Acheckout__u540E_u52A0commit_id_u5C31_u662F_u628Acommit_u7684_u5185_u5BB9_u590D_u5236_u5230index_u548C_u5DE5_u4F5C_u526F_u672C_u4E2D"><a href="#Copy_one_of_the_older_commits_and_checkout_the_older_revision_via__u8BD1_u8005_u6CE8_uFF1Acheckout__u540E_u52A0commit_id_u5C31_u662F_u628Acommit_u7684_u5185_u5BB9_u590D_u5236_u5230index_u548C_u5DE5_u4F5C_u526F_u672C_u4E2D" class="headerlink" title="Copy one of the older commits and checkout the older revision via  译者注：checkout 后加commit id就是把commit的内容复制到index和工作副本中"></a>Copy one of the older commits and checkout the older revision via  译者注：checkout 后加commit id就是把commit的内容复制到index和工作副本中</h1><p>git checkout commit_name</p>
+<p>如果你还未把更改加入到索引中，你也可以直接还原所有的更改</p>
+<p>#Some nonsense change<br>echo “nonsense change” &gt; test01</p>
+<h1 id="Not_added_to_the_staging_index-_Therefore_we_can"><a href="#Not_added_to_the_staging_index-_Therefore_we_can" class="headerlink" title="Not added to the staging index. Therefore we can"></a>Not added to the staging index. Therefore we can</h1><h1 id="just_checkout_the_old_version"><a href="#just_checkout_the_old_version" class="headerlink" title="just checkout the old version"></a>just checkout the old version</h1><p>#译者注：checkout后如果没有commit id号，就是从index中拷贝数据到工作副本，不涉及commit部分的改变<br>git checkout test01</p>
+<h1 id="Check_the_result"><a href="#Check_the_result" class="headerlink" title="Check the result"></a>Check the result</h1><p>cat test01</p>
+<h1 id="Another_nonsense_change"><a href="#Another_nonsense_change" class="headerlink" title="Another nonsense change"></a>Another nonsense change</h1><p>echo “another nonsense change” &gt; test01</p>
+<h1 id="We_add_the_file_to_the_staging_index"><a href="#We_add_the_file_to_the_staging_index" class="headerlink" title="We add the file to the staging index"></a>We add the file to the staging index</h1><p>git add test01</p>
+<h1 id="Restore_the_file_in_the_staging_index"><a href="#Restore_the_file_in_the_staging_index" class="headerlink" title="Restore the file in the staging index"></a>Restore the file in the staging index</h1><p>#译者注：复制HEAD所指commit的test01文件到index中<br>git reset HEAD test01</p>
+<h1 id="Get_the_old_version_from_the_staging_index"><a href="#Get_the_old_version_from_the_staging_index" class="headerlink" title="Get the old version from the staging index"></a>Get the old version from the staging index</h1><p>#译者注：复制index中test01到工作副本中<br>git checkout test01</p>
+<p>#译者注，以上两条命令可以合并为git checkout HEAD test01</p>
+<p>也可以通过revert命令进行还原操作 </p>
+<h1 id="Revert_a_commit"><a href="#Revert_a_commit" class="headerlink" title="Revert a commit"></a>Revert a commit</h1><p>git revert commit_name</p>
+<p>即使你删除了一个未添加到索引和提交的文件，你也可以还原出这个文件</p>
+<h1 id="Delete_a_file"><a href="#Delete_a_file" class="headerlink" title="Delete a file"></a>Delete a file</h1><p>rm test01</p>
+<h1 id="Revert_the_deletion"><a href="#Revert_the_deletion" class="headerlink" title="Revert the deletion"></a>Revert the deletion</h1><p>git checkout test01</p>
+<p>如果你已经添加一个文件到索引中，但是未提交。可以通过git resetfile 命令将这个文件从索引中删除<br>// Create a file<br>touch incorrect.txt<br>// Accidently add it to the index<br>git add .<br>// Remove it from the index<br>git reset incorrect.txt<br>// Delete the file<br>rm incorrect.txt</p>
+<p>如果你删除了文件夹且尚未提交，可以通过以下命令来恢复这个文件夹 。译者注：即使已经提交，也可以还原<br>git checkout HEAD – your_dir_to_restore</p>
+<p>译者注：checkout和reset这两个命令的含义是不同的，可以参阅这篇文章<a href="http://marklodato.github.com/visual-git-guide/index-en.html" target="_blank" rel="external">http://marklodato.github.com/visual-git-guide/index-en.html</a></p>
+<p>1.5.8 标记<br>Git可以使用对历史记录中的任一版本进行标记。这样在后续的版本中就能轻松的找到。一般来说，被用来标记某个发行的版本。可以通过git tag命令列出所有的标记，通过如下命令来创建一个标记和恢复到一个标记<br>git tag version1.6 -m ‘version 1.6’<br>git checkout <tag_name></tag_name></p>
+<p>1.6 分支、合并</p>
+<p>1.6.1 分支</p>
+<p>通过分支，可以创造独立的代码副本。默认的分支叫master。Git消耗很少的资源就能创建分支。Git鼓励开发人员多使用分支</p>
+<p>下面的命令列出了所有的本地分支，当前所在的分支前带有*号<br>git branch </p>
+<p>如果你还想看到远端仓库的分支，可以使用下面的命令<br>git branch -a</p>
+<p>可以通过下面的命令来创建一个新的分支</p>
+<h1 id="Syntax_3A_git_branch"><a href="#Syntax_3A_git_branch" class="headerlink" title="Syntax: git branch"></a>Syntax: git branch <name> <hash></hash></name></h1><h1 id="in_the_above_is_optional"><a href="#in_the_above_is_optional" class="headerlink" title="in the above is optional"></a><hash> in the above is optional</hash></h1><h1 id="if_not_specified_the_last_commit_will_be_used"><a href="#if_not_specified_the_last_commit_will_be_used" class="headerlink" title="if not specified the last commit will be used"></a>if not specified the last commit will be used</h1><h1 id="If_specified_the_corresponding_commit_will_be_used"><a href="#If_specified_the_corresponding_commit_will_be_used" class="headerlink" title="If specified the corresponding commit will be used"></a>If specified the corresponding commit will be used</h1><p>git branch testing</p>
+<h1 id="Switch_to_your_new_branch"><a href="#Switch_to_your_new_branch" class="headerlink" title="Switch to your new branch"></a>Switch to your new branch</h1><p>git checkout testing</p>
+<h1 id="Some_changes"><a href="#Some_changes" class="headerlink" title="Some changes"></a>Some changes</h1><p>echo “Cool new feature in this branch” &gt; test01<br>git commit -a -m “new feature”</p>
+<h1 id="Switch_to_the_master_branch"><a href="#Switch_to_the_master_branch" class="headerlink" title="Switch to the master branch"></a>Switch to the master branch</h1><p>git checkout master</p>
+<h1 id="Check_that_the_content_of_test01_is_the_old_one"><a href="#Check_that_the_content_of_test01_is_the_old_one" class="headerlink" title="Check that the content of test01 is the old one"></a>Check that the content of test01 is the old one</h1><p>cat test01</p>
+<p>1.6.2 合并</p>
+<p>通过Merge我们可以合并两个不同分支的结果。Merge通过所谓的三路合并来完成。分别来自两个分支的最新commit和两个分支的最新公共commit.可以通过如下的命令进行合并</p>
+<h1 id="Syntax_3A_git_merge"><a href="#Syntax_3A_git_merge" class="headerlink" title="Syntax: git merge"></a>Syntax: git merge <branch-name></branch-name></h1><p>git merge testing</p>
+<p>一旦合并发生了冲突，Git会标志出来，开发人员需要手工的去解决这些冲突。解决冲突以后，就可以将文件添加到索引中，然后提交更改</p>
+<p>1.6.3 删除分支</p>
+<p>删除分支的命令如下：</p>
+<p>#Delete branch testing<br>git branch -d testing</p>
+<h1 id="Check_if_branch_has_been_deleted"><a href="#Check_if_branch_has_been_deleted" class="headerlink" title="Check if branch has been deleted"></a>Check if branch has been deleted</h1><p>git branch</p>
+<p>1.6.4 推送（push）一个分支到远端仓库</p>
+<p>默认的，Git只会推送匹配的分支的远端仓库。这意味在使用git push命令默认推送你的分支之前，需要手工的推送一次这个分支。</p>
+<h1 id="Push_testing_branch_to_remote_repository"><a href="#Push_testing_branch_to_remote_repository" class="headerlink" title="Push testing branch to remote repository"></a>Push testing branch to remote repository</h1><p>git push origin testing</p>
+<h1 id="Switch_to_the_testing_branch"><a href="#Switch_to_the_testing_branch" class="headerlink" title="Switch to the testing branch"></a>Switch to the testing branch</h1><p>git checkout testing</p>
+<h1 id="Some_changes-1"><a href="#Some_changes-1" class="headerlink" title="Some changes"></a>Some changes</h1><p>echo “News for you” &gt; test01<br>git commit -a -m “new feature in branch”</p>
+<h1 id="Push_all_including_branch"><a href="#Push_all_including_branch" class="headerlink" title="Push all including branch"></a>Push all including branch</h1><p>git push<br>通过这种方式，你可以确定哪些分支对于其他仓库是可见的，而哪些只是本地的分支</p>
+<p>1.7 解决合并冲突</p>
+<p>如果两个不同的开发人员对同一个文件进行了修改，那么合并冲突就会发生。而Git没有智能到自动解决合并两个修改。</p>
+<p>在这一节中，我们会首先制造一个合并冲突，然后解决它，并应用到Git仓库中。</p>
+<p>下面会产生一个合并冲突</p>
+<h1 id="Switch_to_the_first_directory"><a href="#Switch_to_the_first_directory" class="headerlink" title="Switch to the first directory"></a>Switch to the first directory</h1><p>cd ~/repo01</p>
+<h1 id="Make_changes-1"><a href="#Make_changes-1" class="headerlink" title="Make changes"></a>Make changes</h1><p>touch mergeconflict.txt<br>echo “Change in the first repository” &gt; mergeconflict.txt</p>
+<h1 id="Stage_and_commit"><a href="#Stage_and_commit" class="headerlink" title="Stage and commit"></a>Stage and commit</h1><p>git add . &amp;&amp; git commit -a -m “Will create merge conflict 1”</p>
+<h1 id="Switch_to_the_second_directory"><a href="#Switch_to_the_second_directory" class="headerlink" title="Switch to the second directory"></a>Switch to the second directory</h1><p>cd ~/repo02</p>
+<h1 id="Make_changes-2"><a href="#Make_changes-2" class="headerlink" title="Make changes"></a>Make changes</h1><p>touch mergeconflict.txt<br>echo “Change in the second repository” &gt; mergeconflict.txt</p>
+<h1 id="Stage_and_commit-1"><a href="#Stage_and_commit-1" class="headerlink" title="Stage and commit"></a>Stage and commit</h1><p>git add . &amp;&amp; git commit -a -m “Will create merge conflict 2”</p>
+<h1 id="Push_to_the_master_repository"><a href="#Push_to_the_master_repository" class="headerlink" title="Push to the master repository"></a>Push to the master repository</h1><p>git push</p>
+<h1 id="Now_try_to_push_from_the_first_directory"><a href="#Now_try_to_push_from_the_first_directory" class="headerlink" title="Now try to push from the first directory"></a>Now try to push from the first directory</h1><h1 id="Switch_to_the_first_directory-1"><a href="#Switch_to_the_first_directory-1" class="headerlink" title="Switch to the first directory"></a>Switch to the first directory</h1><p>cd ~/repo01</p>
+<h1 id="Try_to_push__u2013_26gt_3B_you_will_get_an_error_message"><a href="#Try_to_push__u2013_26gt_3B_you_will_get_an_error_message" class="headerlink" title="Try to push –&gt; you will get an error message"></a>Try to push –&gt; you will get an error message</h1><p>git push</p>
+<h1 id="Get_the_changes"><a href="#Get_the_changes" class="headerlink" title="Get the changes"></a>Get the changes</h1><p>git pull origin master</p>
+<p>Git将冲突放在收到影响的文件中，文件内容如下：<br>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</p>
+<h1 id="Change_in_the_first_repository"><a href="#Change_in_the_first_repository" class="headerlink" title="Change in the first repository"></a>Change in the first repository</h1><p>Change in the second repository</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>b29196692f5ebfd10d8a9ca1911c8b08127c85f8</p>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+<p>上面部分是你的本地仓库，下面部分是远端仓库。现在编辑这个文件，然后commit更改。另外的，你可以使用git mergetool命令</p>
+<h1 id="Either_edit_the_file_manually_or_use"><a href="#Either_edit_the_file_manually_or_use" class="headerlink" title="Either edit the file manually or use"></a>Either edit the file manually or use</h1><p>git mergetool</p>
+<h1 id="You_will_be_prompted_to_select_which_merge_tool_you_want_to_use"><a href="#You_will_be_prompted_to_select_which_merge_tool_you_want_to_use" class="headerlink" title="You will be prompted to select which merge tool you want to use"></a>You will be prompted to select which merge tool you want to use</h1><h1 id="For_example_on_Ubuntu_you_can_use_the_tool__u201Cmeld_u201D"><a href="#For_example_on_Ubuntu_you_can_use_the_tool__u201Cmeld_u201D" class="headerlink" title="For example on Ubuntu you can use the tool “meld”"></a>For example on Ubuntu you can use the tool “meld”</h1><h1 id="After_merging_the_changes_manually_2C_commit_them"><a href="#After_merging_the_changes_manually_2C_commit_them" class="headerlink" title="After  merging the changes manually, commit them"></a>After  merging the changes manually, commit them</h1><p>git commit -m “merged changes”</p>
+<p>1.8 变基（Rebase）</p>
+<p>1.8.1 在同一分支中应用Rebase Commit</p>
+<p>通过rebase命令可以合并多个commit为一个。这样用户push更改到远端仓库的时候就可以先修改commit历史</p>
+<p>接下来我们将创建多个commit，然后再将它们rebase成一个commit</p>
+<h1 id="Create_a_new_file"><a href="#Create_a_new_file" class="headerlink" title="Create a new file"></a>Create a new file</h1><p>touch rebase.txt</p>
+<h1 id="Add_it_to_git"><a href="#Add_it_to_git" class="headerlink" title="Add it to git"></a>Add it to git</h1><p>git add . &amp;&amp; git commit -m “rebase.txt added to index”</p>
+<h1 id="Do_some_silly_changes_and_commit"><a href="#Do_some_silly_changes_and_commit" class="headerlink" title="Do some silly changes and commit"></a>Do some silly changes and commit</h1><p>echo “content” &gt;&gt; rebase.txt<br>git add . &amp;&amp; git commit -m “added content”<br>echo “ more content” &gt;&gt; rebase.txt<br>git add . &amp;&amp; git commit -m “added more content”<br>echo “ more content” &gt;&gt; rebase.txt<br>git add . &amp;&amp; git commit -m “added more content”<br>echo “ more content” &gt;&gt; rebase.txt<br>git add . &amp;&amp; git commit -m “added more content”<br>echo “ more content” &gt;&gt; rebase.txt<br>git add . &amp;&amp; git commit -m “added more content”<br>echo “ more content” &gt;&gt; rebase.txt<br>git add . &amp;&amp; git commit -m “added more content”</p>
+<h1 id="Check_the_git_log_message"><a href="#Check_the_git_log_message" class="headerlink" title="Check the git log message"></a>Check the git log message</h1><p>git log<br>我们合并最后的七个commit。你可以通过如下的命令交互的完成<br>git rebase -i HEAD~7<br>这个命令会打开编辑器让你修改commit的信息或者 squash/ fixup最后一个信息.Squash会合并commit信息而fixup会忽略commit信息（待理解）<br>1.8.2 Rebasing多个分支<br>你也可以对两个分支进行rebase操作。如下所述，merge命令合并两个分支的更改。rebase命令为一个分支的更改生成一个补丁，然后应用这个补丁到另一分支中<br>使用merge和rebase，最后的源代码是一样的，但是使用rebase产生的commit历史更加的少，而且历史记录看上去更加的线性</p>
+<h1 id="Create_new_branch"><a href="#Create_new_branch" class="headerlink" title="Create new branch"></a>Create new branch</h1><p>git branch testing</p>
+<h1 id="Checkout_the_branch"><a href="#Checkout_the_branch" class="headerlink" title="Checkout the branch"></a>Checkout the branch</h1><p>git checkout testing</p>
+<h1 id="Make_some_changes"><a href="#Make_some_changes" class="headerlink" title="Make some changes"></a>Make some changes</h1><p>echo “This will be rebased to master” &gt; test01</p>
+<h1 id="Commit_into_testing_branch"><a href="#Commit_into_testing_branch" class="headerlink" title="Commit into testing branch"></a>Commit into testing branch</h1><p>git commit -a -m “New feature in branch”</p>
+<h1 id="Rebase_the_master"><a href="#Rebase_the_master" class="headerlink" title="Rebase the master"></a>Rebase the master</h1><p>git rebase master</p>
+<p>1.8.3 Rebase最佳实践<br>在push更改到其他的Git仓库之前，我们需要仔细检查本地分支的commit历史</p>
+<p>在Git中，你可以使用本地的commit。开发人员可以利用这个功能方便的回滚本地的开发历史。但是在push之前，需要观察你的本地分支历史，是否其中有些commit历史对其他用户来说是无关的</p>
+<p>如果所有的commit历史都跟同一个功能有关，很多情况下，你需要rebase这些commit历史为一个commit历史。</p>
+<p>交互性的rebase主要就是做重写commit历史的任务。这样做是安全的，因为commit还没有被push到其它的仓库。这意味着commit历史只有在被push之前被修改。</p>
+<p>如果你修改然后push了一个已经在目标仓库中存在的commit历史，这看起来就像是你实现了一些别人已经实现的功能</p>
+<p>1.8.4 创建和应用补丁</p>
+<p>一个补丁指的是一个包含对源代码进行修改的文本文件。你可以将这个文件发送给某人，然后他就可以应用这个补丁到他的本地仓库。</p>
+<p>下面会创建一个分支，对这个分支所一些修改，然后创建一个补丁，并应用这个补丁到master分支</p>
+<h1 id="Create_a_new_branch"><a href="#Create_a_new_branch" class="headerlink" title="Create a new branch"></a>Create a new branch</h1><p>git branch mybranch</p>
+<h1 id="Use_this_new_branch"><a href="#Use_this_new_branch" class="headerlink" title="Use this new branch"></a>Use this new branch</h1><p>git checkout mybranch</p>
+<h1 id="Make_some_changes-1"><a href="#Make_some_changes-1" class="headerlink" title="Make some changes"></a>Make some changes</h1><p>touch test05</p>
+<h1 id="Change_some_content_in_an_existing_file"><a href="#Change_some_content_in_an_existing_file" class="headerlink" title="Change some content in an existing file"></a>Change some content in an existing file</h1><p>echo “New content for test01” &gt;test01</p>
+<h1 id="Commit_this_to_the_branch"><a href="#Commit_this_to_the_branch" class="headerlink" title="Commit this to the branch"></a>Commit this to the branch</h1><p>git add .<br>git commit -a -m “First commit in the branch”</p>
+<h1 id="Create_a_patch__u2013_26gt_3B_git_format-patch_master"><a href="#Create_a_patch__u2013_26gt_3B_git_format-patch_master" class="headerlink" title="Create a patch –&gt; git format-patch master"></a>Create a patch –&gt; git format-patch master</h1><p>git format-patch origin/master</p>
+<h1 id="This_created_patch_0001-First-commit-in-the-branch-patch"><a href="#This_created_patch_0001-First-commit-in-the-branch-patch" class="headerlink" title="This created patch 0001-First-commit-in-the-branch.patch"></a>This created patch 0001-First-commit-in-the-branch.patch</h1><h1 id="Switch_to_the_master"><a href="#Switch_to_the_master" class="headerlink" title="Switch to the master"></a>Switch to the master</h1><p>git checkout master</p>
+<h1 id="Apply_the_patch"><a href="#Apply_the_patch" class="headerlink" title="Apply the patch"></a>Apply the patch</h1><p>git apply 0001-First-commit-in-the-branch.patch</p>
+<h1 id="Do_your_normal_commit_in_the_master"><a href="#Do_your_normal_commit_in_the_master" class="headerlink" title="Do your normal commit in the master"></a>Do your normal commit in the master</h1><p>git add .<br>git commit -a -m “Applied patch”</p>
+<h1 id="Delete_the_patch"><a href="#Delete_the_patch" class="headerlink" title="Delete the patch"></a>Delete the patch</h1><p>rm 0001-First-commit-in-the-branch.patch</p>
+<p>1.9 定义同名命令</p>
+<p>Git允许你设定你自己的Git命令。你可以给你自己常用的命令起一个缩写命令，或者合并几条命令道一个命令上来。</p>
+<p>下面的例子中，定义了git add-commit 命令，这个命令合并了git add . -A 和git commit -m 命令。定义这个命令后，就可以使用git add-commit -m”message” 了.</p>
+<p>git config –global alias.add-commit ‘!git add . -A &amp;&amp; git commit’<br>但是非常不幸，截止写这篇文章之前，定义同名命令在msysGit中还没有支持。同名命令不能以！开始。</p>
+<p>1.10 放弃跟踪文件</p>
+<p>有时候，你不希望某些文件或者文件夹被包含在Git仓库中。但是如果你把它们加到.gitignore文件中以后，Git会停止跟踪这个文件。但是它不会将这个文件从仓库中删除。这导致了文件或者文件夹的最后一个版本还是存在于仓库中。为了取消跟踪这些文件或者文件夹，你可以使用如下的命令</p>
+<h1 id="Remove_directory_-metadata_from_git_repo"><a href="#Remove_directory_-metadata_from_git_repo" class="headerlink" title="Remove directory .metadata from git repo"></a>Remove directory .metadata from git repo</h1><p>git rm -r –cached .metadata</p>
+<h1 id="Remove_file_test-txt_from_repo"><a href="#Remove_file_test-txt_from_repo" class="headerlink" title="Remove file test.txt from repo"></a>Remove file test.txt from repo</h1><p>git rm –cached test.txt<br>这样做不会将这些文件从commit历史中去掉。如果你想将这些文件从commit历史中去掉，可以参考git filter-branch命令</p>
+<p>1.11 其他有用的命令</p>
+<p>下面列出了在日常工作中非常有用的Git命令</p>
+<p>有用的Git命令</p>
+<p>命令    描述<br>git blame filename    谁创建了或者是修改了这个文件<br>git checkout -b mybranch    以上上个commit信息为起点，创建一条<br>master~1    新的分支</p>
+<p>1.12 安装Git服务</p>
+<p>如上所述，我们的操作不需要Git服务。我可以只使用文件系统或者是Git仓库的提供者，像Github或Bitbucket。但是，有时候，拥有一个自己的服务是比较方便的，在ubuntu下安装一个服务相对来说是比较容易的</p>
+<p>确定你已经安装了ssh<br>apt-get install ssh</p>
+<p>如果你还没有安装Git服务，安装它<br>sudo apt-get install git-core</p>
+<p>添加一个名为git的用户<br>sudo adduser git</p>
+<p>然后使用git用户进行登陆，创建一个空的仓库</p>
+<h1 id="Login_to_server"><a href="#Login_to_server" class="headerlink" title="Login to server"></a>Login to server</h1><h1 id="to_test_use_localhost"><a href="#to_test_use_localhost" class="headerlink" title="to test use localhost"></a>to test use localhost</h1><p>ssh git@IP_ADDRESS_OF_SERVER</p>
+<h1 id="Create_repository"><a href="#Create_repository" class="headerlink" title="Create repository"></a>Create repository</h1><p>git init –bare example.git</p>
+<p>现在你就可以向远端的仓库提交变更了<br>mkdir gitexample<br>cd gitexample<br>git init<br>touch README<br>git add README<br>git commit -m ‘first commit’<br>git remote add origin git@IP_ADDRESS_OF_SERVER:example.git<br>git push origin master</p>
+<p>1.13 在线的远端仓库</p>
+<p>1.13.1 克隆远端仓库</p>
+<p>Git支持远端的操作。Git支持多种的传输类型，Git自带的协议就叫做git。下面的的命令通过git协议从克隆一个仓库<br>git clone git@github.com:vogella/gitbook.git</p>
+<p>同样的，你可以通过http协议来克隆仓库</p>
+<h1 id="The_following_will_clone_via_HTTP"><a href="#The_following_will_clone_via_HTTP" class="headerlink" title="The following will clone via HTTP"></a>The following will clone via HTTP</h1><p>git clone <a href="http://vogella@github.com/vogella/gitbook.git" target="_blank" rel="external">http://vogella@github.com/vogella/gitbook.git</a></p>
+<p>1.13.2 添加远端仓库<br>如果你克隆了一个远端仓库，那么原先的仓库就叫做origin<br>你可以push修改到origin中，通过 git push origin 命令. 当然，push到一个远端的仓库需要对仓库的写权限<br>你可以通过git remote add name gitrepo 命令添加多个仓库。例如，你可以通过http协议再次添加之前clone过来的仓库:<br>// Add the https protocol<br>git remote add githttp <a href="https://vogella@github.com/vogella/gitbook.git" target="_blank" rel="external">https://vogella@github.com/vogella/gitbook.git</a></p>
+<p>1.13.3 通过http和代理服务器进行远端操作<br>如果你的防火墙屏蔽了出http以外的所有协议，那么使用http协议来获取仓库是非常好的方法。.<br>Git同样支持通过代理服务器使用http协议。下面的Git命令会展示这一点。你可以为所有的程序设置代理服务器或者只是为Git服务提供。<br>下面的例子用到了环境变量</p>
+<h1 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h1><p>export http_proxy=<a href="http://proxy:8080" target="_blank" rel="external">http://proxy:8080</a></p>
+<h1 id="On_Windows"><a href="#On_Windows" class="headerlink" title="On Windows"></a>On Windows</h1><h1 id="Set_http_proxy_3Dhttp_3A//proxy_3A8080"><a href="#Set_http_proxy_3Dhttp_3A//proxy_3A8080" class="headerlink" title="Set http_proxy=http://proxy:8080"></a>Set http_proxy=<a href="http://proxy:8080" target="_blank" rel="external">http://proxy:8080</a></h1><p>git clone <a href="http://dev.eclipse.org/git/org.eclipse.jface/org.eclipse.jface.snippets.git" target="_blank" rel="external">http://dev.eclipse.org/git/org.eclipse.jface/org.eclipse.jface.snippets.git</a></p>
+<h1 id="Push_back_to_the_origin_using_http"><a href="#Push_back_to_the_origin_using_http" class="headerlink" title="Push back to the origin using http"></a>Push back to the origin using http</h1><p>git push origin</p>
+<p>下面的例子只是用到了Git的配置<br>// Set proxy for git globally<br> git config –global http.proxy <a href="http://proxy:8080" target="_blank" rel="external">http://proxy:8080</a><br>// To check the proxy settings<br>git config –get http.proxy<br>// Just in case you need to you can also revoke the proxy settings<br>git config –global –unset http.proxy</p>
+<p>1.14 Git服务提供商<br>除了假设自己的服务，你也可以使用Git服务提供商提供的服务。最流行的Git服务提供网站是GitHub和Bitbucket。它们都提供了有限制的免费服务</p>
+<p>1.14.1 GitHub<br>可以通过 <a href="https://github.com/" target="_blank" rel="external">https://github.com/</a> 访问GitHub. GitHub上所有的公开仓库都是免费的。如果你想在上面使用私有的仓库，那么就需要付费给GitHub</p>
+<p>GitHub需要你创建ssh的公钥私钥。生成一份Ubuntu的公钥私钥可以访问 sshkey creation in Ubuntu ，Windows环境可以访问msysgit ssh key generation.</p>
+<p>在GitHub上创建一个账户和一个仓库以后。你会收到如何将你的项目上传到GitHUb的指南，其中的命令大致如下：</p>
+<p>Global setup:<br> Set up git<br>  git config –global user.name “Your Name”<br>  git config –global user.email your.email@gmail.com</p>
+<p>Next steps:<br>  mkdir gitbook<br>  cd gitbook<br>  git init<br>  touch README<br>  git add README<br>  git commit -m ‘first commit’<br>  git remote add origin git@github.com:vogella/gitbook.git<br>  git push -u origin master</p>
+<p>Existing Git Repo?<br>  cd existing_git_repo<br>  git remote add origin git@github.com:vogella/gitbook.git<br>  git push -u origin master</p>
+<p>1.14.2 Bitbucket</p>
+<p>可以通过 <a href="https://bitbucket.org/" target="_blank" rel="external">https://bitbucket.org/</a> 访问Bitbucket. Bitbucket 提供了无限制了公共仓库和只能有五个人访问的私有仓库。如果你需要超过五个人访问私有仓库，就需要付费给Bitbucket</p>
+<p>1.15 Git的图形接口</p>
+<p>这个教程主要说明Git命令行的使用。完成了这个教程以后，你可能想要找到一个Git的图形工具</p>
+<p>Git提供了两个图形工具。 gitk能够展示仓库的历史信息、git gui 让你可以通过编辑器来完成Git操作</p>
+<p>Eclipse EGit 项目提供了Git与Eclipse的集成，在最新的Eclipse版本中可以找到</p>
+<p>1.16 Kindle版本教程</p>
+<p>这个教程提供了Kindle版本<br>Kindle Edition</p>
+<p>1.17 问题与讨论</p>
+<p>在提出问题之前，请先查看 vogella FAQ. 如果你有任何的问题或者是从文章中找到错误，那么可以使用www.vogella.com Google Group. 我自己写了一个简短的列表 how to create good questions 可能会对你有用.</p>
+<p>1.18 链接和文章<br>1.Git相关学习资源</p>
+<p>Git homepage<br>EGit - Teamprovider for Eclipse<br>Video with Linus Torwalds on Git<br>Progit book - Free Git book<br>Video casts about Git<br><a href="http://code.google.com/p/msysgit/" target="_blank" rel="external">http://code.google.com/p/msysgit/</a> Git on Windows<br><a href="http://github.com/guides/git-cheat-sheet" target="_blank" rel="external">http://github.com/guides/git-cheat-sheet</a> Git Cheat Sheets</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Github/">Github</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  
+<div class="jiathis_style">
+    <span class="jiathis_txt">分享到：</span>
+    <a class="jiathis_button_tsina">新浪微博</a>
+    <a class="jiathis_button_weixin">微信</a>
+    <a class="jiathis_button_twitter">Twitter</a>
+    <a class="jiathis_button_evernote">EverNote</a>
+    <a href="http://www.jiathis.com/share?uid=1501277" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+</div>
+<script type="text/javascript" >
+    var jiathis_config={
+    data_track_clickback:true,
+    sm:"copy,renren,cqq",
+    pic:"",
+    summary:"",
+    
+  </script> 
+<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=
+" charset="utf-8"></script>      
+
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2013/06/25/Java/spring实战第3版/" title="《Spring实战》第3版">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  《Spring实战》第3版</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2013/05/08/职业生涯/《我编程，我快乐》/"  title="《我编程，我快乐》">
+ <strong>NEXT:</strong><br/> 
+ <span>《我编程，我快乐》
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Set_default_so_that_all_changes_are_always_pushed_to_the_repository"><span class="toc-number">1.</span> <span class="toc-text">Set default so that all changes are always pushed to the repository</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Create_a_directory"><span class="toc-number">2.</span> <span class="toc-text">Create a directory</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Switch_into_it"><span class="toc-number">3.</span> <span class="toc-text">Switch into it</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Create_a_new_directory"><span class="toc-number">4.</span> <span class="toc-text">Create a new directory</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Create_a_few_files"><span class="toc-number">5.</span> <span class="toc-text">Create a few files</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Put_a_little_text_into_the_first_file"><span class="toc-number">6.</span> <span class="toc-text">Put a little text into the first file</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Initialize_the_local_Git_repository"><span class="toc-number">7.</span> <span class="toc-text">Initialize the local Git repository</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Add_all__28files_and_directories_29_to_the_Git_repository"><span class="toc-number">8.</span> <span class="toc-text">Add all (files and directories) to the Git repository</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Make_a_commit_of_your_file_to_the_local_repository"><span class="toc-number">9.</span> <span class="toc-text">Make a commit of your file to the local repository</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Show_the_log_file"><span class="toc-number">10.</span> <span class="toc-text">Show the log file</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Make_some_changes_to_the_file"><span class="toc-number">11.</span> <span class="toc-text">Make some changes to the file</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Check_the_changes_via_the_diff_command"><span class="toc-number">12.</span> <span class="toc-text">Check the changes via the diff command</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Commit_the_changes_2C_-a_will_commit_changes_for_modified_files"><span class="toc-number">13.</span> <span class="toc-text">Commit the changes, -a will commit changes for modified files</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#but_will_not_add_automatically_new_files"><span class="toc-number">14.</span> <span class="toc-text">but will not add automatically new files</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Make_some_changes_in_the_file"><span class="toc-number">15.</span> <span class="toc-text">Make some changes in the file</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#See_the_current_status_of_your_repository"><span class="toc-number">16.</span> <span class="toc-text">See the current status of your repository</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#28which_files_are_changed_/_new_/_deleted_29"><span class="toc-number">17.</span> <span class="toc-text">(which files are changed / new / deleted)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Show_the_differences_between_the_uncommitted_files"><span class="toc-number">18.</span> <span class="toc-text">Show the differences between the uncommitted files</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#and_the_last_commit_in_the_current_branch"><span class="toc-number">19.</span> <span class="toc-text">and the last commit in the current branch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Add_the_changes_to_the_index_and_commit"><span class="toc-number">20.</span> <span class="toc-text">Add the changes to the index and commit</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Show_the_history_of_commits_in_the_current_branch"><span class="toc-number">21.</span> <span class="toc-text">Show the history of commits in the current branch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#This_starts_a_nice_graphical_view_of_the_changes"><span class="toc-number">22.</span> <span class="toc-text">This starts a nice graphical view of the changes</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Create_a_file_and_put_it_under_version_control"><span class="toc-number">23.</span> <span class="toc-text">Create a file and put it under version control</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Remove_the_file"><span class="toc-number">24.</span> <span class="toc-text">Remove the file</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Try_standard_way_of_committing_-_26gt_3B_will_not_work"><span class="toc-number">25.</span> <span class="toc-text">Try standard way of committing -> will not work</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Now_commit_with_the_-a_flag"><span class="toc-number">26.</span> <span class="toc-text">Now commit with the -a flag</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Alternatively_you_could_add_deleted_files_to_the_staging_index_via"><span class="toc-number">27.</span> <span class="toc-text">Alternatively you could add deleted files to the staging index via</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Switch_to_the_first_repository"><span class="toc-number">28.</span> <span class="toc-text">Switch to the first repository</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Check_the_content_2C_it_is_identical_to_the_-git_directory_in_repo01"><span class="toc-number">29.</span> <span class="toc-text">Check the content, it is identical to the .git directory in repo01</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Add_-/remote-repository-git_with_the_name_origin"><span class="toc-number">30.</span> <span class="toc-text">Add ../remote-repository.git with the name origin</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Again_some_changes"><span class="toc-number">31.</span> <span class="toc-text">Again some changes</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Commit"><span class="toc-number">32.</span> <span class="toc-text">Commit</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#If_you_do_not_label_a_repository_it_will_push_to_origin"><span class="toc-number">33.</span> <span class="toc-text">If you do not label a repository it will push to origin</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Show_the_existing_defined_remote_repositories"><span class="toc-number">34.</span> <span class="toc-text">Show the existing defined remote repositories</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Switch_to_home"><span class="toc-number">35.</span> <span class="toc-text">Switch to home</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Make_new_directory"><span class="toc-number">36.</span> <span class="toc-text">Make new directory</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Switch_to_new_directory"><span class="toc-number">37.</span> <span class="toc-text">Switch to new directory</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Clone"><span class="toc-number">38.</span> <span class="toc-text">Clone</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Switch_to_home-1"><span class="toc-number">39.</span> <span class="toc-text">Switch to home</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Switch_to_second_directory"><span class="toc-number">40.</span> <span class="toc-text">Switch to second directory</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Make_changes"><span class="toc-number">41.</span> <span class="toc-text">Make changes</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Commit-1"><span class="toc-number">42.</span> <span class="toc-text">Commit</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Push_changes_to_remote_repository"><span class="toc-number">43.</span> <span class="toc-text">Push changes to remote repository</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Origin_is_automatically_maintained_as_we_cloned_from_this_repository"><span class="toc-number">44.</span> <span class="toc-text">Origin is automatically maintained as we cloned from this repository</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Switch_to_the_first_repository_and_pull_in_the_changes"><span class="toc-number">45.</span> <span class="toc-text">Switch to the first repository and pull in the changes</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Check_the_changes"><span class="toc-number">46.</span> <span class="toc-text">Check the changes</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Create_a_new_file_with_content"><span class="toc-number">47.</span> <span class="toc-text">Create a new file with content</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Make_a_dry-run_to_see_what_would_happen"><span class="toc-number">48.</span> <span class="toc-text">Make a dry-run to see what would happen</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#n_is_the_same_as__u2013dry-run"><span class="toc-number">49.</span> <span class="toc-text">-n is the same as –dry-run</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Now_delete"><span class="toc-number">50.</span> <span class="toc-text">Now delete</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Switch_to_home-2"><span class="toc-number">51.</span> <span class="toc-text">Switch to home</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Get_the_log"><span class="toc-number">52.</span> <span class="toc-text">Get the log</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Copy_one_of_the_older_commits_and_checkout_the_older_revision_via__u8BD1_u8005_u6CE8_uFF1Acheckout__u540E_u52A0commit_id_u5C31_u662F_u628Acommit_u7684_u5185_u5BB9_u590D_u5236_u5230index_u548C_u5DE5_u4F5C_u526F_u672C_u4E2D"><span class="toc-number">53.</span> <span class="toc-text">Copy one of the older commits and checkout the older revision via  译者注：checkout 后加commit id就是把commit的内容复制到index和工作副本中</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Not_added_to_the_staging_index-_Therefore_we_can"><span class="toc-number">54.</span> <span class="toc-text">Not added to the staging index. Therefore we can</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#just_checkout_the_old_version"><span class="toc-number">55.</span> <span class="toc-text">just checkout the old version</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Check_the_result"><span class="toc-number">56.</span> <span class="toc-text">Check the result</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Another_nonsense_change"><span class="toc-number">57.</span> <span class="toc-text">Another nonsense change</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#We_add_the_file_to_the_staging_index"><span class="toc-number">58.</span> <span class="toc-text">We add the file to the staging index</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Restore_the_file_in_the_staging_index"><span class="toc-number">59.</span> <span class="toc-text">Restore the file in the staging index</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Get_the_old_version_from_the_staging_index"><span class="toc-number">60.</span> <span class="toc-text">Get the old version from the staging index</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Revert_a_commit"><span class="toc-number">61.</span> <span class="toc-text">Revert a commit</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Delete_a_file"><span class="toc-number">62.</span> <span class="toc-text">Delete a file</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Revert_the_deletion"><span class="toc-number">63.</span> <span class="toc-text">Revert the deletion</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Syntax_3A_git_branch"><span class="toc-number">64.</span> <span class="toc-text">Syntax: git branch  </span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#in_the_above_is_optional"><span class="toc-number">65.</span> <span class="toc-text"> in the above is optional</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#if_not_specified_the_last_commit_will_be_used"><span class="toc-number">66.</span> <span class="toc-text">if not specified the last commit will be used</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#If_specified_the_corresponding_commit_will_be_used"><span class="toc-number">67.</span> <span class="toc-text">If specified the corresponding commit will be used</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Switch_to_your_new_branch"><span class="toc-number">68.</span> <span class="toc-text">Switch to your new branch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Some_changes"><span class="toc-number">69.</span> <span class="toc-text">Some changes</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Switch_to_the_master_branch"><span class="toc-number">70.</span> <span class="toc-text">Switch to the master branch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Check_that_the_content_of_test01_is_the_old_one"><span class="toc-number">71.</span> <span class="toc-text">Check that the content of test01 is the old one</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Syntax_3A_git_merge"><span class="toc-number">72.</span> <span class="toc-text">Syntax: git merge </span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Check_if_branch_has_been_deleted"><span class="toc-number">73.</span> <span class="toc-text">Check if branch has been deleted</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Push_testing_branch_to_remote_repository"><span class="toc-number">74.</span> <span class="toc-text">Push testing branch to remote repository</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Switch_to_the_testing_branch"><span class="toc-number">75.</span> <span class="toc-text">Switch to the testing branch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Some_changes-1"><span class="toc-number">76.</span> <span class="toc-text">Some changes</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Push_all_including_branch"><span class="toc-number">77.</span> <span class="toc-text">Push all including branch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Switch_to_the_first_directory"><span class="toc-number">78.</span> <span class="toc-text">Switch to the first directory</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Make_changes-1"><span class="toc-number">79.</span> <span class="toc-text">Make changes</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Stage_and_commit"><span class="toc-number">80.</span> <span class="toc-text">Stage and commit</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Switch_to_the_second_directory"><span class="toc-number">81.</span> <span class="toc-text">Switch to the second directory</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Make_changes-2"><span class="toc-number">82.</span> <span class="toc-text">Make changes</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Stage_and_commit-1"><span class="toc-number">83.</span> <span class="toc-text">Stage and commit</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Push_to_the_master_repository"><span class="toc-number">84.</span> <span class="toc-text">Push to the master repository</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Now_try_to_push_from_the_first_directory"><span class="toc-number">85.</span> <span class="toc-text">Now try to push from the first directory</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Switch_to_the_first_directory-1"><span class="toc-number">86.</span> <span class="toc-text">Switch to the first directory</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Try_to_push__u2013_26gt_3B_you_will_get_an_error_message"><span class="toc-number">87.</span> <span class="toc-text">Try to push –> you will get an error message</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Get_the_changes"><span class="toc-number">88.</span> <span class="toc-text">Get the changes</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Change_in_the_first_repository"><span class="toc-number">89.</span> <span class="toc-text">Change in the first repository</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Either_edit_the_file_manually_or_use"><span class="toc-number">90.</span> <span class="toc-text">Either edit the file manually or use</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#You_will_be_prompted_to_select_which_merge_tool_you_want_to_use"><span class="toc-number">91.</span> <span class="toc-text">You will be prompted to select which merge tool you want to use</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#For_example_on_Ubuntu_you_can_use_the_tool__u201Cmeld_u201D"><span class="toc-number">92.</span> <span class="toc-text">For example on Ubuntu you can use the tool “meld”</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#After_merging_the_changes_manually_2C_commit_them"><span class="toc-number">93.</span> <span class="toc-text">After  merging the changes manually, commit them</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Create_a_new_file"><span class="toc-number">94.</span> <span class="toc-text">Create a new file</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Add_it_to_git"><span class="toc-number">95.</span> <span class="toc-text">Add it to git</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Do_some_silly_changes_and_commit"><span class="toc-number">96.</span> <span class="toc-text">Do some silly changes and commit</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Check_the_git_log_message"><span class="toc-number">97.</span> <span class="toc-text">Check the git log message</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Create_new_branch"><span class="toc-number">98.</span> <span class="toc-text">Create new branch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Checkout_the_branch"><span class="toc-number">99.</span> <span class="toc-text">Checkout the branch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Make_some_changes"><span class="toc-number">100.</span> <span class="toc-text">Make some changes</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Commit_into_testing_branch"><span class="toc-number">101.</span> <span class="toc-text">Commit into testing branch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Rebase_the_master"><span class="toc-number">102.</span> <span class="toc-text">Rebase the master</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Create_a_new_branch"><span class="toc-number">103.</span> <span class="toc-text">Create a new branch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Use_this_new_branch"><span class="toc-number">104.</span> <span class="toc-text">Use this new branch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Make_some_changes-1"><span class="toc-number">105.</span> <span class="toc-text">Make some changes</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Change_some_content_in_an_existing_file"><span class="toc-number">106.</span> <span class="toc-text">Change some content in an existing file</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Commit_this_to_the_branch"><span class="toc-number">107.</span> <span class="toc-text">Commit this to the branch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Create_a_patch__u2013_26gt_3B_git_format-patch_master"><span class="toc-number">108.</span> <span class="toc-text">Create a patch –> git format-patch master</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#This_created_patch_0001-First-commit-in-the-branch-patch"><span class="toc-number">109.</span> <span class="toc-text">This created patch 0001-First-commit-in-the-branch.patch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Switch_to_the_master"><span class="toc-number">110.</span> <span class="toc-text">Switch to the master</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Apply_the_patch"><span class="toc-number">111.</span> <span class="toc-text">Apply the patch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Do_your_normal_commit_in_the_master"><span class="toc-number">112.</span> <span class="toc-text">Do your normal commit in the master</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Delete_the_patch"><span class="toc-number">113.</span> <span class="toc-text">Delete the patch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Remove_directory_-metadata_from_git_repo"><span class="toc-number">114.</span> <span class="toc-text">Remove directory .metadata from git repo</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Remove_file_test-txt_from_repo"><span class="toc-number">115.</span> <span class="toc-text">Remove file test.txt from repo</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Login_to_server"><span class="toc-number">116.</span> <span class="toc-text">Login to server</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#to_test_use_localhost"><span class="toc-number">117.</span> <span class="toc-text">to test use localhost</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Create_repository"><span class="toc-number">118.</span> <span class="toc-text">Create repository</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#The_following_will_clone_via_HTTP"><span class="toc-number">119.</span> <span class="toc-text">The following will clone via HTTP</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Linux"><span class="toc-number">120.</span> <span class="toc-text">Linux</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#On_Windows"><span class="toc-number">121.</span> <span class="toc-text">On Windows</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Set_http_proxy_3Dhttp_3A//proxy_3A8080"><span class="toc-number">122.</span> <span class="toc-text">Set http_proxy=http://proxy:8080</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Push_back_to_the_origin_using_http"><span class="toc-number">123.</span> <span class="toc-text">Push back to the origin using http</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/C/" title="C++">C++<sup>4</sup></a></li>
+		
+			<li><a href="/categories/Github/" title="Github">Github<sup>3</sup></a></li>
+		
+			<li><a href="/categories/Java/" title="Java">Java<sup>11</sup></a></li>
+		
+			<li><a href="/categories/Linux/" title="Linux">Linux<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Lisp/" title="Lisp">Lisp<sup>0</sup></a></li>
+		
+			<li><a href="/categories/Python/" title="Python">Python<sup>0</sup></a></li>
+		
+			<li><a href="/categories/Spark/" title="Spark">Spark<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Web/" title="Web">Web<sup>1</sup></a></li>
+		
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>1</sup></a></li>
+		
+			<li><a href="/categories/数据结构/" title="数据结构">数据结构<sup>4</sup></a></li>
+		
+			<li><a href="/categories/算法/" title="算法">算法<sup>4</sup></a></li>
+		
+			<li><a href="/categories/职业生涯/" title="职业生涯">职业生涯<sup>7</sup></a></li>
+		
+			<li><a href="/categories/随笔生活/" title="随笔生活">随笔生活<sup>4</sup></a></li>
+		
+			<li><a href="/categories/面试/" title="面试">面试<sup>4</sup></a></li>
+		
+			<li><a href="/categories/项目总结/" title="项目总结">项目总结<sup>0</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+      <li><a href="http://yangjian.me" target="_blank" title="YangJian">Alimon's Blog</a></li>
+      <li><a href="http://zespia.tw/hexo" target="_blank" title="Hexo">Hexo</a></li>
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="http://weibo.com/lsx1993" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  
+  <div class="archiveslist">
+    <p class="asidetitle"><a href="/archives">归档</a></p>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">九月 2014</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">五月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">四月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/03/">三月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">二月 2014</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/10/">十月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/09/">九月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/02/">二月 2013</a><span class="archive-list-count">2</span></li></ul>
+  </div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello,This is my blog. <br/>
+			I will share my learing experience here.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/lsx1993" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/lisuxuan1993" target="_blank" title="github"></a>
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2016 
+		
+		<a href="http://lisuxuan1993.github.com" target="_blank" title="Leo_璇哥">Leo_璇哥</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"null"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'null', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+  </body>
+</html>

@@ -1,0 +1,416 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Java中HashMap详解二 | Leo&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="Leo_璇哥">
+    
+    <meta name="description" content="《HashMap的实现与优缺点》个人感觉：比较详细的讲解，和特点比较。[http://blog.csdn.net/tlycherry/article/details/8991530]
+HashMap 是我们经常使用的一种数据结构。工作中会经常用到，面试也会总提到这个数据结构，找工作的时候，”Hash">
+    
+    
+    
+    
+    <link rel="alternative" href="http://weibo.com/lsx1993" title="Leo&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/author.jpg" alt="Leo&#39;s Blog" title="Leo&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Leo&#39;s Blog">Leo&#39;s Blog</a></h1>
+				<h2 class="blog-motto">华南理工大学2010级计算机全英创新班，2013级研究生。Java程序员，研究PaaS平台。积极向上，追求卓越。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">博客主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/page/lab">实验室</a></li>
+					
+						<li><a href="/page">关于</a></li>
+					
+					<li>
+					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/09/26/Java/Java中HashMap详解二/" title="Java中HashMap详解二" itemprop="url">Java中HashMap详解二</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://lisuxuan1993.github.com" title="Leo_璇哥">Leo_璇哥</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2014-09-26T09:10:58.000Z" itemprop="datePublished">Sep 26 2014</time>
+    更新日期:<time datetime="2014-09-26T01:15:17.000Z" itemprop="dateModified">Sep 26 2014</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#JDK_u6E90_u4EE3_u7801"><span class="toc-number">1.</span> <span class="toc-text">JDK源代码</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#HashMap_u7684_u4F18_u70B9_uFF1A"><span class="toc-number">1.1.</span> <span class="toc-text">HashMap的优点：</span></a></li></ol></li></ol>
+		</div>
+		
+		<p>《HashMap的实现与优缺点》<br>个人感觉：比较详细的讲解，和特点比较。<br>[<a href="http://blog.csdn.net/tlycherry/article/details/8991530" target="_blank" rel="external">http://blog.csdn.net/tlycherry/article/details/8991530</a>]</p>
+<p>HashMap 是我们经常使用的一种数据结构。工作中会经常用到，面试也会总提到这个数据结构，找工作的时候，”HashTable 和HashMap的区别“被问到过没有？<br>     本文会从原理，JDK源码，项目使用多个角度来分析HashMap。<br>1.HashMap是什么<br>       JDK文档中如是说”基于哈希表的 Map 接口的实现。此实现提供所有可选的映射操作，并允许使用 null 值和 null 键。（除了不同步和允许使用 null 之外，HashMap 类与 Hashtable 大致相同。）不保证映射的顺序“<br>       里面大致包含如下意思：<br>       HashMap是Map的实现，因此它内部的元素都是K-V（键，值）组成的。<br>       HashMap内部元素是无序的。</p>
+<p>2.jdk中如何实现一个HashMap<br>        HashMap在java.util包下，我们平时使用的类，有大部分都是这个包或者其子包的类<br>        JDK中实现类的定义<br>public class HashMap<k,v> extends AbstractMap<k,v> implements Map<k,v>, Cloneable, Serializable<br>       它实现了Map接口<br>       通常我们这么使用HashMap<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Map&#60;Integer,String&#62; maps=new HashMap&#60;Integer,String&#62;();&#10;maps.put(1, &#34;a&#34;);&#10;maps.put(2, &#34;b&#34;);</span><br></pre></td></tr></table></figure></k,v></k,v></k,v></p>
+<p> 上面代码新建了一个HashMap并且往里插入了两个数据，这里不接受基本数据类型来做K,V<br>如果你这么写的话，就会出问题了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Map&#60;int,double&#62; maps=new HashMap&#60;int,double&#62;();</span><br></pre></td></tr></table></figure></p>
+<p>   上面例子很简单可是你知道内部他们怎么实现的吗？<br>   我们来看看HashMap的构造方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public HashMap() &#123;&#10;       this.loadFactor = DEFAULT_LOAD_FACTOR;&#10;       threshold = (int)(DEFAULT_INITIAL_CAPACITY * DEFAULT_LOAD_FACTOR);&#10;       table = new Entry[DEFAULT_INITIAL_CAPACITY];&#10;       init();&#10;   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>都知道HashMap是个变长的数据结构，看了上面的构造方法可能你并不会认为它有那么神了。<br>DEFAULT_LOAD_FACTOR //默认加载因子，如果不制定的话是0.75<br>DEFAULT_INITIAL_CAPACITY //默认初始化容量，默认是16<br>threshold //阈（yu）值 根据加载因子和初始化容量计算得出<br>    因此我们知道了，如果我们调用无参数的构造方法的话，我们将得到一个16容量的数组<br>    数组是定长的，如何用一个定长的数据来表示一个不定长的数据呢，答案就是找一个更长的<br>    下面来看看put方法是怎么实现的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public V put(K key, V value) &#123;&#10;       if (key == null) //&#38190;&#20026;&#31354;&#30340;&#24773;&#20917;&#65292;HashMap&#21644;HashTable&#30340;&#19968;&#20010;&#21306;&#21035;&#10;           return putForNullKey(value);&#10;&#10;       int hash = hash(key.hashCode()); //&#26681;&#25454;&#38190;&#30340;hashCode&#31639;&#20986;hash&#20540;&#10;       int i = indexFor(hash, table.length); //&#26681;&#25454;hash&#20540;&#31639;&#20986;&#31350;&#31455;&#35813;&#25918;&#20837;&#21738;&#20010;&#25968;&#32452;&#19979;&#26631;&#20013;&#10;&#10;       for (Entry&#60;K,V&#62; e = table[i]; e != null; e = e.next) &#123;//&#25972;&#20010;for&#24490;&#29615;&#23454;&#29616;&#20102;&#22914;&#26524;&#23384;&#22312;K&#37027;&#20040;&#23601;&#26367;&#25442;V&#10;&#10;           Object k;&#10;           if (e.hash == hash &#38;&#38; ((k = e.key) == key || key.equals(k))) &#123;&#10;               V oldValue = e.value;&#10;               e.value = value;&#10;               e.recordAccess(this);&#10;               return oldValue;&#10;           &#125;&#10;       &#125;&#10; &#10;       modCount++;//&#35745;&#25968;&#22120;&#10;       addEntry(hash, key, value, i); //&#28155;&#21152;&#21040;&#25968;&#32452;&#20013;&#10;       return null;&#10;   &#125;&#10; &#21306;&#21306;&#21313;&#20960;&#34892;&#20195;&#30721;&#65292;&#36890;&#36807;&#25105;&#28155;&#21152;&#30340;&#27880;&#37322;&#30475;&#25026;&#24182;&#19981;&#38590;&#65292;&#32454;&#24515;&#30340;&#35805;&#21487;&#33021;&#20250;&#21457;&#29616;&#36825;&#37324;&#24182;&#27809;&#26377;&#20307;&#29616;&#21464;&#38271;&#30340;&#27010;&#24565;&#65292;&#22914;&#26524;&#25105;&#25968;&#25454;&#22823;&#20110;&#20043;&#21069;&#30340;&#23481;&#37327;&#30340;&#24590;&#20040;&#32487;&#32493;&#28155;&#21152;&#21568;&#65292;&#31572;&#26696;&#23601;&#22312;addEntry&#26041;&#27861;&#20013;&#10;void addEntry(int hash, K key, V value, int bucketIndex) &#123;&#10;Entry&#60;K,V&#62; e = table[bucketIndex];&#10;       table[bucketIndex] = new Entry&#60;K,V&#62;(hash, key, value, e);&#10;       if (size++ &#62;= threshold)&#10;           resize(2 * table.length);&#10;   &#125;&#10;&#10; &#36825;&#37324;&#26174;&#31034;&#20102;&#22914;&#26524;&#24403;&#21069;size&#62;threshold&#30340;&#35805;&#37027;&#20040;&#23601;&#20250;&#25193;&#23637;&#24403;&#21069;&#30340;size&#30340;&#20004;&#20493;,&#22914;&#20309;&#25193;&#23637;&#65311;&#10;void resize(int newCapacity) &#123;&#10;        Entry[] oldTable = table;&#10;        int oldCapacity = oldTable.length;&#10;        if (oldCapacity == MAXIMUM_CAPACITY) &#123;&#10;            threshold = Integer.MAX_VALUE;&#10;            return;&#10;        &#125;&#10; &#10;        Entry[] newTable = new Entry[newCapacity];&#10;        transfer(newTable);&#10;        table = newTable;&#10;        threshold = (int)(newCapacity * loadFactor);&#10;    &#125;&#10; new &#19968;&#20010;&#26032;&#30340;&#25968;&#32452;&#65292;&#23558;&#26087;&#25968;&#25454;&#36716;&#31227;&#21040;&#26032;&#30340;&#25968;&#32452;&#20013;&#65292;&#24182;&#19988;&#37325;&#26032;&#35745;&#31639;&#38408;&#20540;&#65292;&#22914;&#20309;&#36716;&#31227;&#25968;&#25454;&#65311;&#10;void transfer(Entry[] newTable) &#123;&#10;       Entry[] src = table;&#10;       int newCapacity = newTable.length;&#10;       for (int j = 0; j &#60; src.length; j++) &#123;&#10;           Entry&#60;K,V&#62; e = src[j];&#10;           if (e != null) &#123;&#10;               src[j] = null;&#10;               do &#123;&#10;                   Entry&#60;K,V&#62; next = e.next;&#10;                   int i = indexFor(e.hash, newCapacity);&#10;                   e.next = newTable[i];&#10;                   newTable[i] = e;&#10;                   e = next;&#10;               &#125; while (e != null);&#10;           &#125;&#10;       &#125;&#10;   &#125;</span><br></pre></td></tr></table></figure></p>
+<p> 根据hash值，和新的容量重新计算数据下标。天呀，太麻烦了吧。<br> 到此为止我们知道了新建一个HashMap和添加一个HashMap之后源代码中都干了什么。</p>
+<pre><code>3.hashcode你懂它不
+ HashMap是根据hashcode的来进行计算hash值的，equals方法默认也是通过hashcode来进行比较的
+ hashCode到底是个什么东西呢？
+ 我们跟踪JDK源码到Object结果JDK确给了我们一个下面的本地方法
+</code></pre><p>public native int hashCode();<br>     通过方法我们只能知道hashcode 是一个int值。<br>     疑问更加多了，首先它如何保证不同对象的hashcode 值不一样呢，<br>     既然hashcode是一个整形的，那么它最多的应该只能表示Integer.maxValue个值， 那么当大于这么多值的情况下这些对象的值又该如何表示呢。<br>     要理解这些东西需要从操作系统说起了<br>     //TODO 时间关系，后面再补</p>
+<p>  4.HashMap的优缺点<br>     优点：超级快速的查询速度，如果有人问你什么数据结构可以达到O(1)的时间复杂度，没错是HashMap<br>             动态的可变长存储数据（和数组相比较而言）<br>     缺点：需要额外计算一次hash值<br>             如果处理不当会占用额外的空间</p>
+<p>5.如何更加高效的使用HashMap<br>       添加<br>       前面我们知道了添加数据的时候，如果当前数据的个数加上1要大于hashmap的阈值的话，那么数组就会进行一个<em>2的操作。并且从新计算所有元素的在数组中的位置。<br>       因此如果我们要添加一个1000个元素的hashMap，如果我们用默认值那么我么需要额外的计算多少次呢<br>       当大于16</em>0.75=12的时候，需要从新计算 12次<br>       当大于16<em>2</em>0.75=24的时候，需要额外计算 24次<br>       ……<br>       当大于16<em>n</em>0.75=768的时候，需要额外计算 768次<br>       所以我们总共在扩充过程中额外计算12+24+48+……+768次<br>       因此强力建议我们在项目中如果知道范围的情况下，我们应该手动指定初始大小 像这样<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Map&#60;Integer,String&#62; maps=new HashMap&#60;Integer,String&#62;(1000);</span><br></pre></td></tr></table></figure></p>
+<pre><code>删除
+JDK中如下方式进行删除
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"> public V remove(Object key) &#123;&#10;        Entry&#60;K,V&#62; e = removeEntryForKey(key);&#10;        return (e == null ? null : e.value);&#10;    &#125;&#10; &#10;final Entry&#60;K,V&#62; removeEntryForKey(Object key) &#123;&#10;        int hash = (key == null) ? 0 : hash(key.hashCode());&#10;        int i = indexFor(hash, table.length);&#10;        Entry&#60;K,V&#62; prev = table[i];&#10;        Entry&#60;K,V&#62; e = prev;&#10; &#10;        while (e != null) &#123;&#10;            Entry&#60;K,V&#62; next = e.next;&#10;            Object k;&#10;            if (e.hash == hash &#38;&#38;&#10;                ((k = e.key) == key || (key != null &#38;&#38; key.equals(k)))) &#123;&#10;                modCount++;&#10;                size--;&#10;                if (prev == e)&#10;                    table[i] = next;&#10;                else&#10;                    prev.next = next;&#10;                e.recordRemoval(this);&#10;                return e;&#10;            &#125;&#10;            prev = e;&#10;            e = next;&#10;        &#125;&#10; &#10;        return e;&#10;    &#125;</span><br></pre></td></tr></table></figure>
+<pre><code>根据上面代码我们知道了，如果删除是不进行了数组容量的重新定义的。所以，如果你有1000个元素的HashMap就算你最后删除只剩下一个了，你在内存中依然还有大于1000个容量，其中大于999个是空的。 为什么是大于因为扩容之后的HashMap实际容量大于1000个。
+</code></pre><p> 因此如果我们项目中有很大的HashMap，删除之后却很小了，我们还是弄一个新的小的存它 吧。</p>
+<pre><code>6.HashMap同步
+  如果HashMap在多线程下会出现什么问题呢
+  我们知道HashMap不是线程安全的（HashMap和HashTable的另外一个区别），如果我们也想要在多线程的环境下使用它怎么办呢？
+  也许你会说不是有HashTable吗？那我们就试试
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public class MyThread extends Thread &#123; // &#32447;&#31243;&#31867;&#10;    private Map&#60;Integer, String&#62; maps; // &#22810;&#32447;&#31243;&#22788;&#29702;&#30340;map&#10; &#10;    public MyThread(Map&#60;Integer, String&#62; maps) &#123;&#10;        this.maps = maps;&#10;    &#125;&#10; &#10;    @Override&#10;    public void run() &#123;&#10;        int delNumber = (int) (Math.random() * 10000);//&#38543;&#21363;&#21024;&#38500;&#30340;key&#10;        op(delNumber);&#10;    &#125;&#10; &#10;    public void op(int delNumber) &#123;&#10;        Iterator&#60;Map.Entry&#60;Integer, String&#62;&#62; t = maps.entrySet().iterator();&#10;        while (t.hasNext()) &#123;&#10;            Map.Entry&#60;Integer, String&#62; entry = t.next();&#10;            int key = entry.getKey();&#10;            if (key == delNumber) &#123; //&#30475;&#19979;key&#26159;&#21542;&#26159;&#38656;&#35201;&#21024;&#38500;&#30340;key&#65292;&#26159;&#30340;&#35805;&#23601;&#21024;&#38500;&#10;                maps.remove(key);&#10;                break;&#10;            &#125;&#10;        &#125;&#10;    &#125;&#10; &#10;&#125;&#10;&#10;public class HashMapTest &#123;&#10;    public static void main(String[] args) &#123;&#10;        testSync();&#10;    &#125;&#10; &#10;    public static void testSync()&#123;&#10;        Map&#60;Integer, String&#62; maps = new Hashtable&#60;Integer, String&#62;(10000);&#10;// Map&#60;Integer, String&#62; maps = new HashMap&#60;Integer, String&#62;(10000);&#10;// Map&#60;Integer, String&#62; maps = new ConcurrentHashMap&#60;Integer, String&#62;(10000);&#10;        for (int i = 0; i &#60; 10000; i++) &#123;&#10;            maps.put(i, &#34;a&#34;);&#10;        &#125;&#10;        for(int i=0;i&#60;10;i++)&#123;&#10;            new MyThread(maps).start();&#10;        &#125;&#10;    &#125;&#10; &#10;&#125;</span><br></pre></td></tr></table></figure>
+<p> 我们使用HashTable来运行试试，不一会就出现了如下错误信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Exception in thread &#34;Thread-6&#34; java.util.ConcurrentModificationException&#10;    at java.util.Hashtable$Enumerator.next(Hashtable.java:1031)&#10;    at cn.tang.demos.hashmap.MyThread.op(MyThread.java:22)&#10;    at cn.tang.demos.hashmap.MyThread.run(MyThread.java:16)&#10;Exception in thread &#34;Thread-4&#34; java.util.ConcurrentModificationException&#10;    at java.util.Hashtable$Enumerator.next(Hashtable.java:1031)&#10;    at cn.tang.demos.hashmap.MyThread.op(MyThread.java:22)&#10;    at cn.tang.demos.hashmap.MyThread.run(MyThread.java:16)&#10;Exception in thread &#34;Thread-2&#34; java.util.ConcurrentModificationException&#10;    at java.util.Hashtable$Enumerator.next(Hashtable.java:1031)&#10;    at cn.tang.demos.hashmap.MyThread.op(MyThread.java:22)&#10;    at cn.tang.demos.hashmap.MyThread.run(MyThread.java:16)&#10;Exception in thread &#34;Thread-1&#34; java.util.ConcurrentModificationException&#10;    at java.util.Hashtable$Enumerator.next(Hashtable.java:1031)&#10;    at cn.tang.demos.hashmap.MyThread.op(MyThread.java:22)&#10;    at cn.tang.demos.hashmap.MyThread.run(MyThread.java:16)&#10;Exception in thread &#34;Thread-8&#34; java.util.ConcurrentModificationException&#10;    at java.util.Hashtable$Enumerator.next(Hashtable.java:1031)&#10;    at cn.tang.demos.hashmap.MyThread.op(MyThread.java:22)&#10;    at cn.tang.demos.hashmap.MyThread.run(MyThread.java:16)&#10;Exception in thread &#34;Thread-9&#34; java.util.ConcurrentModificationException&#10;    at java.util.Hashtable$Enumerator.next(Hashtable.java:1031)&#10;    at cn.tang.demos.hashmap.MyThread.op(MyThread.java:22)&#10;    at cn.tang.demos.hashmap.MyThread.run(MyThread.java:16)&#10;Exception in thread &#34;Thread-5&#34; java.util.ConcurrentModificationException&#10;    at java.util.Hashtable$Enumerator.next(Hashtable.java:1031)&#10;    at cn.tang.demos.hashmap.MyThread.op(MyThread.java:22)&#10;    at cn.tang.demos.hashmap.MyThread.run(MyThread.java:16)&#10;ERROR: JDWP Unable to get JNI 1.2 environment, jvm-&#62;GetEnv() return code = -2&#10;JDWP exit error AGENT_ERROR_NO_JNI_ENV(183): [../../../src/share/back/util.c:820]</span><br></pre></td></tr></table></figure></p>
+<p> 不是说是安全的不？为什么会出现这个问题呢，继续看源代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public T next() &#123;&#10;        if (modCount != expectedModCount)&#10;        throw new ConcurrentModificationException();&#10;        return nextElement();&#10;    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>  当修改之后的计数器和期望的不一致的时候就会抛出异常了。对应于上面代码，线程1，遍历的时候假如有100个，本来删除之后就99个，但是线程2这段时间也删除了一个<br>所以实际只有98个了，线程1并不知道，当线程1调用next方法时候比较下结果不对，完了，数据不对了，老板要扣工资了，线程自己也解决不了，抛出去吧，别引起更大的问题了。<br>于是你得到了一个ConcurrentModificationException。<br>所以以后要注意了，HashTable,vector都不是绝对线程安全的了，所以我们需要将maps加上同步<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public void op(int delNumber) &#123;&#10;        synchronized (maps) &#123;&#10;            Iterator&#60;Map.Entry&#60;Integer, String&#62;&#62; t = maps.entrySet().iterator();&#10;            while (t.hasNext()) &#123;&#10;                Map.Entry&#60;Integer, String&#62; entry = t.next();&#10;                int key = entry.getKey();&#10;                if (key == delNumber) &#123; // &#30475;&#19979;key&#26159;&#21542;&#26159;&#38656;&#35201;&#21024;&#38500;&#30340;key&#26159;&#30340;&#35805;&#23601;&#21024;&#38500;&#10;                    maps.remove(key);&#10;                    break;&#10;                &#125;&#10;            &#125;&#10;        &#125;&#10;    &#125;</span><br></pre></td></tr></table></figure></p>
+<p> synchronized(maps)加上之后就不会出现问题了，就算你用的是HashMap都不会出问题。<br>其实JDK中在早在1.5之后有了ConcurrentHashMap了这个类你可以放心的在多线程下使用并且不需要加任何同步 了。</p>
+<h1 id="JDK_u6E90_u4EE3_u7801"><a href="#JDK_u6E90_u4EE3_u7801" class="headerlink" title="JDK源代码"></a>JDK源代码</h1><h2 id="HashMap_u7684_u4F18_u70B9_uFF1A"><a href="#HashMap_u7684_u4F18_u70B9_uFF1A" class="headerlink" title="HashMap的优点："></a>HashMap的优点：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">package java.util;&#10;import java.io.*;&#10;&#10;public class HashMap&#60;K,V&#62;&#10;    extends AbstractMap&#60;K,V&#62;&#10;    implements Map&#60;K,V&#62;, Cloneable, Serializable&#10;&#123;&#10;    /**&#10;     * The default initial capacity - MUST be a power of two.&#10;     */&#10;    static final int DEFAULT_INITIAL_CAPACITY = 16;&#10;    /**&#10;     * The maximum capacity, used if a higher value is implicitly specified&#10;     * by either of the constructors with arguments.&#10;     * MUST be a power of two &#60;= 1&#60;&#60;30.&#10;     */&#10;    static final int MAXIMUM_CAPACITY = 1 &#60;&#60; 30;&#10;    /**&#10;     * The load factor used when none specified in constructor.&#10;     */&#10;    static final float DEFAULT_LOAD_FACTOR = 0.75f;&#10;    /**&#10;     * The table, resized as necessary. Length MUST Always be a power of two.&#10;     */&#10;    transient Entry&#60;K,V&#62;[] table;&#10;    /**&#10;     * The number of key-value mappings contained in this map.&#10;     */&#10;    transient int size;&#10;    /**&#10;     * The next size value at which to resize (capacity * load factor).&#10;     * @serial&#10;     */&#10;    int threshold;&#10;    /**&#10;     * The load factor for the hash table.&#10;     *&#10;     * @serial&#10;     */&#10;    final float loadFactor;&#10;    /**&#10;     * The number of times this HashMap has been structurally modified&#10;     * Structural modifications are those that change the number of mappings in&#10;     * the HashMap or otherwise modify its internal structure (e.g.,&#10;     * rehash). This field is used to make iterators on Collection-views of&#10;     * the HashMap fail-fast. (See ConcurrentModificationException).&#10;     */&#10;    transient int modCount;&#10;    /**&#10;     * The default threshold of map capacity above which alternative hashing is&#10;     * used for String keys. Alternative hashing reduces the incidence of&#10;     * collisions due to weak hash code calculation for String keys.&#10;     * &#60;p/&#62;&#10;     * This value may be overridden by defining the system property&#10;     * &#123;@code jdk.map.althashing.threshold&#125;. A property value of &#123;@code 1&#125;&#10;     * forces alternative hashing to be used at all times whereas&#10;     * &#123;@code -1&#125; value ensures that alternative hashing is never used.&#10;     */&#10;    static final int ALTERNATIVE_HASHING_THRESHOLD_DEFAULT = Integer.MAX_VALUE;&#10;    /**&#10;     * holds values which can&#39;t be initialized until after VM is booted.&#10;     */&#10;    private static class Holder &#123;&#10;            // Unsafe mechanics&#10;        /**&#10;         * Unsafe utilities&#10;         */&#10;        static final sun.misc.Unsafe UNSAFE;&#10;        /**&#10;         * Offset of &#34;final&#34; hashSeed field we must set in readObject() method.&#10;         */&#10;        static final long HASHSEED_OFFSET;&#10;        /**&#10;         * Table capacity above which to switch to use alternative hashing.&#10;         */&#10;        static final int ALTERNATIVE_HASHING_THRESHOLD;&#10;        static &#123;&#10;            String altThreshold = java.security.AccessController.doPrivileged(&#10;                new sun.security.action.GetPropertyAction(&#10;                    &#34;jdk.map.althashing.threshold&#34;));&#10;            int threshold;&#10;            try &#123;&#10;                threshold = (null != altThreshold)&#10;                        ? Integer.parseInt(altThreshold)&#10;                        : ALTERNATIVE_HASHING_THRESHOLD_DEFAULT;&#10;                // disable alternative hashing if -1&#10;                if (threshold == -1) &#123;&#10;                    threshold = Integer.MAX_VALUE;&#10;                &#125;&#10;                if (threshold &#60; 0) &#123;&#10;                    throw new IllegalArgumentException(&#34;value must be positive integer.&#34;);&#10;                &#125;&#10;            &#125; catch(IllegalArgumentException failed) &#123;&#10;                throw new Error(&#34;Illegal value for &#39;jdk.map.althashing.threshold&#39;&#34;, failed);&#10;            &#125;&#10;            ALTERNATIVE_HASHING_THRESHOLD = threshold;&#10;            try &#123;&#10;                UNSAFE = sun.misc.Unsafe.getUnsafe();&#10;                HASHSEED_OFFSET = UNSAFE.objectFieldOffset(&#10;                    HashMap.class.getDeclaredField(&#34;hashSeed&#34;));&#10;            &#125; catch (NoSuchFieldException | SecurityException e) &#123;&#10;                throw new Error(&#34;Failed to record hashSeed offset&#34;, e);&#10;            &#125;&#10;        &#125;&#10;    &#125;&#10;    /**&#10;     * If &#123;@code true&#125; then perform alternative hashing of String keys to reduce&#10;     * the incidence of collisions due to weak hash code calculation.&#10;     */&#10;    transient boolean useAltHashing;&#10;    /**&#10;     * A randomizing value associated with this instance that is applied to&#10;     * hash code of keys to make hash collisions harder to find.&#10;     */&#10;    transient final int hashSeed = sun.misc.Hashing.randomHashSeed(this);&#10;    /**&#10;     * Constructs an empty &#60;tt&#62;HashMap&#60;/tt&#62; with the specified initial&#10;     * capacity and load factor.&#10;     *&#10;     * @param initialCapacity the initial capacity&#10;     * @param loadFactor the load factor&#10;     * @throws IllegalArgumentException if the initial capacity is negative&#10;     * or the load factor is nonpositive&#10;     */&#10;    public HashMap(int initialCapacity, float loadFactor) &#123;&#10;        if (initialCapacity &#60; 0)&#10;            throw new IllegalArgumentException(&#34;Illegal initial capacity: &#34; +&#10;                                               initialCapacity);&#10;        if (initialCapacity &#62; MAXIMUM_CAPACITY)&#10;            initialCapacity = MAXIMUM_CAPACITY;&#10;        if (loadFactor &#60;= 0 || Float.isNaN(loadFactor))&#10;            throw new IllegalArgumentException(&#34;Illegal load factor: &#34; +&#10;                                               loadFactor);&#10;        // Find a power of 2 &#62;= initialCapacity&#10;        int capacity = 1;&#10;        while (capacity &#60; initialCapacity)&#10;            capacity &#60;&#60;= 1;&#10;        this.loadFactor = loadFactor;&#10;        threshold = (int)Math.min(capacity * loadFactor, MAXIMUM_CAPACITY + 1);&#10;        table = new Entry[capacity];&#10;        useAltHashing = sun.misc.VM.isBooted() &#38;&#38;&#10;                (capacity &#62;= Holder.ALTERNATIVE_HASHING_THRESHOLD);&#10;        init();&#10;    &#125;&#10;    /**&#10;     * Constructs an empty &#60;tt&#62;HashMap&#60;/tt&#62; with the specified initial&#10;     * capacity and the default load factor (0.75).&#10;     *&#10;     * @param initialCapacity the initial capacity.&#10;     * @throws IllegalArgumentException if the initial capacity is negative.&#10;     */&#10;    public HashMap(int initialCapacity) &#123;&#10;        this(initialCapacity, DEFAULT_LOAD_FACTOR);&#10;    &#125;&#10;    /**&#10;     * Constructs an empty &#60;tt&#62;HashMap&#60;/tt&#62; with the default initial capacity&#10;     * (16) and the default load factor (0.75).&#10;     */&#10;    public HashMap() &#123;&#10;        this(DEFAULT_INITIAL_CAPACITY, DEFAULT_LOAD_FACTOR);&#10;    &#125;&#10;    /**&#10;     * Constructs a new &#60;tt&#62;HashMap&#60;/tt&#62; with the same mappings as the&#10;     * specified &#60;tt&#62;Map&#60;/tt&#62;. The &#60;tt&#62;HashMap&#60;/tt&#62; is created with&#10;     * default load factor (0.75) and an initial capacity sufficient to&#10;     * hold the mappings in the specified &#60;tt&#62;Map&#60;/tt&#62;.&#10;     *&#10;     * @param m the map whose mappings are to be placed in this map&#10;     * @throws NullPointerException if the specified map is null&#10;     */&#10;    public HashMap(Map&#60;? extends K, ? extends V&#62; m) &#123;&#10;        this(Math.max((int) (m.size() / DEFAULT_LOAD_FACTOR) + 1,&#10;                      DEFAULT_INITIAL_CAPACITY), DEFAULT_LOAD_FACTOR);&#10;        putAllForCreate(m);&#10;    &#125;&#10;    // internal utilities&#10;    /**&#10;     * Initialization hook for subclasses. This method is called&#10;     * in all constructors and pseudo-constructors (clone, readObject)&#10;     * after HashMap has been initialized but before any entries have&#10;     * been inserted. (In the absence of this method, readObject would&#10;     * require explicit knowledge of subclasses.)&#10;     */&#10;    void init() &#123;&#10;    &#125;&#10;    /**&#10;     * Retrieve object hash code and applies a supplemental hash function to the&#10;     * result hash, which defends against poor quality hash functions. This is&#10;     * critical because HashMap uses power-of-two length hash tables, that&#10;     * otherwise encounter collisions for hashCodes that do not differ&#10;     * in lower bits. Note: Null keys always map to hash 0, thus index 0.&#10;     */&#10;    final int hash(Object k) &#123;&#10;        int h = 0;&#10;        if (useAltHashing) &#123;&#10;            if (k instanceof String) &#123;&#10;                return sun.misc.Hashing.stringHash32((String) k);&#10;            &#125;&#10;            h = hashSeed;&#10;        &#125;&#10;        h ^= k.hashCode();&#10;        // This function ensures that hashCodes that differ only by&#10;        // constant multiples at each bit position have a bounded&#10;        // number of collisions (approximately 8 at default load factor).&#10;        h ^= (h &#62;&#62;&#62; 20) ^ (h &#62;&#62;&#62; 12);&#10;        return h ^ (h &#62;&#62;&#62; 7) ^ (h &#62;&#62;&#62; 4);&#10;    &#125;&#10;    /**&#10;     * Returns index for hash code h.&#10;     */&#10;    static int indexFor(int h, int length) &#123;&#10;        return h &#38; (length-1);&#10;    &#125;&#10;    /**&#10;     * Returns the number of key-value mappings in this map.&#10;     *&#10;     * @return the number of key-value mappings in this map&#10;     */&#10;    public int size() &#123;&#10;        return size;&#10;    &#125;&#10;    /**&#10;     * Returns &#60;tt&#62;true&#60;/tt&#62; if this map contains no key-value mappings.&#10;     *&#10;     * @return &#60;tt&#62;true&#60;/tt&#62; if this map contains no key-value mappings&#10;     */&#10;    public boolean isEmpty() &#123;&#10;        return size == 0;&#10;    &#125;&#10;    /**&#10;     * Returns the value to which the specified key is mapped,&#10;     * or &#123;@code null&#125; if this map contains no mapping for the key.&#10;     *&#10;     * &#60;p&#62;More formally, if this map contains a mapping from a key&#10;     * &#123;@code k&#125; to a value &#123;@code v&#125; such that &#123;@code (key==null ? k==null :&#10;     * key.equals(k))&#125;, then this method returns &#123;@code v&#125;; otherwise&#10;     * it returns &#123;@code null&#125;. (There can be at most one such mapping.)&#10;     *&#10;     * &#60;p&#62;A return value of &#123;@code null&#125; does not &#60;i&#62;necessarily&#60;/i&#62;&#10;     * indicate that the map contains no mapping for the key; it&#39;s also&#10;     * possible that the map explicitly maps the key to &#123;@code null&#125;.&#10;     * The &#123;@link #containsKey containsKey&#125; operation may be used to&#10;     * distinguish these two cases.&#10;     *&#10;     * @see #put(Object, Object)&#10;     */&#10;    public V get(Object key) &#123;&#10;        if (key == null)&#10;            return getForNullKey();&#10;        Entry&#60;K,V&#62; entry = getEntry(key);&#10;        return null == entry ? null : entry.getValue();&#10;    &#125;&#10;    /**&#10;     * Offloaded version of get() to look up null keys. Null keys map&#10;     * to index 0. This null case is split out into separate methods&#10;     * for the sake of performance in the two most commonly used&#10;     * operations (get and put), but incorporated with conditionals in&#10;     * others.&#10;     */&#10;    private V getForNullKey() &#123;&#10;        for (Entry&#60;K,V&#62; e = table[0]; e != null; e = e.next) &#123;&#10;            if (e.key == null)&#10;                return e.value;&#10;        &#125;&#10;        return null;&#10;    &#125;&#10;    /**&#10;     * Returns &#60;tt&#62;true&#60;/tt&#62; if this map contains a mapping for the&#10;     * specified key.&#10;     *&#10;     * @param key The key whose presence in this map is to be tested&#10;     * @return &#60;tt&#62;true&#60;/tt&#62; if this map contains a mapping for the specified&#10;     * key.&#10;     */&#10;    public boolean containsKey(Object key) &#123;&#10;        return getEntry(key) != null;&#10;    &#125;&#10;    /**&#10;     * Returns the entry associated with the specified key in the&#10;     * HashMap. Returns null if the HashMap contains no mapping&#10;     * for the key.&#10;     */&#10;    final Entry&#60;K,V&#62; getEntry(Object key) &#123;&#10;        int hash = (key == null) ? 0 : hash(key);&#10;        for (Entry&#60;K,V&#62; e = table[indexFor(hash, table.length)];&#10;             e != null;&#10;             e = e.next) &#123;&#10;            Object k;&#10;            if (e.hash == hash &#38;&#38;&#10;                ((k = e.key) == key || (key != null &#38;&#38; key.equals(k))))&#10;                return e;&#10;        &#125;&#10;        return null;&#10;    &#125;&#10;    /**&#10;     * Associates the specified value with the specified key in this map.&#10;     * If the map previously contained a mapping for the key, the old&#10;     * value is replaced.&#10;     *&#10;     * @param key key with which the specified value is to be associated&#10;     * @param value value to be associated with the specified key&#10;     * @return the previous value associated with &#60;tt&#62;key&#60;/tt&#62;, or&#10;     * &#60;tt&#62;null&#60;/tt&#62; if there was no mapping for &#60;tt&#62;key&#60;/tt&#62;.&#10;     * (A &#60;tt&#62;null&#60;/tt&#62; return can also indicate that the map&#10;     * previously associated &#60;tt&#62;null&#60;/tt&#62; with &#60;tt&#62;key&#60;/tt&#62;.)&#10;     */&#10;    public V put(K key, V value) &#123;&#10;        if (key == null)&#10;            return putForNullKey(value);&#10;        int hash = hash(key);&#10;        int i = indexFor(hash, table.length);&#10;        for (Entry&#60;K,V&#62; e = table[i]; e != null; e = e.next) &#123;&#10;            Object k;&#10;            if (e.hash == hash &#38;&#38; ((k = e.key) == key || key.equals(k))) &#123;&#10;                V oldValue = e.value;&#10;                e.value = value;&#10;                e.recordAccess(this);&#10;                return oldValue;&#10;            &#125;&#10;        &#125;&#10;        modCount++;&#10;        addEntry(hash, key, value, i);&#10;        return null;&#10;    &#125;&#10;    /**&#10;     * Offloaded version of put for null keys&#10;     */&#10;    private V putForNullKey(V value) &#123;&#10;        for (Entry&#60;K,V&#62; e = table[0]; e != null; e = e.next) &#123;&#10;            if (e.key == null) &#123;&#10;                V oldValue = e.value;&#10;                e.value = value;&#10;                e.recordAccess(this);&#10;                return oldValue;&#10;            &#125;&#10;        &#125;&#10;        modCount++;&#10;        addEntry(0, null, value, 0);&#10;        return null;&#10;    &#125;&#10;    /**&#10;     * This method is used instead of put by constructors and&#10;     * pseudoconstructors (clone, readObject). It does not resize the table,&#10;     * check for comodification, etc. It calls createEntry rather than&#10;     * addEntry.&#10;     */&#10;    private void putForCreate(K key, V value) &#123;&#10;        int hash = null == key ? 0 : hash(key);&#10;        int i = indexFor(hash, table.length);&#10;        /**&#10;         * Look for preexisting entry for key. This will never happen for&#10;         * clone or deserialize. It will only happen for construction if the&#10;         * input Map is a sorted map whose ordering is inconsistent w/ equals.&#10;         */&#10;        for (Entry&#60;K,V&#62; e = table[i]; e != null; e = e.next) &#123;&#10;            Object k;&#10;            if (e.hash == hash &#38;&#38;&#10;                ((k = e.key) == key || (key != null &#38;&#38; key.equals(k)))) &#123;&#10;                e.value = value;&#10;                return;&#10;            &#125;&#10;        &#125;&#10;        createEntry(hash, key, value, i);&#10;    &#125;&#10;    private void putAllForCreate(Map&#60;? extends K, ? extends V&#62; m) &#123;&#10;        for (Map.Entry&#60;? extends K, ? extends V&#62; e : m.entrySet())&#10;            putForCreate(e.getKey(), e.getValue());&#10;    &#125;&#10;    /**&#10;     * Rehashes the contents of this map into a new array with a&#10;     * larger capacity. This method is called automatically when the&#10;     * number of keys in this map reaches its threshold.&#10;     *&#10;     * If current capacity is MAXIMUM_CAPACITY, this method does not&#10;     * resize the map, but sets threshold to Integer.MAX_VALUE.&#10;     * This has the effect of preventing future calls.&#10;     *&#10;     * @param newCapacity the new capacity, MUST be a power of two;&#10;     * must be greater than current capacity unless current&#10;     * capacity is MAXIMUM_CAPACITY (in which case value&#10;     * is irrelevant).&#10;     */&#10;    void resize(int newCapacity) &#123;&#10;        Entry[] oldTable = table;&#10;        int oldCapacity = oldTable.length;&#10;        if (oldCapacity == MAXIMUM_CAPACITY) &#123;&#10;            threshold = Integer.MAX_VALUE;&#10;            return;&#10;        &#125;&#10;        Entry[] newTable = new Entry[newCapacity];&#10;        boolean oldAltHashing = useAltHashing;&#10;        useAltHashing |= sun.misc.VM.isBooted() &#38;&#38;&#10;                (newCapacity &#62;= Holder.ALTERNATIVE_HASHING_THRESHOLD);&#10;        boolean rehash = oldAltHashing ^ useAltHashing;&#10;        transfer(newTable, rehash);&#10;        table = newTable;&#10;        threshold = (int)Math.min(newCapacity * loadFactor, MAXIMUM_CAPACITY + 1);&#10;    &#125;&#10;    /**&#10;     * Transfers all entries from current table to newTable.&#10;     */&#10;    void transfer(Entry[] newTable, boolean rehash) &#123;&#10;        int newCapacity = newTable.length;&#10;        for (Entry&#60;K,V&#62; e : table) &#123;&#10;            while(null != e) &#123;&#10;                Entry&#60;K,V&#62; next = e.next;&#10;                if (rehash) &#123;&#10;                    e.hash = null == e.key ? 0 : hash(e.key);&#10;                &#125;&#10;                int i = indexFor(e.hash, newCapacity);&#10;                e.next = newTable[i];&#10;                newTable[i] = e;&#10;                e = next;&#10;            &#125;&#10;        &#125;&#10;    &#125;&#10;    /**&#10;     * Copies all of the mappings from the specified map to this map.&#10;     * These mappings will replace any mappings that this map had for&#10;     * any of the keys currently in the specified map.&#10;     *&#10;     * @param m mappings to be stored in this map&#10;     * @throws NullPointerException if the specified map is null&#10;     */&#10;    public void putAll(Map&#60;? extends K, ? extends V&#62; m) &#123;&#10;        int numKeysToBeAdded = m.size();&#10;        if (numKeysToBeAdded == 0)&#10;            return;&#10;        /*&#10;         * Expand the map if the map if the number of mappings to be added&#10;         * is greater than or equal to threshold. This is conservative; the&#10;         * obvious condition is (m.size() + size) &#62;= threshold, but this&#10;         * condition could result in a map with twice the appropriate capacity,&#10;         * if the keys to be added overlap with the keys already in this map.&#10;         * By using the conservative calculation, we subject ourself&#10;         * to at most one extra resize.&#10;         */&#10;        if (numKeysToBeAdded &#62; threshold) &#123;&#10;            int targetCapacity = (int)(numKeysToBeAdded / loadFactor + 1);&#10;            if (targetCapacity &#62; MAXIMUM_CAPACITY)&#10;                targetCapacity = MAXIMUM_CAPACITY;&#10;            int newCapacity = table.length;&#10;            while (newCapacity &#60; targetCapacity)&#10;                newCapacity &#60;&#60;= 1;&#10;            if (newCapacity &#62; table.length)&#10;                resize(newCapacity);&#10;        &#125;&#10;        for (Map.Entry&#60;? extends K, ? extends V&#62; e : m.entrySet())&#10;            put(e.getKey(), e.getValue());&#10;    &#125;&#10;    /**&#10;     * Removes the mapping for the specified key from this map if present.&#10;     *&#10;     * @param key key whose mapping is to be removed from the map&#10;     * @return the previous value associated with &#60;tt&#62;key&#60;/tt&#62;, or&#10;     * &#60;tt&#62;null&#60;/tt&#62; if there was no mapping for &#60;tt&#62;key&#60;/tt&#62;.&#10;     * (A &#60;tt&#62;null&#60;/tt&#62; return can also indicate that the map&#10;     * previously associated &#60;tt&#62;null&#60;/tt&#62; with &#60;tt&#62;key&#60;/tt&#62;.)&#10;     */&#10;    public V remove(Object key) &#123;&#10;        Entry&#60;K,V&#62; e = removeEntryForKey(key);&#10;        return (e == null ? null : e.value);&#10;    &#125;&#10;    /**&#10;     * Removes and returns the entry associated with the specified key&#10;     * in the HashMap. Returns null if the HashMap contains no mapping&#10;     * for this key.&#10;     */&#10;    final Entry&#60;K,V&#62; removeEntryForKey(Object key) &#123;&#10;        int hash = (key == null) ? 0 : hash(key);&#10;        int i = indexFor(hash, table.length);&#10;        Entry&#60;K,V&#62; prev = table[i];&#10;        Entry&#60;K,V&#62; e = prev;&#10;        while (e != null) &#123;&#10;            Entry&#60;K,V&#62; next = e.next;&#10;            Object k;&#10;            if (e.hash == hash &#38;&#38;&#10;                ((k = e.key) == key || (key != null &#38;&#38; key.equals(k)))) &#123;&#10;                modCount++;&#10;                size--;&#10;                if (prev == e)&#10;                    table[i] = next;&#10;                else&#10;                    prev.next = next;&#10;                e.recordRemoval(this);&#10;                return e;&#10;            &#125;&#10;            prev = e;&#10;            e = next;&#10;        &#125;&#10;        return e;&#10;    &#125;&#10;    /**&#10;     * Special version of remove for EntrySet using &#123;@code Map.Entry.equals()&#125;&#10;     * for matching.&#10;     */&#10;    final Entry&#60;K,V&#62; removeMapping(Object o) &#123;&#10;        if (!(o instanceof Map.Entry))&#10;            return null;&#10;        Map.Entry&#60;K,V&#62; entry = (Map.Entry&#60;K,V&#62;) o;&#10;        Object key = entry.getKey();&#10;        int hash = (key == null) ? 0 : hash(key);&#10;        int i = indexFor(hash, table.length);&#10;        Entry&#60;K,V&#62; prev = table[i];&#10;        Entry&#60;K,V&#62; e = prev;&#10;        while (e != null) &#123;&#10;            Entry&#60;K,V&#62; next = e.next;&#10;            if (e.hash == hash &#38;&#38; e.equals(entry)) &#123;&#10;                modCount++;&#10;                size--;&#10;                if (prev == e)&#10;                    table[i] = next;&#10;                else&#10;                    prev.next = next;&#10;                e.recordRemoval(this);&#10;                return e;&#10;            &#125;&#10;            prev = e;&#10;            e = next;&#10;        &#125;&#10;        return e;&#10;    &#125;&#10;    /**&#10;     * Removes all of the mappings from this map.&#10;     * The map will be empty after this call returns.&#10;     */&#10;    public void clear() &#123;&#10;        modCount++;&#10;        Entry[] tab = table;&#10;        for (int i = 0; i &#60; tab.length; i++)&#10;            tab[i] = null;&#10;        size = 0;&#10;    &#125;&#10;    /**&#10;     * Returns &#60;tt&#62;true&#60;/tt&#62; if this map maps one or more keys to the&#10;     * specified value.&#10;     *&#10;     * @param value value whose presence in this map is to be tested&#10;     * @return &#60;tt&#62;true&#60;/tt&#62; if this map maps one or more keys to the&#10;     * specified value&#10;     */&#10;    public boolean containsValue(Object value) &#123;&#10;        if (value == null)&#10;            return containsNullValue();&#10;        Entry[] tab = table;&#10;        for (int i = 0; i &#60; tab.length ; i++)&#10;            for (Entry e = tab[i] ; e != null ; e = e.next)&#10;                if (value.equals(e.value))&#10;                    return true;&#10;        return false;&#10;    &#125;&#10;    /**&#10;     * Special-case code for containsValue with null argument&#10;     */&#10;    private boolean containsNullValue() &#123;&#10;        Entry[] tab = table;&#10;        for (int i = 0; i &#60; tab.length ; i++)&#10;            for (Entry e = tab[i] ; e != null ; e = e.next)&#10;                if (e.value == null)&#10;                    return true;&#10;        return false;&#10;    &#125;&#10;    /**&#10;     * Returns a shallow copy of this &#60;tt&#62;HashMap&#60;/tt&#62; instance: the keys and&#10;     * values themselves are not cloned.&#10;     *&#10;     * @return a shallow copy of this map&#10;     */&#10;    public Object clone() &#123;&#10;        HashMap&#60;K,V&#62; result = null;&#10;        try &#123;&#10;            result = (HashMap&#60;K,V&#62;)super.clone();&#10;        &#125; catch (CloneNotSupportedException e) &#123;&#10;            // assert false;&#10;        &#125;&#10;        result.table = new Entry[table.length];&#10;        result.entrySet = null;&#10;        result.modCount = 0;&#10;        result.size = 0;&#10;        result.init();&#10;        result.putAllForCreate(this);&#10;        return result;&#10;    &#125;&#10;    static class Entry&#60;K,V&#62; implements Map.Entry&#60;K,V&#62; &#123;&#10;        final K key;&#10;        V value;&#10;        Entry&#60;K,V&#62; next;&#10;        int hash;&#10;        /**&#10;         * Creates new entry.&#10;         */&#10;        Entry(int h, K k, V v, Entry&#60;K,V&#62; n) &#123;&#10;            value = v;&#10;            next = n;&#10;            key = k;&#10;            hash = h;&#10;        &#125;&#10;        public final K getKey() &#123;&#10;            return key;&#10;        &#125;&#10;        public final V getValue() &#123;&#10;            return value;&#10;        &#125;&#10;        public final V setValue(V newValue) &#123;&#10;            V oldValue = value;&#10;            value = newValue;&#10;            return oldValue;&#10;        &#125;&#10;        public final boolean equals(Object o) &#123;&#10;            if (!(o instanceof Map.Entry))&#10;                return false;&#10;            Map.Entry e = (Map.Entry)o;&#10;            Object k1 = getKey();&#10;            Object k2 = e.getKey();&#10;            if (k1 == k2 || (k1 != null &#38;&#38; k1.equals(k2))) &#123;&#10;                Object v1 = getValue();&#10;                Object v2 = e.getValue();&#10;                if (v1 == v2 || (v1 != null &#38;&#38; v1.equals(v2)))&#10;                    return true;&#10;            &#125;&#10;            return false;&#10;        &#125;&#10;        public final int hashCode() &#123;&#10;            return (key==null ? 0 : key.hashCode()) ^&#10;                   (value==null ? 0 : value.hashCode());&#10;        &#125;&#10;        public final String toString() &#123;&#10;            return getKey() + &#34;=&#34; + getValue();&#10;        &#125;&#10;        /**&#10;         * This method is invoked whenever the value in an entry is&#10;         * overwritten by an invocation of put(k,v) for a key k that&#39;s already&#10;         * in the HashMap.&#10;         */&#10;        void recordAccess(HashMap&#60;K,V&#62; m) &#123;&#10;        &#125;&#10;        /**&#10;         * This method is invoked whenever the entry is&#10;         * removed from the table.&#10;         */&#10;        void recordRemoval(HashMap&#60;K,V&#62; m) &#123;&#10;        &#125;&#10;    &#125;&#10;    /**&#10;     * Adds a new entry with the specified key, value and hash code to&#10;     * the specified bucket. It is the responsibility of this&#10;     * method to resize the table if appropriate.&#10;     *&#10;     * Subclass overrides this to alter the behavior of put method.&#10;     */&#10;    void addEntry(int hash, K key, V value, int bucketIndex) &#123;&#10;        if ((size &#62;= threshold) &#38;&#38; (null != table[bucketIndex])) &#123;&#10;            resize(2 * table.length);&#10;            hash = (null != key) ? hash(key) : 0;&#10;            bucketIndex = indexFor(hash, table.length);&#10;        &#125;&#10;        createEntry(hash, key, value, bucketIndex);&#10;    &#125;&#10;    /**&#10;     * Like addEntry except that this version is used when creating entries&#10;     * as part of Map construction or &#34;pseudo-construction&#34; (cloning,&#10;     * deserialization). This version needn&#39;t worry about resizing the table.&#10;     *&#10;     * Subclass overrides this to alter the behavior of HashMap(Map),&#10;     * clone, and readObject.&#10;     */&#10;    void createEntry(int hash, K key, V value, int bucketIndex) &#123;&#10;        Entry&#60;K,V&#62; e = table[bucketIndex];&#10;        table[bucketIndex] = new Entry&#60;&#62;(hash, key, value, e);&#10;        size++;&#10;    &#125;&#10;    private abstract class HashIterator&#60;E&#62; implements Iterator&#60;E&#62; &#123;&#10;        Entry&#60;K,V&#62; next; // next entry to return&#10;        int expectedModCount; // For fast-fail&#10;        int index; // current slot&#10;        Entry&#60;K,V&#62; current; // current entry&#10;        HashIterator() &#123;&#10;            expectedModCount = modCount;&#10;            if (size &#62; 0) &#123; // advance to first entry&#10;                Entry[] t = table;&#10;                while (index &#60; t.length &#38;&#38; (next = t[index++]) == null)&#10;                    ;&#10;            &#125;&#10;        &#125;&#10;        public final boolean hasNext() &#123;&#10;            return next != null;&#10;        &#125;&#10;        final Entry&#60;K,V&#62; nextEntry() &#123;&#10;            if (modCount != expectedModCount)&#10;                throw new ConcurrentModificationException();&#10;            Entry&#60;K,V&#62; e = next;&#10;            if (e == null)&#10;                throw new NoSuchElementException();&#10;            if ((next = e.next) == null) &#123;&#10;                Entry[] t = table;&#10;                while (index &#60; t.length &#38;&#38; (next = t[index++]) == null)&#10;                    ;&#10;            &#125;&#10;            current = e;&#10;            return e;&#10;        &#125;&#10;        public void remove() &#123;&#10;            if (current == null)&#10;                throw new IllegalStateException();&#10;            if (modCount != expectedModCount)&#10;                throw new ConcurrentModificationException();&#10;            Object k = current.key;&#10;            current = null;&#10;            HashMap.this.removeEntryForKey(k);&#10;            expectedModCount = modCount;&#10;        &#125;&#10;    &#125;&#10;    private final class ValueIterator extends HashIterator&#60;V&#62; &#123;&#10;        public V next() &#123;&#10;            return nextEntry().value;&#10;        &#125;&#10;    &#125;&#10;    private final class KeyIterator extends HashIterator&#60;K&#62; &#123;&#10;        public K next() &#123;&#10;            return nextEntry().getKey();&#10;        &#125;&#10;    &#125;&#10;    private final class EntryIterator extends HashIterator&#60;Map.Entry&#60;K,V&#62;&#62; &#123;&#10;        public Map.Entry&#60;K,V&#62; next() &#123;&#10;            return nextEntry();&#10;        &#125;&#10;    &#125;&#10;    // Subclass overrides these to alter behavior of views&#39; iterator() method&#10;    Iterator&#60;K&#62; newKeyIterator() &#123;&#10;        return new KeyIterator();&#10;    &#125;&#10;    Iterator&#60;V&#62; newValueIterator() &#123;&#10;        return new ValueIterator();&#10;    &#125;&#10;    Iterator&#60;Map.Entry&#60;K,V&#62;&#62; newEntryIterator() &#123;&#10;        return new EntryIterator();&#10;    &#125;&#10;    // Views&#10;    private transient Set&#60;Map.Entry&#60;K,V&#62;&#62; entrySet = null;&#10;    /**&#10;     * Returns a &#123;@link Set&#125; view of the keys contained in this map.&#10;     * The set is backed by the map, so changes to the map are&#10;     * reflected in the set, and vice-versa. If the map is modified&#10;     * while an iteration over the set is in progress (except through&#10;     * the iterator&#39;s own &#60;tt&#62;remove&#60;/tt&#62; operation), the results of&#10;     * the iteration are undefined. The set supports element removal,&#10;     * which removes the corresponding mapping from the map, via the&#10;     * &#60;tt&#62;Iterator.remove&#60;/tt&#62;, &#60;tt&#62;Set.remove&#60;/tt&#62;,&#10;     * &#60;tt&#62;removeAll&#60;/tt&#62;, &#60;tt&#62;retainAll&#60;/tt&#62;, and &#60;tt&#62;clear&#60;/tt&#62;&#10;     * operations. It does not support the &#60;tt&#62;add&#60;/tt&#62; or &#60;tt&#62;addAll&#60;/tt&#62;&#10;     * operations.&#10;     */&#10;    public Set&#60;K&#62; keySet() &#123;&#10;        Set&#60;K&#62; ks = keySet;&#10;        return (ks != null ? ks : (keySet = new KeySet()));&#10;    &#125;&#10;    private final class KeySet extends AbstractSet&#60;K&#62; &#123;&#10;        public Iterator&#60;K&#62; iterator() &#123;&#10;            return newKeyIterator();&#10;        &#125;&#10;        public int size() &#123;&#10;            return size;&#10;        &#125;&#10;        public boolean contains(Object o) &#123;&#10;            return containsKey(o);&#10;        &#125;&#10;        public boolean remove(Object o) &#123;&#10;            return HashMap.this.removeEntryForKey(o) != null;&#10;        &#125;&#10;        public void clear() &#123;&#10;            HashMap.this.clear();&#10;        &#125;&#10;    &#125;&#10;    /**&#10;     * Returns a &#123;@link Collection&#125; view of the values contained in this map.&#10;     * The collection is backed by the map, so changes to the map are&#10;     * reflected in the collection, and vice-versa. If the map is&#10;     * modified while an iteration over the collection is in progress&#10;     * (except through the iterator&#39;s own &#60;tt&#62;remove&#60;/tt&#62; operation),&#10;     * the results of the iteration are undefined. The collection&#10;     * supports element removal, which removes the corresponding&#10;     * mapping from the map, via the &#60;tt&#62;Iterator.remove&#60;/tt&#62;,&#10;     * &#60;tt&#62;Collection.remove&#60;/tt&#62;, &#60;tt&#62;removeAll&#60;/tt&#62;,&#10;     * &#60;tt&#62;retainAll&#60;/tt&#62; and &#60;tt&#62;clear&#60;/tt&#62; operations. It does not&#10;     * support the &#60;tt&#62;add&#60;/tt&#62; or &#60;tt&#62;addAll&#60;/tt&#62; operations.&#10;     */&#10;    public Collection&#60;V&#62; values() &#123;&#10;        Collection&#60;V&#62; vs = values;&#10;        return (vs != null ? vs : (values = new Values()));&#10;    &#125;&#10;    private final class Values extends AbstractCollection&#60;V&#62; &#123;&#10;        public Iterator&#60;V&#62; iterator() &#123;&#10;            return newValueIterator();&#10;        &#125;&#10;        public int size() &#123;&#10;            return size;&#10;        &#125;&#10;        public boolean contains(Object o) &#123;&#10;            return containsValue(o);&#10;        &#125;&#10;        public void clear() &#123;&#10;            HashMap.this.clear();&#10;        &#125;&#10;    &#125;&#10;    /**&#10;     * Returns a &#123;@link Set&#125; view of the mappings contained in this map.&#10;     * The set is backed by the map, so changes to the map are&#10;     * reflected in the set, and vice-versa. If the map is modified&#10;     * while an iteration over the set is in progress (except through&#10;     * the iterator&#39;s own &#60;tt&#62;remove&#60;/tt&#62; operation, or through the&#10;     * &#60;tt&#62;setValue&#60;/tt&#62; operation on a map entry returned by the&#10;     * iterator) the results of the iteration are undefined. The set&#10;     * supports element removal, which removes the corresponding&#10;     * mapping from the map, via the &#60;tt&#62;Iterator.remove&#60;/tt&#62;,&#10;     * &#60;tt&#62;Set.remove&#60;/tt&#62;, &#60;tt&#62;removeAll&#60;/tt&#62;, &#60;tt&#62;retainAll&#60;/tt&#62; and&#10;     * &#60;tt&#62;clear&#60;/tt&#62; operations. It does not support the&#10;     * &#60;tt&#62;add&#60;/tt&#62; or &#60;tt&#62;addAll&#60;/tt&#62; operations.&#10;     *&#10;     * @return a set view of the mappings contained in this map&#10;     */&#10;    public Set&#60;Map.Entry&#60;K,V&#62;&#62; entrySet() &#123;&#10;        return entrySet0();&#10;    &#125;&#10;    private Set&#60;Map.Entry&#60;K,V&#62;&#62; entrySet0() &#123;&#10;        Set&#60;Map.Entry&#60;K,V&#62;&#62; es = entrySet;&#10;        return es != null ? es : (entrySet = new EntrySet());&#10;    &#125;&#10;    private final class EntrySet extends AbstractSet&#60;Map.Entry&#60;K,V&#62;&#62; &#123;&#10;        public Iterator&#60;Map.Entry&#60;K,V&#62;&#62; iterator() &#123;&#10;            return newEntryIterator();&#10;        &#125;&#10;        public boolean contains(Object o) &#123;&#10;            if (!(o instanceof Map.Entry))&#10;                return false;&#10;            Map.Entry&#60;K,V&#62; e = (Map.Entry&#60;K,V&#62;) o;&#10;            Entry&#60;K,V&#62; candidate = getEntry(e.getKey());&#10;            return candidate != null &#38;&#38; candidate.equals(e);&#10;        &#125;&#10;        public boolean remove(Object o) &#123;&#10;            return removeMapping(o) != null;&#10;        &#125;&#10;        public int size() &#123;&#10;            return size;&#10;        &#125;&#10;        public void clear() &#123;&#10;            HashMap.this.clear();&#10;        &#125;&#10;    &#125;&#10;    /**&#10;     * Save the state of the &#60;tt&#62;HashMap&#60;/tt&#62; instance to a stream (i.e.,&#10;     * serialize it).&#10;     *&#10;     * @serialData The &#60;i&#62;capacity&#60;/i&#62; of the HashMap (the length of the&#10;     * bucket array) is emitted (int), followed by the&#10;     * &#60;i&#62;size&#60;/i&#62; (an int, the number of key-value&#10;     * mappings), followed by the key (Object) and value (Object)&#10;     * for each key-value mapping. The key-value mappings are&#10;     * emitted in no particular order.&#10;     */&#10;    private void writeObject(java.io.ObjectOutputStream s)&#10;        throws IOException&#10;    &#123;&#10;        Iterator&#60;Map.Entry&#60;K,V&#62;&#62; i =&#10;            (size &#62; 0) ? entrySet0().iterator() : null;&#10;        // Write out the threshold, loadfactor, and any hidden stuff&#10;        s.defaultWriteObject();&#10;        // Write out number of buckets&#10;        s.writeInt(table.length);&#10;        // Write out size (number of Mappings)&#10;        s.writeInt(size);&#10;        // Write out keys and values (alternating)&#10;        if (size &#62; 0) &#123;&#10;            for(Map.Entry&#60;K,V&#62; e : entrySet0()) &#123;&#10;                s.writeObject(e.getKey());&#10;                s.writeObject(e.getValue());&#10;            &#125;&#10;        &#125;&#10;    &#125;&#10;    private static final long serialVersionUID = 362498820763181265L;&#10;    /**&#10;     * Reconstitute the &#123;@code HashMap&#125; instance from a stream (i.e.,&#10;     * deserialize it).&#10;     */&#10;    private void readObject(java.io.ObjectInputStream s)&#10;         throws IOException, ClassNotFoundException&#10;    &#123;&#10;        // Read in the threshold (ignored), loadfactor, and any hidden stuff&#10;        s.defaultReadObject();&#10;        if (loadFactor &#60;= 0 || Float.isNaN(loadFactor))&#10;            throw new InvalidObjectException(&#34;Illegal load factor: &#34; +&#10;                                               loadFactor);&#10;        // set hashSeed (can only happen after VM boot)&#10;        Holder.UNSAFE.putIntVolatile(this, Holder.HASHSEED_OFFSET,&#10;                sun.misc.Hashing.randomHashSeed(this));&#10;        // Read in number of buckets and allocate the bucket array;&#10;        s.readInt(); // ignored&#10;        // Read number of mappings&#10;        int mappings = s.readInt();&#10;        if (mappings &#60; 0)&#10;            throw new InvalidObjectException(&#34;Illegal mappings count: &#34; +&#10;                                               mappings);&#10;        int initialCapacity = (int) Math.min(&#10;                // capacity chosen by number of mappings&#10;                // and desired load (if &#62;= 0.25)&#10;                mappings * Math.min(1 / loadFactor, 4.0f),&#10;                // we have limits...&#10;                HashMap.MAXIMUM_CAPACITY);&#10;        int capacity = 1;&#10;        // find smallest power of two which holds all mappings&#10;        while (capacity &#60; initialCapacity) &#123;&#10;            capacity &#60;&#60;= 1;&#10;        &#125;&#10;        table = new Entry[capacity];&#10;        threshold = (int) Math.min(capacity * loadFactor, MAXIMUM_CAPACITY + 1);&#10;        useAltHashing = sun.misc.VM.isBooted() &#38;&#38;&#10;                (capacity &#62;= Holder.ALTERNATIVE_HASHING_THRESHOLD);&#10;        init(); // Give subclass a chance to do its thing.&#10;        // Read the keys and values, and put the mappings in the HashMap&#10;        for (int i=0; i&#60;mappings; i++) &#123;&#10;            K key = (K) s.readObject();&#10;            V value = (V) s.readObject();&#10;            putForCreate(key, value);&#10;        &#125;&#10;    &#125;&#10;    // These methods are used when serializing HashSets&#10;    int capacity() &#123; return table.length; &#125;&#10;    float loadFactor() &#123; return loadFactor; &#125;&#10;&#125;</span><br></pre></td></tr></table></figure>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+
+
+<div class="article-share" id="share">
+
+  
+<div class="jiathis_style">
+    <span class="jiathis_txt">分享到：</span>
+    <a class="jiathis_button_tsina">新浪微博</a>
+    <a class="jiathis_button_weixin">微信</a>
+    <a class="jiathis_button_twitter">Twitter</a>
+    <a class="jiathis_button_evernote">EverNote</a>
+    <a href="http://www.jiathis.com/share?uid=1501277" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+</div>
+<script type="text/javascript" >
+    var jiathis_config={
+    data_track_clickback:true,
+    sm:"copy,renren,cqq",
+    pic:"",
+    summary:"",
+    
+  </script> 
+<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=
+" charset="utf-8"></script>      
+
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2014/10/16/Java/Axis2发布WebService/" title="《使用Axis2框架发布Web项目中WebService》">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  《使用Axis2框架发布Web项目中WebService》</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2014/09/12/Java/单例模式/"  title="单例模式">
+ <strong>NEXT:</strong><br/> 
+ <span>单例模式
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#JDK_u6E90_u4EE3_u7801"><span class="toc-number">1.</span> <span class="toc-text">JDK源代码</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#HashMap_u7684_u4F18_u70B9_uFF1A"><span class="toc-number">1.1.</span> <span class="toc-text">HashMap的优点：</span></a></li></ol></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/C/" title="C++">C++<sup>4</sup></a></li>
+		
+			<li><a href="/categories/Github/" title="Github">Github<sup>3</sup></a></li>
+		
+			<li><a href="/categories/Java/" title="Java">Java<sup>11</sup></a></li>
+		
+			<li><a href="/categories/Linux/" title="Linux">Linux<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Lisp/" title="Lisp">Lisp<sup>0</sup></a></li>
+		
+			<li><a href="/categories/Python/" title="Python">Python<sup>0</sup></a></li>
+		
+			<li><a href="/categories/Spark/" title="Spark">Spark<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Web/" title="Web">Web<sup>1</sup></a></li>
+		
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>1</sup></a></li>
+		
+			<li><a href="/categories/数据结构/" title="数据结构">数据结构<sup>4</sup></a></li>
+		
+			<li><a href="/categories/算法/" title="算法">算法<sup>4</sup></a></li>
+		
+			<li><a href="/categories/职业生涯/" title="职业生涯">职业生涯<sup>7</sup></a></li>
+		
+			<li><a href="/categories/随笔生活/" title="随笔生活">随笔生活<sup>4</sup></a></li>
+		
+			<li><a href="/categories/面试/" title="面试">面试<sup>4</sup></a></li>
+		
+			<li><a href="/categories/项目总结/" title="项目总结">项目总结<sup>0</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+      <li><a href="http://yangjian.me" target="_blank" title="YangJian">Alimon's Blog</a></li>
+      <li><a href="http://zespia.tw/hexo" target="_blank" title="Hexo">Hexo</a></li>
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="http://weibo.com/lsx1993" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  
+  <div class="archiveslist">
+    <p class="asidetitle"><a href="/archives">归档</a></p>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">九月 2014</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">五月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">四月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/03/">三月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">二月 2014</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/10/">十月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/09/">九月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/02/">二月 2013</a><span class="archive-list-count">2</span></li></ul>
+  </div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello,This is my blog. <br/>
+			I will share my learing experience here.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/lsx1993" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/lisuxuan1993" target="_blank" title="github"></a>
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2016 
+		
+		<a href="http://lisuxuan1993.github.com" target="_blank" title="Leo_璇哥">Leo_璇哥</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"null"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'null', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+  </body>
+</html>

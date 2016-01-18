@@ -4,12 +4,13 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Leo&#39;s Blog</title>
+    <title>排序算法总结之快速排序 | Leo&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="Leo_璇哥">
     
-    <meta name="description" content="Just do it!">
+    <meta name="description" content="原理见算法导论：非常详细
+以下是自己实现的快速排序精简代码：12345678910111213141516171819202122232425262728293031323334353637#include&amp;lt;cstdio&amp;gt;  #include&amp;lt;ctime&amp;gt;  #include">
     
     
     
@@ -66,182 +67,110 @@
 
     </header>
     <div id="container">
-      <div id="main">
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2016/01/18/hello-world/" title="Hello World" itemprop="url">
-  
-    <h1 itemprop="name">Hello World</h1>
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
     
-     
-           <p itemprop="description" >Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the </p>
-        
+      <a href="/2015/01/16/算法/排序算法总结之快速排序/" title="排序算法总结之快速排序" itemprop="url">排序算法总结之快速排序</a>
+  </h1>
+  <p class="article-author">By
     
-    <time datetime="2016-01-18T07:23:44.153Z" itemprop="datePublished">Jan 18 2016</time>
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2015/03/16/数据库/SQL语句/" title="SQL语句" itemprop="url">
-  
-    <h1 itemprop="name">SQL语句</h1>
-    
-     
-           <p itemprop="description" >【http://www.w3school.com.cn/sql/】【http://www.1keydata.com/cn/sql/】
-SQL 指令
-- SQL SELECT
-SELECT Store_Name FROM Store_Information;
-- SQL DISTI</p>
-        
-    
-    <time datetime="2015-03-15T20:22:05.000Z" itemprop="datePublished">Mar 16 2015</time>
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2015/01/16/算法/排序算法总结之快速排序/" title="排序算法总结之快速排序" itemprop="url">
-  
-    <h1 itemprop="name">排序算法总结之快速排序</h1>
-    
-     
-           <p itemprop="description" >原理见算法导论：非常详细
-以下是自己实现的快速排序精简代码：12345678910111213141516171819202122232425262728293031323334353637#include&amp;lt;cstdio&amp;gt;  #include&amp;lt;ctime&amp;gt;</p>
-        
-    
+      <a href="http://lisuxuan1993.github.com" title="Leo_璇哥">Leo_璇哥</a>
+    </p>
+  <p class="article-time">
     <time datetime="2015-01-16T15:22:49.000Z" itemprop="datePublished">Jan 16 2015</time>
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2014/11/23/Java/java对象的生命周期/" title="Java对象的生命周期" itemprop="url">
-  
-    <h1 itemprop="name">Java对象的生命周期</h1>
+    更新日期:<time datetime="2015-03-15T12:32:58.000Z" itemprop="dateModified">Mar 15 2015</time>
     
-     
-           <p itemprop="description" >要理解java对象的生命周期，我们需要要明白两个问题：
-
-java是怎么分配内存的 
-
-java是怎么回收内存的
-
-
-理解java的内存管理机制。任何语言，内存管理无外乎分配和回收。
-在java虚拟机规范里，JVM被分为7个内存区域。
-虚拟器规范中的7个内存区域分别是三个线程私有</p>
-        
-    
-    <time datetime="2014-11-23T08:24:34.000Z" itemprop="datePublished">Nov 23 2014</time>
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+		</div>
+		
+		<p>原理见算法导论：非常详细</p>
+<p>以下是自己实现的快速排序精简代码：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span><span class="string">&lt;cstdio&gt;</span>  </span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span><span class="string">&lt;ctime&gt;</span>  </span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span><span class="string">&lt;cstdlib&gt;</span>  </span></span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">Swap</span><span class="params">(<span class="keyword">int</span> &amp;a, <span class="keyword">int</span> &amp;b)</span>  </span><br><span class="line"></span>&#123;  </span><br><span class="line">    <span class="keyword">if</span>(a!=b)  </span><br><span class="line">    &#123;  </span><br><span class="line">        a^=b;  </span><br><span class="line">        b^=a;  </span><br><span class="line">        a^=b;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Partition</span><span class="params">(<span class="keyword">int</span> *A,<span class="keyword">int</span> front,<span class="keyword">int</span> end)</span>  </span><br><span class="line"></span>&#123;  </span><br><span class="line">    <span class="keyword">int</span> key = A[end];  </span><br><span class="line">    <span class="keyword">int</span> i = front - <span class="number">1</span>;  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> current = front;current &lt; end;++current)  </span><br><span class="line">    &#123;  </span><br><span class="line">        <span class="keyword">if</span>(A[current]&lt;=key)  </span><br><span class="line">            Swap(A[++i],A[current]);  </span><br><span class="line">    &#125;  </span><br><span class="line">    Swap(A[++i],A[end]);  </span><br><span class="line">    <span class="keyword">return</span> i;  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">QuickSort</span> <span class="params">(<span class="keyword">int</span> *A,<span class="keyword">int</span> front,<span class="keyword">int</span> end)</span>  </span><br><span class="line"></span>&#123;  </span><br><span class="line">    <span class="keyword">if</span>(front &lt; end)  </span><br><span class="line">    &#123;  </span><br><span class="line">        <span class="keyword">int</span> midPosition = Partition(A,front,end);  </span><br><span class="line">        QuickSort(A,front,midPosition-<span class="number">1</span>);  </span><br><span class="line">        QuickSort(A,midPosition+<span class="number">1</span>,end);  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
   
-    <a href="/2014/10/31/Java/《Java反射机制》/" title="《Java反射机制》" itemprop="url">
-  
-    <h1 itemprop="name">《Java反射机制》</h1>
-    
-     
-           <p itemprop="description" >反射机制《JAVA反射机制》：[http://blog.csdn.net/justinavril/article/details/2873664]
-Reflection是Java 程序开发语言的特征之一，它允许运行中的 Java 程序对自身进行检查，或者说”自审”，并能直接操作程</p>
-        
-    
-    <time datetime="2014-10-31T15:15:57.000Z" itemprop="datePublished">Oct 31 2014</time>
-  </a>
-</section>
+	</div>
+		<footer class="article-footer clearfix">
 
-  <section class="post" itemscope itemprop="blogPost">
+  <div class="article-tags">
   
-    <a href="/2014/10/25/Java/《深入理解Java虚拟机》/" title="《深入理解Java虚拟机》" itemprop="url">
-  
-    <h1 itemprop="name">《深入理解Java虚拟机》</h1>
-    
-     
-           <p itemprop="description" >《深入理解Java虚拟机》学习虚拟机中各种自动运作的技术特性的原理（自己思考程序这样写好不好的基础和前提：理解认清这些技术的运作本质）
-1.内存管理 2.Class文件结构与执行引擎 3.编译器优化 4. 多线程并发
-安全的内存管理和访问机制，避免了绝大部分的内存泄露和指针越界问</p>
-        
-    
-    <time datetime="2014-10-25T09:18:39.000Z" itemprop="datePublished">Oct 25 2014</time>
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2014/10/23/Java/《Java并发编程实战》/" title="《Java并发编程实战》" itemprop="url">
-  
-    <h1 itemprop="name">《Java并发编程实战》</h1>
-    
-     
-           <p itemprop="description" >多线程。同步。Java线程和并发编程知识。
-从并发性和线程安全性的基本概念出发，介绍了如何使用类库提供的基本并发构建块来避免并发危险。
-使用线程，并且关注程序执行性能的开发人员。如何有效地利用并发性。如何在Java并发应用程序中正确且高效的使用底层提供的基本的并发功能。
-Java</p>
-        
-    
-    <time datetime="2014-10-22T20:15:12.000Z" itemprop="datePublished">Oct 23 2014</time>
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2014/10/16/Java/Axis2发布WebService/" title="《使用Axis2框架发布Web项目中WebService》" itemprop="url">
-  
-    <h1 itemprop="name">《使用Axis2框架发布Web项目中WebService》</h1>
-    
-     
-           <p itemprop="description" >《主流Web Service框架介绍：CXF和Axis2》
-
-CXF和Axis2是目前java平台上最主流的两个框架，虽然两个项目都隶属ASF，但却是基于不同思想和风格实现的，因此也各有所长。 
-CXF：http://cxf.apache.org/是由过去的Celtix和XFir</p>
-        
-    
-    <time datetime="2014-10-16T14:34:46.000Z" itemprop="datePublished">Oct 16 2014</time>
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2014/09/26/Java/Java中HashMap详解二/" title="Java中HashMap详解二" itemprop="url">
-  
-    <h1 itemprop="name">Java中HashMap详解二</h1>
-    
-     
-           <p itemprop="description" >《HashMap的实现与优缺点》个人感觉：比较详细的讲解，和特点比较。[http://blog.csdn.net/tlycherry/article/details/8991530]
-HashMap 是我们经常使用的一种数据结构。工作中会经常用到，面试也会总提到这个数据结构，找工</p>
-        
-    
-    <time datetime="2014-09-26T09:10:58.000Z" itemprop="datePublished">Sep 26 2014</time>
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2014/09/12/Java/单例模式/" title="单例模式" itemprop="url">
-  
-    <h1 itemprop="name">单例模式</h1>
-    
-     
-           <p itemprop="description" >单例模式
-
-——类对象只能有一个实例的情况。——线程池，缓存，对话框，处理偏好设置，注册表的对象。日志对象。充当打印机显卡等设备的驱动程序的对象。——全局访问点：可以在需要时才创建对象；对比于全局变量。——常被用来管理共享的全局资源（数据库连接池，线程池）
-单例模式：确保一个类只</p>
-        
-    
-    <time datetime="2014-09-12T13:33:35.000Z" itemprop="datePublished">Sep 12 2014</time>
-  </a>
-</section>
+  <span></span> <a href="/tags/排序算法/">排序算法</a>
+  </div>
 
 
-  <nav id="page-nav" class="clearfix">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
-  </nav>
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/算法/">算法</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  
+<div class="jiathis_style">
+    <span class="jiathis_txt">分享到：</span>
+    <a class="jiathis_button_tsina">新浪微博</a>
+    <a class="jiathis_button_weixin">微信</a>
+    <a class="jiathis_button_twitter">Twitter</a>
+    <a class="jiathis_button_evernote">EverNote</a>
+    <a href="http://www.jiathis.com/share?uid=1501277" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+</div>
+<script type="text/javascript" >
+    var jiathis_config={
+    data_track_clickback:true,
+    sm:"copy,renren,cqq",
+    pic:"",
+    summary:"",
+    
+  </script> 
+<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=
+" charset="utf-8"></script>      
+
 
 </div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/03/16/数据库/SQL语句/" title="SQL语句">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  SQL语句</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2014/11/23/Java/java对象的生命周期/"  title="Java对象的生命周期">
+ <strong>NEXT:</strong><br/> 
+ <span>Java对象的生命周期
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
       <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  
+  </div>
 
 <div id="asidepart">
 <div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
@@ -365,6 +294,8 @@ $(document).ready(function(){
       m.removeClass('moveMain');
       a.css('display', 'block').removeClass('fadeOut');
       o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
         
     }
   });
@@ -384,9 +315,74 @@ $(document).ready(function(){
 });
 </script>
 
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
 
 
 
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"null"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
 
 
 <script type="text/javascript">
@@ -400,4 +396,4 @@ ga('send', 'pageview');
 
 
   </body>
- </html>
+</html>

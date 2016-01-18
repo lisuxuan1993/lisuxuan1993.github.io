@@ -1,0 +1,430 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>《使用Axis2框架发布Web项目中WebService》 | Leo&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="Leo_璇哥">
+    
+    <meta name="description" content="《主流Web Service框架介绍：CXF和Axis2》
+
+CXF和Axis2是目前java平台上最主流的两个框架，虽然两个项目都隶属ASF，但却是基于不同思想和风格实现的，因此也各有所长。 
+CXF：http://cxf.apache.org/是由过去的Celtix和XFire两个框架合并而来，">
+    
+    
+    
+    
+    <link rel="alternative" href="http://weibo.com/lsx1993" title="Leo&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/author.jpg" alt="Leo&#39;s Blog" title="Leo&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Leo&#39;s Blog">Leo&#39;s Blog</a></h1>
+				<h2 class="blog-motto">华南理工大学2010级计算机全英创新班，2013级研究生。Java程序员，研究PaaS平台。积极向上，追求卓越。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">博客主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/page/lab">实验室</a></li>
+					
+						<li><a href="/page">关于</a></li>
+					
+					<li>
+					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/10/16/Java/Axis2发布WebService/" title="《使用Axis2框架发布Web项目中WebService》" itemprop="url">《使用Axis2框架发布Web项目中WebService》</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://lisuxuan1993.github.com" title="Leo_璇哥">Leo_璇哥</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2014-10-16T14:34:46.000Z" itemprop="datePublished">Oct 16 2014</time>
+    更新日期:<time datetime="2014-10-16T06:43:42.000Z" itemprop="dateModified">Oct 16 2014</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+		</div>
+		
+		<p><strong>《主流Web Service框架介绍：CXF和Axis2》</strong></p>
+<hr>
+<p>CXF和Axis2是目前java平台上最主流的两个框架，虽然两个项目都隶属ASF，但却是基于不同思想和风格实现的，因此也各有所长。 </p>
+<p>CXF：<a href="http://cxf.apache.org/" target="_blank" rel="external">http://cxf.apache.org/</a><br>是由过去的Celtix和XFire两个框架合并而来，CXF在java社区有广泛的接受度是得益于它能很好的集成Spring。我认为CXF最突出的两个优势是：<br>1.对JAX-WS规范的完整实现。 作为java平台上的WebService标准，过去既有的WebService产品必然会向这一标准靠拢，而JAX-WS标准本身大大地降低了开发WebService的工作量，对于开发人员来说，是非常受欢迎的。<br>2.对Spring的友好支持。 CXF从Xfire继承而来，对Spring有着非常友好的支持。鉴于Spring的广泛应用，对很多团队来说这是非常有吸引力的一点。 </p>
+<p>Axis2: <a href="http://axis.apache.org/axis2/java/core/" target="_blank" rel="external">http://axis.apache.org/axis2/java/core/</a><br>与CXF这类嵌入式的框架相比，Axis2更像是一种是WS容器，它要求应用程序以aar包的形式部署到自己里面，这对于既有系统，特别是那些基于servlet容器的web应用来说，改造的代价可能会很大。Axis2的优势在于一方面它对WS-*协议族的支持比较全面，另一方面是它还支持C平台，这是一个值得我们关注的优势。 </p>
+<p>总得来说，如果是新生项目，选择CXF或Axis2在工作量上不会有太大的差别，对于那些使用了Spring的既有项目来说，CXF应该是首选，因为CXF是基于注解的。因此对于那些基于jvm1.4构建陈旧系统可能并不适用。Axis2的优势是支持C平台和比较全的WS-*协议族。（以上的考量都还没有考虑ESB的因素。）</p>
+<p><strong>参考的一些教程</strong></p>
+<hr>
+<p>《myeclipse下用axis2开发web service的第一个程序（SayHello）》<a href="http://blog.csdn.net/moonsheep_liu/article/details/6334854该教程版本较老。" target="_blank" rel="external">http://blog.csdn.net/moonsheep_liu/article/details/6334854该教程版本较老。</a></p>
+<p>《Myeclipse+Axis2+Tomcat开发webService》<br><a href="http://www.cnblogs.com/hexinlin/p/3358558.html" target="_blank" rel="external">http://www.cnblogs.com/hexinlin/p/3358558.html</a><br>比较详细准确的教程，主要根据该文档。若要生成wsdl文件，要先生成项目的class文件。</p>
+<p>《MyEclipse学习axis2 WebService学习笔记》一份比较详细的笔记。<a href="http://blog.csdn.net/brianyeye/article/details/7551741" target="_blank" rel="external">http://blog.csdn.net/brianyeye/article/details/7551741</a></p>
+<p><a href="http://my.oschina.net/zichen/blog/101485" target="_blank" rel="external">http://my.oschina.net/zichen/blog/101485</a></p>
+<p>开源中国社区：《Web服务框架 Apache Axis2》<br><a href="http://www.oschina.net/p/axis2" target="_blank" rel="external">http://www.oschina.net/p/axis2</a></p>
+<p>《AXIS2:如何发布webservice》<br><a href="http://blog.csdn.net/zzq560/article/details/5627993" target="_blank" rel="external">http://blog.csdn.net/zzq560/article/details/5627993</a></p>
+<p>《Web工程集成Axis2发布WebService》<br><a href="http://wenku.baidu.com/link?url=_RZoizHnGKcPzjso50JKkg3Ar77KzTae9__V25nB_Zf1Z3tGZm5XrtFmuy1WL1VBuqQMjxXsEM5aZW9fxRd8npEqes5QUIMrb5u_SLLK0ti" target="_blank" rel="external">http://wenku.baidu.com/link?url=_RZoizHnGKcPzjso50JKkg3Ar77KzTae9__V25nB_Zf1Z3tGZm5XrtFmuy1WL1VBuqQMjxXsEM5aZW9fxRd8npEqes5QUIMrb5u_SLLK0ti</a></p>
+<p><strong>《MyEclipse+Axis2插件开发Web服务》</strong></p>
+<hr>
+<p>官网下载地址：<a href="http://axis.apache.org/axis2/java/core/download.cgi。" target="_blank" rel="external">http://axis.apache.org/axis2/java/core/download.cgi。</a></p>
+<p>下载四个文件 ：Binary Distribution ，Source Distribution ，WAR Distribution ，Documents Distribution。关于axis2，官方提供了四种类型的包，分别为二进制包、war包、文档包和源文件包。其中的二进制包包含了示例程序和一些jar包；war包是可以作为web应用部署到servlet container中的axis2服务包，它是apache axis2提供的服务管理的工具类web应用，所谓的axis2的安装即指的是在servlet container中安装此包；文档包不再多说；源码包也不再多说。</p>
+<p>Axis2插件地址： <a href="http://axis.apache.org/axis2/java/core/tools/index.html。" target="_blank" rel="external">http://axis.apache.org/axis2/java/core/tools/index.html。</a><br>axis2-eclipse-codegen-plugin-1.6.2，axis2-eclipse-service-plugin-1.6.2。</p>
+<p>安装axis2比较简单，把/axis2-1.5.4-war下axis2.war拷贝到tomcat的webapps下。启动tomcat，浏览器中键入<a href="http://localhost:8080/axis2/。《MyEclipse下axis2插件的安装》" target="_blank" rel="external">http://localhost:8080/axis2/。《MyEclipse下axis2插件的安装》</a> <a href="http://blog.csdn.net/hao495430759/article/details/9142363。" target="_blank" rel="external">http://blog.csdn.net/hao495430759/article/details/9142363。</a></p>
+<p>插件发布Web Service：项目工程地址：D:\Workspaces\MyEclipse。<br>生成Hello_Service.aar。可以把这个aar文件放入tomcat中发布，首先把生成的aar文件拷贝到tomcat目录中的axis2项目的service目录中位置</p>
+<p>服务发布的地址：<a href="http://localhost:8080/axis2/services/HelloService?wsdl。" target="_blank" rel="external">http://localhost:8080/axis2/services/HelloService?wsdl。</a></p>
+<p>编写测试服务的类：MyCallBack.java，TestHelloDemo.java<br>    新建stub本地操作对象：HelloServiceStub stub = new HelloServiceStub();<br>    新建代理对象：GetResp和SayHello，封装了一些参数的细节和设置方法，获取方法等。类似于Spring中Bean的作用。<br>    然后通过stub的函数操作该代理对象。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GetResp rsp = new GetResp();&#10;GetRespResponse rspResponse = new GetRespResponse();&#10;System.out.println(stub.getResp(rsp).get_return());//&#35831;&#27714;&#34987;&#21709;&#24212;&#10; &#10;SayHello hellolsx = new SayHello();&#10;hellolsx.setName(&#34;lisuxuan&#34;);&#10;System.out.println(stub.sayHello(hellolsx).get_return());//Hellolisuxuan</span><br></pre></td></tr></table></figure></p>
+<p><a href="http://damiao-cn.iteye.com/blog/260914" target="_blank" rel="external">http://damiao-cn.iteye.com/blog/260914</a><br>在生成的服务调用类中，最重要的是*Stub.java类，其他生成的类都是对应与这个类中的各个方法的，将生成的所有服务调用类放于client端的项目中，Stub就相当于一个存根。<br>当client端调用webservice端的方法时，首先会调用client端本地项目的Stub.java中的对应方法，然后Stub在通过soap以信封xml的方式通过网络发到服务器即server端。 </p>
+<p><strong>XML方式使用Axis2将人流量分析系统中功能发布为Web Service</strong></p>
+<hr>
+<p>修改web.xml<br>    在web.xml中添加如下配置：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;!-- lisuxuan @ 2014-10-15 --&#62;&#10;&#60;servlet&#62;&#10;&#60;display-name&#62;Apache-Axis Servlet&#60;/display-name&#62;&#10;&#9;&#60;servlet-name&#62;AxisServlet&#60;/servlet-name&#62;&#10;&#9;&#60;servlet-class&#62;org.apache.axis2.transport.http.AxisServlet&#60;/servlet-class&#62;&#10;&#9;&#60;load-on-startup&#62;1&#60;/load-on-startup&#62;&#10;&#60;/servlet&#62;&#10;&#10;&#60;servlet-mapping&#62;&#10;&#9;&#60;servlet-name&#62;AxisServlet&#60;/servlet-name&#62;&#10;&#9;&#60;url-pattern&#62;/services/*&#60;/url-pattern&#62;&#10;&#60;/servlet-mapping&#62;</span><br></pre></td></tr></table></figure></p>
+<p><strong>建立WebService配置文件的目录结构</strong></p>
+<p>把WAR包中WEB-INF下面的conf、lib、modules 三个文件夹复制到Web项目的WEB-INF目录中。  到Web项目的WEB-INF目录中新建一个services文件夹，在services文件夹下新建一个webservice的根目录（目录名即你所提供的webservice名），再在下面新建META-INF文件夹，并存放services.xml文件。</p>
+<p>SelectDataActionService服务的xml配置文件如下，其他类似：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;service name=&#34;SelectDataActionService&#34;&#62;  &#10;&#60;!-- &#27880;&#24847;&#65306;&#26381;&#21153;&#21517;&#31216;&#38656;&#19982;&#30446;&#24405;&#21517;&#31216;&#23545;&#24212; --&#62;&#10;    &#60;description&#62;  SelectDataAction Service &#60;/description&#62;&#10;    &#10;    &#10;    &#60;parameter name=&#34;ServiceClass&#34;&#62;  &#10;        com.heatmap.action.SelectDataAction    &#10;    &#60;/parameter&#62;&#10;    &#10;    &#10;    &#60;operation name=&#34;gettable&#34;&#62;  &#10;        &#60;messageReceiver class=&#34;org.apache.axis2.rpc.receivers.RPCMessageReceiver&#34; /&#62;  &#10;    &#60;/operation&#62;&#10;    &#10;    &#60;operation name=&#34;taocanAnalysis&#34;&#62;  &#10;        &#60;messageReceiver class=&#34;org.apache.axis2.rpc.receivers.RPCMessageReceiver&#34; /&#62;  &#10;    &#60;/operation&#62;  &#10;&#10;    &#60;operation name=&#34;taocanAnalysis_ws&#34;&#62;  &#10;        &#60;messageReceiver class=&#34;org.apache.axis2.rpc.receivers.RPCMessageReceiver&#34; /&#62;  &#10;    &#60;/operation&#62; &#10;    &#10;&#9;&#60;operation name=&#34;terminaAnalysis&#34;&#62;  &#10;        &#60;messageReceiver class=&#34;org.apache.axis2.rpc.receivers.RPCMessageReceiver&#34; /&#62;  &#10;    &#60;/operation&#62; &#10;    &#10;    &#60;operation name=&#34;chargeAnalysis&#34;&#62;  &#10;        &#60;messageReceiver class=&#34;org.apache.axis2.rpc.receivers.RPCMessageReceiver&#34; /&#62;  &#10;    &#60;/operation&#62;  &#10;    &#10;    &#60;operation name=&#34;complaintAnalysis&#34;&#62;  &#10;        &#60;messageReceiver class=&#34;org.apache.axis2.rpc.receivers.RPCMessageReceiver&#34; /&#62;  &#10;    &#60;/operation&#62;&#10;    &#10;    &#60;operation name=&#34;priceAnalysis&#34;&#62;  &#10;        &#60;messageReceiver class=&#34;org.apache.axis2.rpc.receivers.RPCMessageReceiver&#34; /&#62;  &#10;    &#60;/operation&#62;  &#10;    &#10;    &#60;operation name=&#34;methodForTest&#34;&#62;  &#10;        &#60;messageReceiver class=&#34;org.apache.axis2.rpc.receivers.RPCMessageReceiver&#34; /&#62;  &#10;    &#60;/operation&#62;  &#10;&#10;&#60;/service&#62;</span><br></pre></td></tr></table></figure></p>
+<p><strong>调用服务测试：</strong><br>1.服务发布地址：<br>（其中ip为服务所在IP）<br><a href="http://10.1.15.190:8080/ZSHeatmap/services/SelectDataActionService?wsdl" target="_blank" rel="external">http://10.1.15.190:8080/ZSHeatmap/services/SelectDataActionService?wsdl</a><br><a href="http://10.1.15.190:8080/ZSHeatmap/services/QueryDataActionService?wsdl" target="_blank" rel="external">http://10.1.15.190:8080/ZSHeatmap/services/QueryDataActionService?wsdl</a><br><a href="http://10.1.15.190:8080/ZSHeatmap/services/DataLoadActionService?wsdl" target="_blank" rel="external">http://10.1.15.190:8080/ZSHeatmap/services/DataLoadActionService?wsdl</a></p>
+<p>2.服务测试：数据库表获取服务<br>简单方法采用WSDL地址+方法名+参数名：</p>
+<p><a href="http://10.1.15.190:8080/ZSHeatmap/services/SelectDataActionService/gettable?str=1" target="_blank" rel="external">http://10.1.15.190:8080/ZSHeatmap/services/SelectDataActionService/gettable?str=1</a><br><a href="http://10.1.15.190:8080/ZSHeatmap/services/SelectDataActionService/gettable?str=0" target="_blank" rel="external">http://10.1.15.190:8080/ZSHeatmap/services/SelectDataActionService/gettable?str=0</a></p>
+<p>获取数据库的套餐服务：<br><a href="http://10.1.15.190:8080/ZSHeatmap/services/SelectDataActionService/priceAnalysis_ws?radio=1" target="_blank" rel="external">http://10.1.15.190:8080/ZSHeatmap/services/SelectDataActionService/priceAnalysis_ws?radio=1</a><br><a href="http://10.1.15.190:8080/ZSHeatmap/services/SelectDataActionService/complaintAnalysis_ws?radio=1" target="_blank" rel="external">http://10.1.15.190:8080/ZSHeatmap/services/SelectDataActionService/complaintAnalysis_ws?radio=1</a><br><a href="http://10.1.15.190:8080/ZSHeatmap/services/SelectDataActionService/chargeAnalysis_ws?radio=1" target="_blank" rel="external">http://10.1.15.190:8080/ZSHeatmap/services/SelectDataActionService/chargeAnalysis_ws?radio=1</a><br><a href="http://10.1.15.190:8080/ZSHeatmap/services/SelectDataActionService/terminaAnalysis_ws?radio=1" target="_blank" rel="external">http://10.1.15.190:8080/ZSHeatmap/services/SelectDataActionService/terminaAnalysis_ws?radio=1</a><br><a href="http://10.1.15.190:8080/ZSHeatmap/services/SelectDataActionService/taocanAnalysis_ws?radio=1" target="_blank" rel="external">http://10.1.15.190:8080/ZSHeatmap/services/SelectDataActionService/taocanAnalysis_ws?radio=1</a></p>
+<p>可采用其他Web Service浏览工具（可视化工具）进行测试，或者编写代码对Web Service进行测试。测试时需要根据方法具体参数进行调用。部分方法需要进行封装，形成便于提供给外界调用的“接口”形式。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Java/">Java</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  
+<div class="jiathis_style">
+    <span class="jiathis_txt">分享到：</span>
+    <a class="jiathis_button_tsina">新浪微博</a>
+    <a class="jiathis_button_weixin">微信</a>
+    <a class="jiathis_button_twitter">Twitter</a>
+    <a class="jiathis_button_evernote">EverNote</a>
+    <a href="http://www.jiathis.com/share?uid=1501277" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+</div>
+<script type="text/javascript" >
+    var jiathis_config={
+    data_track_clickback:true,
+    sm:"copy,renren,cqq",
+    pic:"",
+    summary:"",
+    
+  </script> 
+<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=
+" charset="utf-8"></script>      
+
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2014/10/23/Java/《Java并发编程实战》/" title="《Java并发编程实战》">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  《Java并发编程实战》</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2014/09/26/Java/Java中HashMap详解二/"  title="Java中HashMap详解二">
+ <strong>NEXT:</strong><br/> 
+ <span>Java中HashMap详解二
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/C/" title="C++">C++<sup>4</sup></a></li>
+		
+			<li><a href="/categories/Github/" title="Github">Github<sup>3</sup></a></li>
+		
+			<li><a href="/categories/Java/" title="Java">Java<sup>11</sup></a></li>
+		
+			<li><a href="/categories/Linux/" title="Linux">Linux<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Lisp/" title="Lisp">Lisp<sup>0</sup></a></li>
+		
+			<li><a href="/categories/Python/" title="Python">Python<sup>0</sup></a></li>
+		
+			<li><a href="/categories/Spark/" title="Spark">Spark<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Web/" title="Web">Web<sup>1</sup></a></li>
+		
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>1</sup></a></li>
+		
+			<li><a href="/categories/数据结构/" title="数据结构">数据结构<sup>4</sup></a></li>
+		
+			<li><a href="/categories/算法/" title="算法">算法<sup>4</sup></a></li>
+		
+			<li><a href="/categories/职业生涯/" title="职业生涯">职业生涯<sup>7</sup></a></li>
+		
+			<li><a href="/categories/随笔生活/" title="随笔生活">随笔生活<sup>4</sup></a></li>
+		
+			<li><a href="/categories/面试/" title="面试">面试<sup>4</sup></a></li>
+		
+			<li><a href="/categories/项目总结/" title="项目总结">项目总结<sup>0</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+      <li><a href="http://yangjian.me" target="_blank" title="YangJian">Alimon's Blog</a></li>
+      <li><a href="http://zespia.tw/hexo" target="_blank" title="Hexo">Hexo</a></li>
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="http://weibo.com/lsx1993" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  
+  <div class="archiveslist">
+    <p class="asidetitle"><a href="/archives">归档</a></p>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">九月 2014</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">五月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">四月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/03/">三月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">二月 2014</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/10/">十月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/09/">九月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/02/">二月 2013</a><span class="archive-list-count">2</span></li></ul>
+  </div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello,This is my blog. <br/>
+			I will share my learing experience here.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/lsx1993" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/lisuxuan1993" target="_blank" title="github"></a>
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2016 
+		
+		<a href="http://lisuxuan1993.github.com" target="_blank" title="Leo_璇哥">Leo_璇哥</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"null"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'null', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+  </body>
+</html>

@@ -1,0 +1,429 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>单例模式 | Leo&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="Leo_璇哥">
+    
+    <meta name="description" content="单例模式
+
+——类对象只能有一个实例的情况。——线程池，缓存，对话框，处理偏好设置，注册表的对象。日志对象。充当打印机显卡等设备的驱动程序的对象。——全局访问点：可以在需要时才创建对象；对比于全局变量。——常被用来管理共享的全局资源（数据库连接池，线程池）
+单例模式：确保一个类只有一个实例，并提供一">
+    
+    
+    
+    
+    <link rel="alternative" href="http://weibo.com/lsx1993" title="Leo&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/author.jpg" alt="Leo&#39;s Blog" title="Leo&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Leo&#39;s Blog">Leo&#39;s Blog</a></h1>
+				<h2 class="blog-motto">华南理工大学2010级计算机全英创新班，2013级研究生。Java程序员，研究PaaS平台。积极向上，追求卓越。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">博客主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/page/lab">实验室</a></li>
+					
+						<li><a href="/page">关于</a></li>
+					
+					<li>
+					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/09/12/Java/单例模式/" title="单例模式" itemprop="url">单例模式</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://lisuxuan1993.github.com" title="Leo_璇哥">Leo_璇哥</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2014-09-12T13:33:35.000Z" itemprop="datePublished">Sep 12 2014</time>
+    更新日期:<time datetime="2014-09-21T05:39:48.000Z" itemprop="dateModified">Sep 21 2014</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+		</div>
+		
+		<p><strong>单例模式</strong></p>
+<hr>
+<p>——类对象只能有一个实例的情况。<br>——线程池，缓存，对话框，处理偏好设置，注册表的对象。日志对象。充当打印机显卡等设备的驱动程序的对象。<br>——全局访问点：可以在需要时才创建对象；对比于全局变量。<br>——常被用来管理共享的全局资源（数据库连接池，线程池）</p>
+<p><strong>单例模式：确保一个类只有一个实例，并提供一个全局访问点。</strong></p>
+<p><strong>考虑多线程的情况：</strong><br><strong>1.降低性能的同步方法</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public class Singleton&#10;&#123;&#10; private static Singleton uniqueInstance;&#10; private Singleton()&#123;&#125;&#10; &#10; public static synchronized Singleton getInstance()&#10; &#123;&#10;  if(uniqueInstance == null)&#10;  &#123;&#10;   uniqueInstance = new Singleton();&#10;  &#125;&#10;  return uniqueInstance;&#10; &#125;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>2.不用延迟实例化</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public class Singleton&#10;&#123;&#10; //&#38745;&#24577;&#21021;&#22987;&#21270;&#22120;&#65292;&#20445;&#35777;&#20102;&#32447;&#31243;&#23433;&#20840;&#10; private static Singleton uniqueInstance = new Singleton();&#10; private Singleton()&#123;&#125;&#10; &#10; public static Singleton getInstance()&#10; &#123;&#10;  return uniqueInstance;&#10; &#125;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>3.“双重检查加锁”</strong></p>
+<p>尚未创建实例时，才进行同步；只有第一次会同步。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public class Singleton&#10;&#123;&#10; private volatile static Singleton uniqueInstance;&#10; private Singleton()&#123;&#125;&#10; &#10; public static Singleton getInstance()&#10; &#123;&#10;  if(uniqueInstance == null)&#10;  &#123;&#10;   Synchronized(Singleton.class)&#10;   &#123;&#10;    if(uniqueInstance == null)&#10;     uniqueInstance = new Singleton();&#10;   &#125;&#10;  &#125;&#10;  return uniqueInstance;&#10; &#125;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<hr>
+<p>《Java单例模式探讨》<br><a href="http://blog.csdn.net/it_man/article/details/5787567" target="_blank" rel="external">http://blog.csdn.net/it_man/article/details/5787567</a></p>
+<p>【For last review before the interview】</p>
+<hr>
+<p>《Java中的五种单例模式实现方法》<br><a href="http://www.oschina.net/code/snippet_107039_6062" target="_blank" rel="external">http://www.oschina.net/code/snippet_107039_6062</a></p>
+<p><strong>一、懒汉，常用的写法</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">class LazySingleton&#123;&#10;    private static LazySingleton singleton;&#10;    private LazySingleton()&#123;&#10;    &#125;&#10;    public static LazySingleton getInstance()&#123;&#10;        if(singleton==null)&#123;&#10;            singleton=new LazySingleton();&#10;        &#125;&#10;        return singleton;&#10;    &#125;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>二、恶汉,缺点：没有达到lazy loading的效果</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">class HungrySingleton&#123;&#10;    private static HungrySingleton singleton=new HungrySingleton();&#10;    private HungrySingleton()&#123;&#125;&#10;    public static HungrySingleton getInstance()&#123;&#10;        return singleton;&#10;    &#125;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>三、静态内部类 优点：加载时不会初始化静态变量INSTANCE，因为没有主动使用，达到Lazy loading</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">class InternalSingleton&#123;&#10;    private static class SingletonHolder&#123;&#10;        private final static InternalSingleton INSTANCE = new InternalSingleton();&#10;    &#125;&#10;    private InternalSingleton()&#123;&#125;&#10; &#10;    public static InternalSingleton getInstance()&#123;&#10;        return SingletonHolder.INSTANCE;&#10;    &#125;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>四、枚举，《Effective Java》作者推荐使用的方法，优点：不仅能避免多线程同步问题，而且还能防止反序列化重新创建新的对象。</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"> enum EnumSingleton&#123;&#10;    INSTANCE;&#10;    public void doSomeThing()&#123;&#10;    &#125;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>五、 双重校验锁，在当前的内存模型中无效</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">class LockSingleton&#123; &#10;private volatile static LockSingleton singleton; &#10;private LockSingleton()&#123;&#125; &#10;&#10;//&#35814;&#35265;&#65306;http://www.ibm.com/developerworks/cn/java/j-dcl.html &#10;public static LockSingleton getInstance()&#123; &#10;if(singleton==null)&#123; &#10;synchronized(LockSingleton.class)&#123; &#10;if(singleton==null)&#123; &#10;singleton=new LockSingleton(); &#10;&#125; &#10;&#125; &#10;&#125; &#10;return singleton; &#10;&#125; &#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<hr>
+<p>单例类：Singleton模式<br><a href="http://www.cnblogs.com/rush/archive/2011/10/30/2229565.html" target="_blank" rel="external">http://www.cnblogs.com/rush/archive/2011/10/30/2229565.html</a><br>——微软面试100题第72题：语法题。题目：设计一个类，我们只能生成该类的一个实例。<br>分析：是实现了Singleton模式的类型。</p>
+<p>单例类的目的：Java中的多线程编程？</p>
+<hr>
+<p><a href="http://blog.csdn.net/hackbuteer1/article/details/7460019" target="_blank" rel="external">http://blog.csdn.net/hackbuteer1/article/details/7460019</a><br>《C++中的单例模式》<br>单例模式可能是使用最广泛的设计模式，意图是保证一个类仅有一个实例，并提供一个访问它的全局访问点，该实例被所有程序模块共享。</p>
+<pre><code>有很多地方需要这样的功能模块，如系统的日志输出，GUI应用必须是单鼠标，MODEM的联接需要一条且只需要一条电话线，操作系统只能有一个窗口管理器，一台PC连一个键盘。
+</code></pre><p>《设计模式》一书中给出了一种很不错的实现，定义一个单例类，使用类的私有静态指针变量指向类的唯一实例，并用一个公有的静态方法获取该实例。<br>    单例模式通过类本身来管理其唯一实例，这种特性提供了解决问题的方法。唯一的实例是类的一个普通对象，但设计这个类时，让它只能创建一个实例并提供对此实例的全局访问。 唯一实例类Singleton在静态成员函数中隐藏创建实例的操作。习惯上把这个成员函数叫做Instance()，它的返回值是唯一实例的指针。</p>
+<p>1 class CSingleton<br>2 {<br>3 private:<br>4     CSingleton()   //构造函数是私有的<br>5     {<br>6     }<br>7     static CSingleton <em>m_pInstance;<br>8 public:<br>9     static CSingleton </em> GetInstance()<br>10     {<br>11         if(m_pInstance == NULL)  //判断是否第一次调用<br>12             m_pInstance = new CSingleton();<br>13         return m_pInstance;<br>14     }<br>15 };<br>用户访问唯一实例的方法只有GetInstance()成员函数。<br>如果不通过这个函数，任何创建实例的尝试都将失败。<br>因为类的构造函数是私有的。<br>GetInstance()使用懒惰初始化，也就是说它的返回值是当这个函数首次被访问时被创建的。<br>这是一种防弹设计——所有GetInstance()之后的调用都返回相同实例的指针：<br>CSingleton<em> p1 = CSingleton :: GetInstance();<br>CSingleton</em> p2 = p1-&gt;GetInstance();<br>CSingleton &amp; ref = * CSingleton :: GetInstance();<br>对GetInstance稍加修改，这个设计模板便可以适用于可变多实例情况，如一个类允许最多五个实例。</p>
+<p>单例类CSingleton有以下特征：<br>它有一个指向唯一实例的静态指针m_pInstance，并且是私有的；<br>它有一个公有的函数，可以获取这个唯一的实例，并且在需要的时候创建该实例；<br>它的构造函数是私有的，这样就不能从别处创建该类的实例。</p>
+<p>扩展延伸思考：<br>m_pInstance指向的空间什么时候释放呢？更严重的问题是，该实例的析构函数什么时候执行？<br>如果在类的析构行为中有必须的操作，比如关闭文件，释放外部资源，那么上面的代码无法实现这个要求。我们需要一种方法，正常的删除该实例。</p>
+<p>可以在程序结束时调用GetInstance()，并对返回的指针掉用delete操作。这样做可以实现功能，但不仅很丑陋，而且容易出错。因为这样的附加代码很容易被忘记，而且也很难保证在delete之后，没有代码再调用GetInstance函数。</p>
+<p>一个妥善的方法是让这个类自己知道在合适的时候把自己删除，或者说把删除自己的操作挂在操作系统中的某个合适的点上，使其在恰当的时候被自动执行。</p>
+<p>我们知道，程序在结束的时候，系统会自动析构所有的全局变量。事实上，系统也会析构所有的类的静态成员变量，就像这些静态成员也是全局变量一样。利用这个特征，我们可以在单例类中定义一个这样的静态成员变量，而它的唯一工作就是在析构函数中删除单例类的实例。如下面的代码中的CGarbo类（Garbo意为垃圾工人）：<br>16 class CSingleton<br>17 {<br>18 private:<br>19     CSingleton()<br>20     {<br>21     }<br>22     static CSingleton <em>m_pInstance;<br>23     class CGarbo   //它的唯一工作就是在析构函数中删除CSingleton的实例<br>24     {<br>25     public:<br>26         ~CGarbo()<br>27         {<br>28             if(CSingleton::m_pInstance)<br>29                 delete CSingleton::m_pInstance;<br>30         }<br>31     };<br>32     static CGarbo Garbo;  //定义一个静态成员变量，程序结束时，系统会自动调用它的析构函数 【静态成员变量的机制！】<br>33 public:<br>34     static CSingleton </em> GetInstance()<br>35     {<br>36         if(m_pInstance == NULL)  //判断是否第一次调用<br>37             m_pInstance = new CSingleton();<br>38         return m_pInstance;<br>39     }<br>40 };<br>CGarbo被定义为CSingleton的私有内嵌类，以防该类被在其他地方滥用。<br>程序运行结束时，系统会调用CSingleton的静态成员Garbo的析构函数，该析构函数会删除单例的唯一实例。<br>使用这种方法释放单例对象有以下特征：<br>–在单例类内部定义专有的嵌套类；<br>–在单例类内定义私有的专门用于释放的静态成员；<br>–利用程序在结束时析构全局变量的特性，选择最终的释放时机；<br>–使用单例的代码不需要任何操作，不必关心对象的释放。</p>
+<p>但是添加一个类的静态对象，总是让人不太满意，所以有人用如下方法来重现实现单例和解决它相应的问题。<br>41 class CSingleton<br>42 {<br>43 private:<br>44     CSingleton()   //构造函数是私有的<br>45     {<br>46     }<br>47 public:<br>48     static CSingleton &amp; GetInstance()<br>49     {<br>50         static CSingleton instance;   //局部静态变量<br>51         return instance;<br>52     }<br>53 };<br>使用局部静态变量，非常强大的方法，完全实现了单例的特性，而且代码量更少，也不用担心单例销毁的问题。</p>
+<p>但使用此种方法也会出现问题，当如下方法使用单例时问题来了，<br>Singleton singleton = Singleton :: GetInstance();<br>这么做就出现了一个类拷贝的问题，这就违背了单例的特性。产生这个问题原因在于： 编译器会为类生成一个默认的构造函数，来支持类的拷贝。</p>
+<p>最后没有办法，我们要禁止类拷贝和类赋值，禁止程序员用这种方式来使用单例，当时领导的意思是GetInstance()函数返回一个指针而不是返回一个引用，函数的代码改为如下<br>54 class CSingleton<br>55 {<br>56 private:<br>57     CSingleton()   //构造函数是私有的<br>58     {<br>59     }<br>60 public:<br>61     static CSingleton * GetInstance()<br>62     {<br>63         static CSingleton instance;   //局部静态变量<br>64         return &instance;<br>65     }<br>66 };<br>但我总觉的不好，为什么不让编译器不这么干呢。这时我才想起可以显式的声明类拷贝的构造函数，和重载 = 操作符，新的单例类如下：<br>67 class CSingleton<br>68 {<br>69 private:<br>70     CSingleton()   //构造函数是私有的<br>71     {<br>72     }<br>73     CSingleton(const CSingleton &amp;);<br>74     CSingleton &amp; operator = (const CSingleton &amp;);<br>75 public:<br>76     static CSingleton &amp; GetInstance()<br>77     {<br>78         static CSingleton instance;   //局部静态变量<br>79         return instance;<br>80     }<br>81 };<br>关于Singleton(const Singleton);和 Singleton &amp; operate = (const Singleton&amp;);函数，需要声明成私有的，并且只声明不实现。<br>这样，如果用上面的方式来使用单例时，不管是在友元类中还是其他的，编译器都是报错。<br>不知道这样的单例类是否还会有问题，但在程序中这样子使用已经基本没有问题了。</p>
+<hr>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Java/">Java</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  
+<div class="jiathis_style">
+    <span class="jiathis_txt">分享到：</span>
+    <a class="jiathis_button_tsina">新浪微博</a>
+    <a class="jiathis_button_weixin">微信</a>
+    <a class="jiathis_button_twitter">Twitter</a>
+    <a class="jiathis_button_evernote">EverNote</a>
+    <a href="http://www.jiathis.com/share?uid=1501277" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+</div>
+<script type="text/javascript" >
+    var jiathis_config={
+    data_track_clickback:true,
+    sm:"copy,renren,cqq",
+    pic:"",
+    summary:"",
+    
+  </script> 
+<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=
+" charset="utf-8"></script>      
+
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2014/09/26/Java/Java中HashMap详解二/" title="Java中HashMap详解二">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  Java中HashMap详解二</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2014/09/02/Github/《版本控制之道——使用git》/"  title="《版本控制之道——使用Git》">
+ <strong>NEXT:</strong><br/> 
+ <span>《版本控制之道——使用Git》
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/C/" title="C++">C++<sup>4</sup></a></li>
+		
+			<li><a href="/categories/Github/" title="Github">Github<sup>3</sup></a></li>
+		
+			<li><a href="/categories/Java/" title="Java">Java<sup>11</sup></a></li>
+		
+			<li><a href="/categories/Linux/" title="Linux">Linux<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Lisp/" title="Lisp">Lisp<sup>0</sup></a></li>
+		
+			<li><a href="/categories/Python/" title="Python">Python<sup>0</sup></a></li>
+		
+			<li><a href="/categories/Spark/" title="Spark">Spark<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Web/" title="Web">Web<sup>1</sup></a></li>
+		
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>1</sup></a></li>
+		
+			<li><a href="/categories/数据结构/" title="数据结构">数据结构<sup>4</sup></a></li>
+		
+			<li><a href="/categories/算法/" title="算法">算法<sup>4</sup></a></li>
+		
+			<li><a href="/categories/职业生涯/" title="职业生涯">职业生涯<sup>7</sup></a></li>
+		
+			<li><a href="/categories/随笔生活/" title="随笔生活">随笔生活<sup>4</sup></a></li>
+		
+			<li><a href="/categories/面试/" title="面试">面试<sup>4</sup></a></li>
+		
+			<li><a href="/categories/项目总结/" title="项目总结">项目总结<sup>0</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+      <li><a href="http://yangjian.me" target="_blank" title="YangJian">Alimon's Blog</a></li>
+      <li><a href="http://zespia.tw/hexo" target="_blank" title="Hexo">Hexo</a></li>
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="http://weibo.com/lsx1993" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  
+  <div class="archiveslist">
+    <p class="asidetitle"><a href="/archives">归档</a></p>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">九月 2014</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">五月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">四月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/03/">三月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">二月 2014</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/10/">十月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/09/">九月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/02/">二月 2013</a><span class="archive-list-count">2</span></li></ul>
+  </div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello,This is my blog. <br/>
+			I will share my learing experience here.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/lsx1993" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/lisuxuan1993" target="_blank" title="github"></a>
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2016 
+		
+		<a href="http://lisuxuan1993.github.com" target="_blank" title="Leo_璇哥">Leo_璇哥</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"null"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'null', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+  </body>
+</html>

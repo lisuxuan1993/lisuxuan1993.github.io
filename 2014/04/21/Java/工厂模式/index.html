@@ -1,0 +1,422 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>工厂方法模式 | Leo&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="Leo_璇哥">
+    
+    <meta name="description" content="工厂模式——实例化可能不公开。——识别变化的部分，封装变化的部分，封装创建对象的代码。
+简单工厂编程习惯：1public class SimplePizzaFactory&amp;#10;&amp;#123;&amp;#10; public Pizza createPizza(String type)&amp;#10; &amp;#123">
+    
+    
+    
+    
+    <link rel="alternative" href="http://weibo.com/lsx1993" title="Leo&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/author.jpg" alt="Leo&#39;s Blog" title="Leo&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Leo&#39;s Blog">Leo&#39;s Blog</a></h1>
+				<h2 class="blog-motto">华南理工大学2010级计算机全英创新班，2013级研究生。Java程序员，研究PaaS平台。积极向上，追求卓越。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">博客主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/page/lab">实验室</a></li>
+					
+						<li><a href="/page">关于</a></li>
+					
+					<li>
+					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/04/21/Java/工厂模式/" title="工厂方法模式" itemprop="url">工厂方法模式</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://lisuxuan1993.github.com" title="Leo_璇哥">Leo_璇哥</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2014-04-21T13:40:57.000Z" itemprop="datePublished">Apr 21 2014</time>
+    更新日期:<time datetime="2015-03-15T12:33:39.000Z" itemprop="dateModified">Mar 15 2015</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+		</div>
+		
+		<p><strong>工厂模式</strong><br>——实例化可能不公开。<br>——识别变化的部分，封装变化的部分，封装创建对象的代码。</p>
+<p><strong>简单工厂编程习惯：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public class SimplePizzaFactory&#10;&#123;&#10; public Pizza createPizza(String type)&#10; &#123;&#10;  Pizza pizza = null;&#10;  ...&#10; &#125;&#10; &#10;&#10; public class PizzaStore&#10; &#123;&#10;  SimplePizzaFactory factory;&#10;  public PizzaStore(SimplePizzaFactory factory)&#10;  &#123;&#10;   this.factory = factory;&#10;  &#125;&#10;  public Pizza orderPizza(String type)&#10;  &#123;&#10;   Pizza pizza;&#10;   pizza = factory.createPizza(type);&#10;   //&#27492;&#22788;&#19981;&#29992;new&#21019;&#24314;&#23545;&#35937;&#10;  &#125;&#10; &#125;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>——abstract Produce factoryMethod (String type)<br>工厂方法：将客户点披萨orderPizza()和实际创建具体产品的代码分隔开。</p>
+<p>——调用使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PizzaStore nyPizzaStore = new NYPizzaStore();//&#24314;&#31435;&#23454;&#20363;&#10;nyPizzaStore.orderPizza(&#34;cheese&#34;);&#10;//&#30456;&#24403;&#20110;&#38544;&#21547;&#35843;&#29992; Pizza pizza = createPizza(&#34;cheese&#34;);</span><br></pre></td></tr></table></figure></p>
+<p><strong>——工厂模式：用来封装对象的创建。【封装改变】让子类决定创建什么对象。<br>工厂方法模式：定义了一个创建对象的接口，但由子类决定要实例化的类是哪一个。工厂方法让类把实例化推迟到子类。</strong></p>
+<p>——依赖倒置原则：<br>要依赖抽象，不要依赖具体类。<br>不能让高层组件依赖底层组件。而且不管高层或底层组件，都应该依赖于抽象。<br>依赖抽象层，而不依赖具体类。</p>
+<p>1.变量不持有具体类的引用，避开new。<br>2.不让类派生自具体类，请派生自一个抽象（接口或抽象类）<br>3.不覆盖基类中已实现的方法。</p>
+<hr>
+<p><strong>抽象工厂模式：</strong><br>提供一个接口，用于创建相关或依赖对象的家族。而不许奥明确指定具体类。<br>（通过对象的组合）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public interface PizzaIngredientFactory&#10;&#123;&#10; public Dough createDough();&#10; public Sauce createSauce();&#10; ...&#10;&#125;&#10;public class NYPizzaIngredientFactory implements PizzaIngredientFactory&#10;&#123;&#10; public Dough createDough()&#123;&#10;  return new ThinCrustDough();&#10; &#125;&#10; &#10; public Sauce createSauce()&#123;&#10;  return new MarinareSource();&#10; &#125;&#10;&#125;&#10;public abstract class Pizza&#123;&#10; String name;&#10; Dough dough;&#10; Sauce sauce;&#10; abstract void prepare();&#10; void cut()&#123;...&#125;&#10;&#125;&#10;public class CheesePizza extends Pizza&#123;&#10; PizzaIngredientFactory ingredientFactory;//&#23545;&#35937;&#32452;&#21512;&#10; public CheesePizza(PizzaIngredientFactory ing)&#123;&#10;  this.ingredientFactory = ing;&#10; &#125;&#10; &#10; void prepare()&#123;&#10;  //&#24037;&#21378;&#21019;&#24314;&#23545;&#35937;&#10;  dough = ingredientFactory.createDough();&#10; &#125;&#10;&#125;&#10;public class NYPizzaStore extends PizzaStore&#123;&#10; protected Pizza createPizza(String item)&#123;&#10;  Pizza pizza = null;&#10; &#10;  PizzaIngredientFactory ing = new NYPizzaIngredientFactory();&#10;  if(item.equals(&#34;cheese&#34;))&#123;&#10;   //&#25226;&#24037;&#21378;&#23545;&#35937;&#20316;&#20026;&#21442;&#25968;&#20256;&#20837;&#26500;&#36896;&#20989;&#25968;&#10;   pizza = new CheesePizza(ing); &#10;&#12304;&#27604;&#22914;&#20063;&#21487;&#20197;&#20256;new CheesePizza(new GuangZhouPizzaIngredientFactory())&#12305;&#10;   pizza.setName(&#34;NY Cheese&#34;);&#10;  &#125;&#10;  return pizza;&#10; &#125;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<p>《Java工厂模式》<br><a href="http://blog.csdn.net/zxl0016/article/details/7922384" target="_blank" rel="external">http://blog.csdn.net/zxl0016/article/details/7922384</a><br>有一个<strong><strong>户，他家有三辆汽车——Benz奔驰、Bmw宝马、Audi奥迪，还雇了司机为他开车。不过，</strong></strong>户坐车时总是怪怪的：上Benz车后跟司机说“开奔驰车！”，坐上Bmw后他说“开宝马车！”，坐上Audi说“开奥迪车！”。你一定说：这人有病！直接说开车不就行了？！</p>
+<p>工厂模式主要是为创建对象提供过渡接口，以便将创建对象的具体过程屏蔽隔离起来，达到提高灵活性的目的。</p>
+<p>工厂模式在《Java与模式》中分为三类：<br>1）简单工厂模式（Simple Factory）<br>2）工厂方法模式（Factory Method）<br>3）抽象工厂模式（Abstract Factory）<br>             这三种模式从上到下逐步抽象，并且更具一般性。<br>             GOF在《设计模式》一书中将工厂模式分为两类：工厂方法模式（FactoryMethod）与抽象工厂模式（Abstract Factory）。将简单工厂模式（SimpleFactory）看为工厂方法模式的一种特例，两者归为一类。<br>两者皆可，在本文使用《Java与模式》的分类方法。下面来看看这些工厂模式是怎么来“治病”的。</p>
+<hr>
+<p><strong>简单工厂模式</strong><br>又称静态工厂方法模式。<br>目的：定义一个用于创建对象的接口。<br>//抽象产品角色<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public interface Car&#123;&#10;     public void drive();&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>//具体产品角色<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public class Benz implements Car&#123;&#10;     public void drive() &#123;&#10;         System.out.println(&#34;Driving Benz &#34;);&#10;     &#125;&#10;&#125;&#10;public class Bmw implements Car&#123;&#10;     public void drive() &#123;&#10;       System.out.println(&#34;Driving Bmw &#34;);&#10;     &#125;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>//工厂类角色<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public class Driver&#123;&#10;           //&#24037;&#21378;&#26041;&#27861;.&#27880;&#24847; &#12304;&#36820;&#22238;&#31867;&#22411;&#20026;&#25277;&#35937;&#20135;&#21697;&#35282;&#33394;&#12305;&#10;             public static Car driverCar(String s)throws Exception&#123;&#10;                   //&#21028;&#26029;&#36923;&#36753;&#65292;&#36820;&#22238;&#20855;&#20307;&#30340;&#20135;&#21697;&#35282;&#33394;&#32473;Client&#10;                   if(s.equalsIgnoreCase(&#34;Benz&#34;))&#10;                       return new Benz();&#10;                   else if(s.equalsIgnoreCase(&#34;Bmw&#34;))&#10;                           return new Bmw();&#10;                                 ......&#10;                           else throw new Exception();&#10;             &#12290;&#12290;&#12290;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//&#27426;&#36814;****&#25143;&#20986;&#22330;......&#10;public class Magnate&#123;&#10;             public static void main(String[] args)&#123;&#10;                       try&#123;&#10;                             //&#21578;&#35785;&#21496;&#26426;&#25105;&#20170;&#22825;&#22352;&#22868;&#39536;&#10;                                 Car car = Driver.driverCar(&#34;benz&#34;);&#10;                             //&#19979;&#21629;&#20196;&#65306;&#24320;&#36710;&#10;                                 car.drive();&#10;                       &#12290;&#12290;&#12290;</span><br></pre></td></tr></table></figure>
+<p>客户端免除了直接创建产品对象的责任，而仅仅负责“消费”产品。</p>
+<p><strong>工厂方法模式</strong></p>
+<p>工厂方法模式去掉了简单工厂模式中工厂方法的静态属性，使得它可以被子类继承。这样在简单工厂模式里集中在工厂方法上的压力可以由工厂方法模式里不同的工厂子类来分担。<br>你应该大致猜出了工厂方法模式的结构，来看下它的组成：<br>       1)抽象工厂角色： 这是工厂方法模式的核心，它与应用程序无关。是具体工厂角色必须实现的接口或者必须继承的父类。在java中它由抽象类或者接口来实现。<br>       2)具体工厂角色：它含有和具体业务逻辑有关的代码。由应用程序调用以创建对应的具体产品的对象。<br>       3)抽象产品角色：它是具体产品继承的父类或者是实现的接口。在java中一般有抽象类或者接口来实现。<br>       4)具体产品角色：具体工厂角色所创建的对象就是此角色的实例。在java中由具体的类来实现。</p>
+<pre><code>工厂方法模式使用继承自抽象工厂角色的多个子类来代替简单工厂模式中的“上帝类”。正如上面所说，这样便分担了对象承受的压力；而且这样使得结构变得灵活起来——当有新的产品（即****户的汽车）产生时，只要按照抽象产品角色、抽象工厂角色提供的合同来生成，那么就可以被客户使用，而不必去修改任何已有的代码。可以看出工厂角色的结构也是符合开闭原则的！
+我们还是老规矩，使用一个完整的例子来看看工厂模式各个角色之间是如何来协调的。话说****户生意越做越大，自己的爱车也越来越多。这可苦了那位司机师傅了，什么车它都要记得，维护，都要经过他来使用！于是****户同情他说：看你跟我这么多年的份上，以后你不用这么辛苦了，我给你分配几个人手，你只管管好他们就行了！于是，工厂方法模式的管理出现了。代码如下：
+</code></pre><p>代码：<br>//抽象产品角色，具体产品角色与简单工厂模式类似，只是变得复杂了些，这里略。<br>//抽象工厂角色<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public interface Driver&#123;&#10;       public Car driverCar();&#10;&#125;&#10;&#10;&#10;public class BenzDriver implements Driver&#123;&#10;         public Car driverCar()&#123;&#10;               return new Benz();&#10;         &#125;&#10;&#125;&#10;public class BmwDriver implements Driver&#123;&#10;         public Car driverCar()&#123;&#10;           return new Bmw();&#10;         &#125;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>//应该和具体产品形成对应关系…<br>//有请<em>**</em>户先生<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public class Magnate&#123;&#10;         public static void main(String[] args)&#123;&#10;                     try&#123;&#10;                       Driver driver = new BenzDriver();&#10;                       Car car = driver.driverCar();&#10;&#10;&#12304;&#24037;&#21378;&#26041;&#27861;&#12305;&#10;&#10;                       car.drive();&#10;                     &#125;&#10;             &#8230;&#8230;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以看出工厂方法的加入，使得对象的数量成倍增长。当产品种类非常多时，会出现大量的与之对应的工厂对象，这不是我们所希望的。因为如果不能避免这种情况，可以考虑使用简单工厂模式与工厂方法模式相结合的方式来减少工厂类：即对于产品树上类似的种类（一般是树的叶子中互为兄弟的）使用简单工厂模式来实现。<br>五、小结<br>工厂方法模式仿佛已经很完美的对对象的创建进行了包装，使得客户程序中仅仅处理抽象产品角色提供的接口。那我们是否一定要在代码中遍布工厂呢？大可不必。也许在下面情况下你可以考虑使用工厂方法模式：<br>     1)当客户程序不需要知道要使用对象的创建过程。<br>     2)客户程序使用的对象存在变动的可能，或者根本就不知道使用哪一个具体的对象。<br>简单工厂模式与工厂方法模式真正的避免了代码的改动了？没有。在简单工厂模式中，新产品的加入要修改工厂角色中的判断语句；而在工厂方法模式中，要么将判断逻辑留在抽象工厂角色中，要么在客户程序中将具体工厂角色写死（就象上面的例子一样）。而且产品对象创建条件的改变必然会引起工厂角色的修改。<br>       面对这种情况，Java的反射机制与配置文件的巧妙结合突破了限制——这在Spring中完美的体现了出来。 </p>
+<p><strong>抽象工厂模式</strong><br>           先来认识下什么是产品族： 位于不同产品等级结构中，功能相关联的产品组成的家族。还是让我们用一个例子来形象地说明一下吧。<br>回到抽象工厂模式的话题上。<br>可以说，抽象工厂模式和工厂方法模式的区别就在于需要创建对象的复杂程度上。而且抽象工厂模式是三个里面最为抽象、最具一般性的。<br>抽象工厂模式的用意为：给客户端提供一个接口，可以创建多个产品族中的产品对象<br>而且使用抽象工厂模式还要满足一下条件：<br>     1)系统中有多个产品族，而系统一次只可能消费其中一族产品。<br>     2)同属于同一个产品族的产品以其使用。</p>
+<p>来看看抽象工厂模式的各个角色（和工厂方法的如出一辙）：<br>     1)抽象工厂角色： 这是工厂方法模式的核心，它与应用程序无关。是具体工厂角色必须实现的接口或者必须继承的父类。在java中它由抽象类或者接口来实现。<br>     2)具体工厂角色：它含有和具体业务逻辑有关的代码。由应用程序调用以创建对应的具体产品的对象。在java中它由具体的类来实现。<br>     3)抽象产品角色：它是具体产品继承的父类或者是实现的接口。在java中一般有抽象类或者接口来实现。<br>     4)具体产品角色：具体工厂角色所创建的对象就是此角色的实例。在java中由具体的类来实现。</p>
+<p>看过了前两个模式，对这个模式各个角色之间的协调情况应该心里有个数了，我就不举具体的例子了。只是一定要注意满足使用抽象工厂模式的条件哦。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Java/">Java</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  
+<div class="jiathis_style">
+    <span class="jiathis_txt">分享到：</span>
+    <a class="jiathis_button_tsina">新浪微博</a>
+    <a class="jiathis_button_weixin">微信</a>
+    <a class="jiathis_button_twitter">Twitter</a>
+    <a class="jiathis_button_evernote">EverNote</a>
+    <a href="http://www.jiathis.com/share?uid=1501277" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+</div>
+<script type="text/javascript" >
+    var jiathis_config={
+    data_track_clickback:true,
+    sm:"copy,renren,cqq",
+    pic:"",
+    summary:"",
+    
+  </script> 
+<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=
+" charset="utf-8"></script>      
+
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2014/05/06/职业生涯/《卓有成效的程序员》/" title="《卓有成效的程序员》">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  《卓有成效的程序员》</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2014/04/05/Github/《git命令快速参考》/"  title="《Git命令快速参考》">
+ <strong>NEXT:</strong><br/> 
+ <span>《Git命令快速参考》
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/C/" title="C++">C++<sup>4</sup></a></li>
+		
+			<li><a href="/categories/Github/" title="Github">Github<sup>3</sup></a></li>
+		
+			<li><a href="/categories/Java/" title="Java">Java<sup>11</sup></a></li>
+		
+			<li><a href="/categories/Linux/" title="Linux">Linux<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Lisp/" title="Lisp">Lisp<sup>0</sup></a></li>
+		
+			<li><a href="/categories/Python/" title="Python">Python<sup>0</sup></a></li>
+		
+			<li><a href="/categories/Spark/" title="Spark">Spark<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Web/" title="Web">Web<sup>1</sup></a></li>
+		
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>1</sup></a></li>
+		
+			<li><a href="/categories/数据结构/" title="数据结构">数据结构<sup>4</sup></a></li>
+		
+			<li><a href="/categories/算法/" title="算法">算法<sup>4</sup></a></li>
+		
+			<li><a href="/categories/职业生涯/" title="职业生涯">职业生涯<sup>7</sup></a></li>
+		
+			<li><a href="/categories/随笔生活/" title="随笔生活">随笔生活<sup>4</sup></a></li>
+		
+			<li><a href="/categories/面试/" title="面试">面试<sup>4</sup></a></li>
+		
+			<li><a href="/categories/项目总结/" title="项目总结">项目总结<sup>0</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+      <li><a href="http://yangjian.me" target="_blank" title="YangJian">Alimon's Blog</a></li>
+      <li><a href="http://zespia.tw/hexo" target="_blank" title="Hexo">Hexo</a></li>
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="http://weibo.com/lsx1993" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  
+  <div class="archiveslist">
+    <p class="asidetitle"><a href="/archives">归档</a></p>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">九月 2014</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">五月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">四月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/03/">三月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">二月 2014</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/10/">十月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/09/">九月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/02/">二月 2013</a><span class="archive-list-count">2</span></li></ul>
+  </div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello,This is my blog. <br/>
+			I will share my learing experience here.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/lsx1993" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/lisuxuan1993" target="_blank" title="github"></a>
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2016 
+		
+		<a href="http://lisuxuan1993.github.com" target="_blank" title="Leo_璇哥">Leo_璇哥</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"null"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'null', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+  </body>
+</html>

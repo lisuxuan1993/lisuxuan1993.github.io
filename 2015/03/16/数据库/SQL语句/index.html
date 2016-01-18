@@ -1,0 +1,473 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>SQL语句 | Leo&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="Leo_璇哥">
+    
+    <meta name="description" content="【http://www.w3school.com.cn/sql/】【http://www.1keydata.com/cn/sql/】
+SQL 指令
+- SQL SELECT
+SELECT Store_Name FROM Store_Information;
+- SQL DISTINCT
+SELECT">
+    
+    
+    
+    
+    <link rel="alternative" href="http://weibo.com/lsx1993" title="Leo&#39;s Blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/author.jpg" alt="Leo&#39;s Blog" title="Leo&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Leo&#39;s Blog">Leo&#39;s Blog</a></h1>
+				<h2 class="blog-motto">华南理工大学2010级计算机全英创新班，2013级研究生。Java程序员，研究PaaS平台。积极向上，追求卓越。</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">博客主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/page/lab">实验室</a></li>
+					
+						<li><a href="/page">关于</a></li>
+					
+					<li>
+					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/03/16/数据库/SQL语句/" title="SQL语句" itemprop="url">SQL语句</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://lisuxuan1993.github.com" title="Leo_璇哥">Leo_璇哥</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2015-03-15T20:22:05.000Z" itemprop="datePublished">Mar 16 2015</time>
+    更新日期:<time datetime="2015-03-15T12:25:55.000Z" itemprop="dateModified">Mar 15 2015</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#SQL__u6307_u4EE4"><span class="toc-number">1.</span> <span class="toc-text">SQL 指令</span></a></li></ol>
+		</div>
+		
+		<p>【<a href="http://www.w3school.com.cn/sql/】" target="_blank" rel="external">http://www.w3school.com.cn/sql/】</a><br>【<a href="http://www.1keydata.com/cn/sql/】" target="_blank" rel="external">http://www.1keydata.com/cn/sql/】</a></p>
+<h1 id="SQL__u6307_u4EE4"><a href="#SQL__u6307_u4EE4" class="headerlink" title="SQL 指令"></a>SQL 指令</h1><hr>
+<pre><code>- SQL SELECT
+</code></pre><p>SELECT Store_Name FROM Store_Information;</p>
+<pre><code>- SQL DISTINCT
+</code></pre><p>SELECT DISTINCT Store_Name FROM Store_Information;</p>
+<pre><code>- SQL WHERE
+</code></pre><p>SELECT Store_Name<br>FROM Store_Information<br>WHERE Sales &gt; 1000;</p>
+<pre><code>- SQL AND OR
+</code></pre><p>SELECT Store_Name<br>FROM Store_Information<br>WHERE Sales &gt; 1000<br>OR (Sales &lt; 500 AND Sales &gt; 275);</p>
+<pre><code>- SQL IN
+</code></pre><p>SELECT *<br>FROM Store_Information<br>WHERE Store_Name IN (‘Los Angeles’, ‘San Diego’);</p>
+<pre><code>- SQL BETWEEN
+</code></pre><p>SELECT *<br>FROM Store_Information<br>WHERE Txn_Date BETWEEN ‘Jan-06-1999’ AND ‘Jan-10-1999’;</p>
+<pre><code>- SQL LIKE
+</code></pre><p>SELECT “栏位名”<br>FROM “表格名”<br>WHERE “栏位名” LIKE {套式};<br>{套式} 经常包括野卡 (wildcard). 以下是几个例子：<br>‘A_Z’: 所有以 ‘A’ 起头，另一个任何值的字原，且以 ‘Z’ 为结尾的字串。 ‘ABZ’ 和 ‘A2Z’ 都符合这一个模式，而 ‘AKKZ’ 并不符合 (因为在 A 和 Z 之间有两个字原，而不是一个字原)。<br>‘ABC%’: 所有以 ‘ABC’ 起头的字串。举例来说，’ABCD’ 和 ‘ABCABC’ 都符合这个套式。<br>‘%XYZ’: 所有以 ‘XYZ’ 结尾的字串。举例来说，’WXYZ’ 和 ‘ZZXYZ’ 都符合这个套式。<br>‘%AN%’: 所有含有 ‘AN’ 这个套式的字串。举例来说， ‘LOS ANGELES’ 和 ‘SAN FRANCISCO’ 都符合这个套式。<br>SELECT *<br>FROM Store_Information<br>WHERE Store_Name LIKE ‘%AN%’;</p>
+<pre><code>- SQL ORDER BY
+</code></pre><p>SELECT “栏位名”<br>FROM “表格名”<br>[WHERE “条件”]<br>ORDER BY “栏位名” [ASC, DESC];<br>ORDER BY “栏位一” [ASC, DESC], “栏位二” [ASC, DESC]<br>SELECT Store_Name, Sales, Txn_Date<br>FROM Store_Information<br>ORDER BY Sales DESC;<br>在以上的例子中，我们用栏位名来指定排列顺序的依据。除了栏位名外，我们也可以用栏位的顺序 (依据 SQL 句中的顺序)。在 SELECT 后的第一个栏位为 1，第二个栏位为 2，以此类推。在上面这个例子中，我们打以下这一句 SQL 可以达到完全一样的效果：<br>SELECT Store_Name, Sales, Txn_Date<br>FROM Store_Information<br>ORDER BY 2 DESC;</p>
+<pre><code>- SQL 函数
+</code></pre><p>AVG (平均)<br>COUNT (计数)<br>MAX (最大值)<br>MIN (最小值)<br>SUM (总合)<br>SELECT “函数名”(“栏位名”)<br>FROM “表格名”;<br>SELECT SUM(Sales) FROM Store_Information;<br>除了函数的运用外，SQL 也可以做简单的数学运算，例如加 (+) 和减 (-)。对于文字类的资料，SQL 也有好几个文字处理方面的函数，例如文字相连 (concatenation)，文字修整 (trim)，以及子字串 (substring)。不同的数据库对这些函数有不同的语法，所以最好是参考您所用数据库的信息，来确定在那个数据库中，这些函数是如何被运用的。 </p>
+<pre><code>- SQL COUNT
+</code></pre><p>SELECT COUNT (Store_Name)<br>FROM Store_Information<br>WHERE Store_Name IS NOT NULL;</p>
+<p>SELECT COUNT (DISTINCT Store_Name)<br>FROM Store_Information;</p>
+<pre><code>- SQL GROUP BY
+</code></pre><p>SELECT “栏位1”, SUM(“栏位2”)<br>FROM “表格名”<br>GROUP BY “栏位1”;<br>SELECT Store_Name, SUM(Sales)<br>FROM Store_Information<br>GROUP BY Store_Name;</p>
+<pre><code>- SQL HAVING
+</code></pre><p>SELECT “栏位1”, SUM(“栏位2”)<br>FROM “表格名”<br>GROUP BY “栏位1”<br>HAVING (函数条件);<br>请读者注意： GROUP BY 子句并不是一定需要的。<br>SELECT Store_Name, SUM(Sales)<br>FROM Store_Information<br>GROUP BY Store_Name<br>HAVING SUM(sales) &gt; 1500;</p>
+<pre><code>- SQL ALIAS
+</code></pre><p>SELECT “表格别名”.”栏位1” “栏位别名”<br>FROM “表格名” “表格别名”;<br>SELECT A1.Store_Name Store, SUM(A1.Sales) ‘Total Sales’<br>FROM Store_Information A1<br>GROUP BY A1.Store_Name;</p>
+<pre><code>- SQL 表格连接 【Join】
+</code></pre><p>SELECT A1.Region_Name REGION, SUM(A2.Sales) SALES<br>FROM Geography A1, Store_Information A2<br>WHERE A1.Store_Name = A2.Store_Name<br>GROUP BY A1.Region_Name;<br>在第一行中，我们告诉 SQL 去选出两个栏位：第一个栏位是 Geography 表格中的 Region_Name 栏位 (我们取了一个别名叫做 REGION)；第二个栏位是 Store_Information 表格中的 Sales 栏位 (别名为 SALES)。请注意在这里我们有用到表格别名：Geography 表格的别名是 A1，Store_Information 表格的别名是 A2。若我们没有用表格别名的话， 第一行就会变成<br>SELECT Geography.Region_Name REGION, SUM(Store_Information.Sales) SALES<br>很明显地，这就复杂多了。在这里我们可以看到表格别名的功用：它能让 SQL 句容易被了解，尤其是这个 SQL 句含盖好几个不同的表格时。<br>接下来我们看第三行，就是 WHERE 子句。 这是我们阐述连接条件的地方。在这里，我们要确认Geography 表格中 Store_Name 栏位的值与 Store_Information 表格中 Store_Name 栏位的值是相等的。这个 WHERE 子句是一个连接的灵魂人物，因为它的角色是确定两个表格之间的连接是正确的。如果 WHERE 子句是错误的，我们就极可能得到一个笛卡儿连接 (Cartesian Join)。笛卡儿连接会造成我们得到所有两个表格每两行之间所有可能的组合。在这个例子中，笛卡儿连接会让我们得到 4 x 4 = 16 行的结果。 </p>
+<pre><code>- SQL 外部连接
+</code></pre><p>之前我们看到的左连接 (left join)，又称内部连接 (inner join)。在这个情况下，要两个表格内都有同样的值，那一笔资料才会被选出。那如果我们想要列出一个表格中每一笔的资料，无论它的值在另一个表格中有没有出现，那该怎么办呢？在这个时候，我们就需要用到 SQL OUTER JOIN (外部连接) 的指令。<br>我们需要知道每一间店的营业额。如果我们用一个普通的连接，我们将会漏失掉 ‘New York’ 这个店，因为它并不存在于 Store_Information 这个表格。所以，在这个情况下，我们需要用外部连接来串联这两个表格：<br>SELECT A1.Store_Name, SUM(A2.Sales) SALES<br>FROM Georgraphy A1, Store_Information A2<br>WHERE A1.Store_Name = A2.Store_Name (+)<br>GROUP BY A1.Store_Name;<br>我们在这里是使用了 Oracle 的外部连接语法。<br>请注意： 当第二个表格没有相对的资料时，SQL 会传回 NULL 值。在这一个例子中，’New York’ 并不存在于 Store_Information 表格，所以它的 “SALES” 栏位是 NULL。 </p>
+<pre><code>- SQL Subquery
+</code></pre><p>我们可以在一个 SQL 语句中放入另一个 SQL 语句。当我们在 WHERE 子句或 HAVING 子句中插入另一个 SQL 语句时，我们就有一个 subquery 的架构。 Subquery 的作用是什么呢？第一，它可以被用来连接表格。另外，有的时候 subquery 是唯一能够连接两个表格的方式。<br>SELECT “栏位1”<br>FROM “表格”<br>WHERE “栏位2” [比较运算素]<br>(SELECT “栏位1”<br>FROM “表格”<br>WHERE “条件”);<br>[比较运算素] 可以是相等的运算素，例如 =, &gt;, &lt;, &gt;=, &lt;=. 这也可以是一个对文字的运算素，例如 “LIKE”。</p>
+<p>我们要运用 subquery 来找出所有在西部的店的营业额。我们可以用下面的 SQL 来达到我们的目的：<br>SELECT SUM(Sales) FROM Store_Information<br>WHERE Store_name IN<br>(SELECT store_name FROM Geography<br>WHERE region_name = ‘West’);<br>在这个例子中，我们并没有直接将两个表格连接起来，然后由此直接算出每一间西区店面的营业额。我们做的是先找出哪些店是在西区的，然后再算出这些店的营业额总共是多少。 </p>
+<pre><code>- SQL UNION
+</code></pre><p>UNION 指令的目的是将两个 SQL 语句的结果合并起来。从这个角度来看， UNION 跟 JOIN 有些许类似，因为这两个指令都可以由多个表格中撷取资料。 UNION 的一个限制是两个 SQL 语句所产生的栏位需要是同样的资料种类。另外，当我们用 UNION 这个指令时，我们只会看到不同的资料值 (类似 SELECT DISTINCT)。<br>[SQL 语句 1]<br>UNION<br>[SQL 语句 2];<br>SELECT Txn_Date FROM Store_Information<br>UNION<br>SELECT Txn_Date FROM Internet_Sales;</p>
+<pre><code>- SQL UNION ALL
+</code></pre><p>UNION ALL 这个指令的目的也是要将两个 SQL 语句的结果合并在一起。 UNION ALL 和UNION 不同之处在于 UNION ALL 会将每一笔符合条件的资料都列出来，无论资料值有无重复。<br>结果:<br>Txn_Date<br>Jan-05-1999<br>Jan-07-1999<br>Jan-08-1999<br>Jan-08-1999<br>Jan-07-1999<br>Jan-10-1999<br>Jan-11-1999<br>Jan-12-1999</p>
+<pre><code>- SQL INTERSECT
+</code></pre><p>和 UNION 指令类似，INTERSECT 也是对两个 SQL 语句所产生的结果做处理的。不同的地方是， UNION 基本上是一个 OR (如果这个值存在于第一句或是第二句，它就会被选出)，而INTERSECT 则比较像 AND ( 这个值要存在于第一句和第二句才会被选出)。UNION 是联集，而INTERSECT 是交集。<br>SELECT Txn_Date FROM Store_Information<br>INTERSECT<br>SELECT Txn_Date FROM Internet_Sales;<br>请注意，在 INTERSECT 指令下，不同的值只会被列出一次。 </p>
+<pre><code>- SQL MINUS
+</code></pre><p>MINUS 指令是运用在两个 SQL 语句上。它先找出第一个 SQL 语句所产生的结果，然后看这些结果有没有在第二个 SQL 语句的结果中。如果有的话，那这一笔资料就被去除，而不会在最后的结果中出现。如果第二个 SQL 语句所产生的结果并没有存在于第一个 SQL 语句所产生的结果内，那这笔资料就被抛弃。<br>SELECT Txn_Date FROM Store_Information<br>MINUS<br>SELECT Txn_Date FROM Internet_Sales;</p>
+<pre><code>- SQL CONCATENATE
+</code></pre><p>有的时候，我们有需要将由不同栏位获得的资料串连在一起。每一种资料库都有提供方法来达到这个目的：<br>MySQL: CONCAT( )<br>Oracle: CONCAT( ), ||<br>SQL Server: +<br>Oracle 的 CONCAT( ) 只允许两个参数；换言之，一次只能将两个字串串连起来。不过，在Oracle中，我们可以用 ‘||’ 来一次串连多个字串。<br>MySQL/Oracle:<br>SELECT CONCAT (Region_Name, Store_Name) FROM Geography<br>WHERE Store_Name = ‘Boston’;</p>
+<p>Oracle:<br>SELECT Region_Name || ‘ ‘ || Store_Name FROM Geography<br>WHERE Store_Name = ‘Boston’;<br>结果：<br>‘East Boston’</p>
+<pre><code>- SQL SUBSTRING
+</code></pre><p>MySQL: SUBSTR( ), SUBSTRING( )<br>Oracle: SUBSTR( )<br>SQL Server: SUBSTRING( )<br>SUBSTR (str, pos)<br>由 <str> 中，选出所有从第 <pos> 位置开始的字元。请注意，这个语法不适用于 SQL Server 上。<br>SUBSTR (str, pos, len)<br>由 <str> 中的第 <pos> 位置开始，选出接下去的 <len> 个字元。<br>SELECT SUBSTR (Store_Name, 3)<br>FROM Geography<br>WHERE Store_Name = ‘Los Angeles’;<br>结果:<br>‘s Angeles’<br>例2<br>SELECT SUBSTR (Store_Name, 2, 4)<br>FROM Geography<br>WHERE Store_Name = ‘San Diego’;<br>结果:<br>‘an D’</len></pos></str></pos></str></p>
+<pre><code>- SQL TRIM
+</code></pre><p>SQL 中的 TRIM 函数是用来移除掉一个字串中的字头或字尾。最常见的用途是移除字首或字尾的空白。这个函数在不同的资料库中有不同的名称：<br>MySQL: TRIM( ), RTRIM( ), LTRIM( )<br>Oracle: RTRIM( ), LTRIM( )<br>SQL Server: RTRIM( ), LTRIM( )<br>各种 trim 函数的语法如下：<br>TRIM ( [ [位置] [要移除的字串] FROM ] 字串): [位置] 的可能值为 LEADING (起头), TRAILING (结尾), or BOTH (起头及结尾)。 这个函数将把 [要移除的字串] 从字串的起头、结尾，或是起头及结尾移除。如果我们没有列出 [要移除的字串] 是什么的话，那空白就会被移除。<br>LTRIM(字串): 将所有字串起头的空白移除。<br>RTRIM(字串): 将所有字串结尾的空白移除。<br>例1<br>SELECT TRIM(‘   Sample   ‘);<br>结果:<br>‘Sample’<br>例2<br>SELECT LTRIM(‘   Sample   ‘);<br>结果:<br>‘Sample   ‘<br>例3<br>SELECT RTRIM(‘   Sample   ‘);<br>结果:<br>‘   Sample’</p>
+<p>表格处理</p>
+<pre><code>- SQL CREATE TABLE
+</code></pre><p>CREATE TABLE Customer<br>(First_Name char(50),<br>Last_Name char(50),<br>Address char(50),<br>City char(50),<br>Country char(25),<br>Birth_Date datetime);</p>
+<pre><code>- SQL CREATE VIEW
+</code></pre><p>CREATE VIEW V_Customer<br>AS SELECT First_Name, Last_Name, Country<br>FROM Customer;</p>
+<p>我们就可以用以下的指令来建一个包括每个地区 (Region) 销售额 (Sales) 的视观表：<br>CREATE VIEW V_REGION_SALES<br>AS SELECT A1.Region_Name REGION, SUM(A2.Sales) SALES<br>FROM Geography A1, Store_Information A2<br>WHERE A1.Store_Name = A2.Store_Name<br>GROUP BY A1.Region_Name;</p>
+<p>这就给我们有一个名为 V_REGION_SALES 的视观表。这个视观表包含不同地区的销售哦。如果我们要从这个视观表中获取资料，我们就打入，<br>SELECT * FROM V_REGION_SALES;</p>
+<pre><code>- SQL CREATE INDEX
+</code></pre><p>若我們要在 Last_Name 這個欄位上建一個索引，我們就打入以下的指令，<br>CREATE INDEX IDX_CUSTOMER_LAST_NAME<br>ON Customer (Last_Name);<br>若我们要在 Last_Name 这个栏位上建一个索引，我们就打入以下的指令，<br>CREATE INDEX IDX_CUSTOMER_LOCATION<br>ON Customer (City, Country);</p>
+<pre><code>- SQL ALTER TABLE
+</code></pre><p>ALTER TABLE “table_name”<br>[改变方式];<br>[改变方式] 的详细写法会依我们想要达到的目标而有所不同。再以上列出的改变中，[改变方式] 如下：<br>加一个栏位: ADD “栏位 1” “栏位 1 资料种类”<br>删去一个栏位: DROP “栏位 1”<br>改变栏位名称: CHANGE “原本栏位名” “新栏位名” “新栏位名资料种类”<br>改变栏位的资料种类: MODIFY “栏位 1” “新资料种类”<br>ALTER TABLE Customer ADD Gender char(1);<br>ALTER TABLE Customer CHANGE Address Addr char(50);<br>ALTER TABLE Customer MODIFY Addr char(30);<br>ALTER TABLE Customer DROP Gender;</p>
+<pre><code>- SQL 主键
+</code></pre><p>MySQL:<br>CREATE TABLE Customer<br>(SID integer,<br>Last_Name varchar(30),<br>First_Name varchar(30),<br>PRIMARY KEY (SID));<br>Oracle:<br>CREATE TABLE Customer<br>(SID integer PRIMARY KEY,<br>Last_Name varchar(30),<br>First_Name varchar(30));<br>SQL Server:<br>CREATE TABLE Customer<br>(SID integer PRIMARY KEY,<br>Last_Name varchar(30),<br>First_Name varchar(30));<br>以下则是以改变现有表格架构来设定主键的方式：<br>MySQL:<br>ALTER TABLE Customer ADD PRIMARY KEY (SID);<br>Oracle:<br>ALTER TABLE Customer ADD PRIMARY KEY (SID);<br>SQL Server:<br>ALTER TABLE Customer ADD PRIMARY KEY (SID);<br>请注意，在用 ALTER TABLE 语句来添加主键之前，我们需要确认被用来当做主键的栏位是设定为 『NOT NULL』 ；也就是说，那个栏位一定不能没有资料。 </p>
+<pre><code>- SQL 外来键
+</code></pre><p>外来键是一个(或数个)指向另外一个表格主键的栏位。外来键的目的是确定资料的参考完整性 (referential integrity)。换言之，只有被准许的资料值才会被存入资料库内。<br>所有的订购资料中的顾客，都一定是要跟在 CUSTOMER 表格中存在。<br>我们就会在 ORDERS 表格中设定一个外来键，而这个外来键是指向 CUSTOMER 表格中的主键。这样一来，我们就可以确定所有在ORDERS 表格中的顾客都存在 CUSTOMER 表格中。换句话说，ORDERS 表格之中，不能有任何顾客是不存在于 CUSTOMER 表格中的资料。<br>MySQL:<br>CREATE TABLE ORDERS<br>(Order_ID integer,<br>Order_Date date,<br>Customer_SID integer,<br>Amount double,<br>PRIMARY KEY (Order_ID),<br>FOREIGN KEY (Customer_SID) REFERENCES CUSTOMER (SID));<br>Oracle:<br>CREATE TABLE ORDERS<br>(Order_ID integer PRIMARY KEY,<br>Order_Date date,<br>Customer_SID integer REFERENCES CUSTOMER (SID),<br>Amount double);<br>SQL Server:<br>CREATE TABLE ORDERS<br>(Order_ID integer PRIMARY KEY,<br>Order_Date datetime,<br>Customer_SID integer REFERENCES CUSTOMER (SID),<br>Amount double);<br>以下的例子则是藉着改变表格架构来指定外来键。这里假设 ORDERS 表格已经被建置，而外来键尚未被指定：<br>MySQL:<br>ALTER TABLE ORDERS<br>ADD FOREIGN KEY (Customer_SID) REFERENCES CUSTOMER (SID);<br>Oracle:<br>ALTER TABLE ORDERS<br>ADD (CONSTRAINT fk_orders1) FOREIGN KEY (Customer_SID) REFERENCES CUSTOMER (SID);<br>SQL Server:<br>ALTER TABLE ORDERS<br>ADD FOREIGN KEY (Customer_SID) REFERENCES CUSTOMER (SID);</p>
+<pre><code>- SQL DROP TABLE
+</code></pre><p>DROP TABLE Customer;</p>
+<pre><code>- SQL TRUNCATE TABLE
+</code></pre><p>有时候我们会需要清除一个表格中的所有资料。要达到者个目的，一种方式是我们在 SQL DROP 那一页 看到 的 DROP TABLE 指令。不过这样整个表格就消失，而无法再被用了。另一种方式就是运用 TRUNCATE TABLE 的指令。在这个指令之下，表格中的资料会完全消失，可是表格本身会继续存在。</p>
+<pre><code>- SQL INSERT INTO
+</code></pre><p>INSERT INTO “表格名” (“栏位1”, “栏位2”, …)<br>VALUES (“值1”, “值2”, …);<br>第二种 INSERT INTO 能够让我们一次输入多笔的资料。<br>INSERT INTO “表格1” (“栏位1”, “栏位2”, …)<br>SELECT “栏位3”, “栏位4”, …<br>FROM “表格2”;<br>INSERT INTO Store_Information (Store_Name, Sales, Txn_Date)<br>SELECT store_name, Sales, Txn_Date<br>FROM Sales_Information<br>WHERE Year (Txn_Date) = 1998;</p>
+<pre><code>- SQL UPDATE
+</code></pre><p>UPDATE Store_Information<br>SET Sales = 500<br>WHERE Store_Name = ‘Los Angeles’<br>AND Txn_Date = ‘Jan-08-1999’;<br>在这个例子中，只有一笔资料符合 WHERE 子句中的条件。如果有多笔资料符合条件的话，每一笔符合条件的资料都会被修改的。<br>我们也可以同时修改好几个栏位。这语法如下：<br>UPDATE “表格”<br>SET “栏位1” = [值1], “栏位2” = [值2]<br>WHERE “条件”;</p>
+<pre><code>- SQL DELETE FROM
+</code></pre><p>DELETE FROM Store_Information<br>WHERE Store_Name = ‘Los Angeles’;</p>
+<p>SQL 语法</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/数据库/">数据库</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  
+<div class="jiathis_style">
+    <span class="jiathis_txt">分享到：</span>
+    <a class="jiathis_button_tsina">新浪微博</a>
+    <a class="jiathis_button_weixin">微信</a>
+    <a class="jiathis_button_twitter">Twitter</a>
+    <a class="jiathis_button_evernote">EverNote</a>
+    <a href="http://www.jiathis.com/share?uid=1501277" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+</div>
+<script type="text/javascript" >
+    var jiathis_config={
+    data_track_clickback:true,
+    sm:"copy,renren,cqq",
+    pic:"",
+    summary:"",
+    
+  </script> 
+<script type="text/javascript" src="//v3.jiathis.com/code/jia.js?uid=
+" charset="utf-8"></script>      
+
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/01/18/hello-world/" title="Hello World">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  Hello World</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/01/16/算法/排序算法总结之快速排序/"  title="排序算法总结之快速排序">
+ <strong>NEXT:</strong><br/> 
+ <span>排序算法总结之快速排序
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#SQL__u6307_u4EE4"><span class="toc-number">1.</span> <span class="toc-text">SQL 指令</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/C/" title="C++">C++<sup>4</sup></a></li>
+		
+			<li><a href="/categories/Github/" title="Github">Github<sup>3</sup></a></li>
+		
+			<li><a href="/categories/Java/" title="Java">Java<sup>11</sup></a></li>
+		
+			<li><a href="/categories/Linux/" title="Linux">Linux<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Lisp/" title="Lisp">Lisp<sup>0</sup></a></li>
+		
+			<li><a href="/categories/Python/" title="Python">Python<sup>0</sup></a></li>
+		
+			<li><a href="/categories/Spark/" title="Spark">Spark<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Web/" title="Web">Web<sup>1</sup></a></li>
+		
+			<li><a href="/categories/数据库/" title="数据库">数据库<sup>1</sup></a></li>
+		
+			<li><a href="/categories/数据结构/" title="数据结构">数据结构<sup>4</sup></a></li>
+		
+			<li><a href="/categories/算法/" title="算法">算法<sup>4</sup></a></li>
+		
+			<li><a href="/categories/职业生涯/" title="职业生涯">职业生涯<sup>7</sup></a></li>
+		
+			<li><a href="/categories/随笔生活/" title="随笔生活">随笔生活<sup>4</sup></a></li>
+		
+			<li><a href="/categories/面试/" title="面试">面试<sup>4</sup></a></li>
+		
+			<li><a href="/categories/项目总结/" title="项目总结">项目总结<sup>0</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+      <li><a href="http://yangjian.me" target="_blank" title="YangJian">Alimon's Blog</a></li>
+      <li><a href="http://zespia.tw/hexo" target="_blank" title="Hexo">Hexo</a></li>
+    </ul>
+</div>
+
+  <div class="rsspart">
+	<a href="http://weibo.com/lsx1993" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  
+  <div class="archiveslist">
+    <p class="asidetitle"><a href="/archives">归档</a></p>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">九月 2014</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">五月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">四月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/03/">三月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/02/">二月 2014</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/10/">十月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/09/">九月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/08/">八月 2013</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/04/">四月 2013</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/02/">二月 2013</a><span class="archive-list-count">2</span></li></ul>
+  </div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello,This is my blog. <br/>
+			I will share my learing experience here.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/lsx1993" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/lisuxuan1993" target="_blank" title="github"></a>
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2016 
+		
+		<a href="http://lisuxuan1993.github.com" target="_blank" title="Leo_璇哥">Leo_璇哥</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"null"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'null', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+  </body>
+</html>
